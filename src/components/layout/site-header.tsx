@@ -37,15 +37,29 @@ export function SiteHeader() {
   }, [menuOpen, megaOpen]);
 
   useEffect(() => {
-    let last = window.scrollY;
+    // Hide on scroll down, reveal only on a deliberate scroll up. `anchor` only moves
+    // once the scroll has travelled past DELTA in one direction, so slow scrolls and
+    // trackpad momentum (1–2px per frame) can't flip the header back into view.
+    const DELTA = 8;
+    const TOP_ZONE = 160;
+    let anchor = window.scrollY;
     let ticking = false;
     const update = () => {
       ticking = false;
       const y = window.scrollY;
       setScrolled(y > 12);
       if (state.current.megaOpen && Math.abs(y - megaOpenedAt.current) > 60) setMegaOpen(false);
-      setHidden(y > 480 && y > last + 2 && !state.current.menuOpen && !state.current.megaOpen);
-      last = y;
+      const dy = y - anchor;
+      if (y < TOP_ZONE || state.current.menuOpen || state.current.megaOpen) {
+        setHidden(false);
+        anchor = y;
+      } else if (dy > DELTA) {
+        setHidden(true);
+        anchor = y;
+      } else if (dy < -DELTA) {
+        setHidden(false);
+        anchor = y;
+      }
     };
     const onScroll = () => {
       if (!ticking) {
