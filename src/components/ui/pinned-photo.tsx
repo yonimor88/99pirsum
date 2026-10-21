@@ -56,7 +56,7 @@ export function PinnedPhoto({
           src={photo.src}
           alt={photo.alt}
           sizes={sizes}
-          placeholder="blur"
+          placeholder={priority ? "blur" : "empty"}
           preload={priority}
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : undefined}

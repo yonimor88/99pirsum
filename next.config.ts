@@ -43,10 +43,9 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ["image/avif", "image/webp"],
-  },
-  experimental: {
-    // Inline Tailwind's CSS into the HTML: no render-blocking stylesheet request
-    inlineCss: true,
+    // Source photos are at most 1600px wide; fewer widths = shorter srcset in every <img>
+    deviceSizes: [640, 828, 1080, 1440, 1920],
+    imageSizes: [96, 192, 384],
   },
   async redirects() {
     const hebrew = Object.entries(legacyRedirects).flatMap(([slug, destination]) => {

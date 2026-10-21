@@ -115,7 +115,7 @@ export function Lightbox({
               <Image
                 src={item.src}
                 alt={item.alt}
-                placeholder="blur"
+                placeholder={item.src.blurDataURL ? "blur" : "empty"}
                 sizes="90vw"
                 className="max-h-[78svh] w-auto object-contain"
               />

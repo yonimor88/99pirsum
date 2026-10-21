@@ -25,9 +25,13 @@ export function TestimonialLetters({ items, full = false }: { items: Testimonial
           >
             <span className={cn("absolute inset-x-9 top-0 h-1.5 rounded-b-full", accentBg[t.accent])} aria-hidden />
             <div className="flex items-start justify-between gap-6">
-              <div className="relative h-12 w-32">
-                <Image src={t.logo} alt={t.org} fill sizes="128px" className="object-contain object-right" />
-              </div>
+              <Image
+                src={t.logo}
+                alt={t.org}
+                width={128}
+                height={Math.round((128 * t.logo.height) / t.logo.width)}
+                className="h-12 w-auto max-w-32 object-contain object-right"
+              />
               <Quote className="size-10 shrink-0 -scale-x-100 text-ink/10" aria-hidden />
             </div>
 

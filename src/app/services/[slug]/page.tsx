@@ -14,6 +14,7 @@ import { PinnedPhoto } from "@/components/ui/pinned-photo";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { posts } from "@/content/posts";
 import { accentBg } from "@/content/service-nav";
+import { lite } from "@/content/media";
 import { getService, services } from "@/content/services";
 import { primaryPhone, site, whatsappLink } from "@/content/site";
 import { cn } from "@/lib/cn";
@@ -215,7 +216,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
               <h2 className="text-4xl font-extrabold sm:text-5xl">מהשטח</h2>
               <p className="mt-3 text-lg text-muted">תמונות אמיתיות מעבודות שביצענו.</p>
             </Reveal>
-            <PhotoGrid photos={[service.hero, ...service.gallery]} className="mt-10" />
+            <PhotoGrid photos={[service.hero, ...service.gallery].map(lite)} className="mt-10" />
           </div>
         </section>
       )}

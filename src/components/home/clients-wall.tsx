@@ -6,15 +6,13 @@ import { clients, type Client } from "@/content/clients";
 function LogoCard({ client }: { client: Client }) {
   return (
     <div className="group grid h-24 w-44 shrink-0 place-items-center rounded-2xl border border-ink/8 bg-white px-5 transition-shadow hover:shadow-[0_18px_40px_-24px_rgba(20,20,20,0.5)] sm:h-28 sm:w-52">
-      <div className="relative h-14 w-full sm:h-16">
-        <Image
-          src={client.logo}
-          alt={client.name}
-          fill
-          sizes="208px"
-          className="object-contain opacity-75 grayscale transition duration-500 group-hover:opacity-100 group-hover:grayscale-0"
-        />
-      </div>
+      <Image
+        src={client.logo}
+        alt={client.name}
+        width={176}
+        height={Math.round((176 * client.logo.height) / client.logo.width)}
+        className="max-h-14 w-auto max-w-full object-contain opacity-75 grayscale transition duration-500 group-hover:opacity-100 group-hover:grayscale-0 sm:max-h-16"
+      />
     </div>
   );
 }

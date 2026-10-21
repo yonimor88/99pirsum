@@ -12,7 +12,7 @@ import { ServiceGlyph } from "@/components/ui/icons";
 import { PhotoGrid } from "@/components/ui/photo-grid";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { cities, getCity, type City } from "@/content/cities";
-import { photos } from "@/content/media";
+import { lite, photos } from "@/content/media";
 import { accentBg } from "@/content/service-nav";
 import { services } from "@/content/services";
 import { site } from "@/content/site";
@@ -187,7 +187,7 @@ export default async function CityPage({ params }: PageProps<"/areas/[city]">) {
             <p className="mt-3 text-lg text-muted">תמונות מעבודות שביצענו באזורי ההפצה שלנו.</p>
           </Reveal>
           <PhotoGrid
-            photos={[photos.boardReader, photos.mailboxes, photos.doorHangersHall, photos.entranceBoard, photos.synagogueLeaflets, photos.boardPosterCrew]}
+            photos={[photos.boardReader, photos.mailboxes, photos.doorHangersHall, photos.entranceBoard, photos.synagogueLeaflets, photos.boardPosterCrew].map(lite)}
             className="mt-10"
           />
         </div>

@@ -1,6 +1,6 @@
 import { CtaBand, PageHero } from "@/components/layout/page-blocks";
 import { FilterableGallery } from "@/components/work/filterable-gallery";
-import { gallery } from "@/content/media";
+import { gallery, noBlur } from "@/content/media";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -21,7 +21,7 @@ export default function WorkPage() {
       />
       <section className="pb-20">
         <div className="container-page">
-          <FilterableGallery items={gallery} />
+          <FilterableGallery items={gallery.map((g) => ({ ...g, src: noBlur(g.src) }))} />
         </div>
       </section>
       <CtaBand title="רוצים לראות את המודעה שלכם כאן?" text="ספרו לנו מה אתם רוצים לפרסם ונחזור אליכם עם הצעה. את התמונות מהשטח תקבלו ישר לוואטסאפ." />

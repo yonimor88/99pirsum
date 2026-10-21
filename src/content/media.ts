@@ -57,6 +57,19 @@ import webDesign from "@/assets/images/work/web-design.jpg";
 
 export type Photo = { src: StaticImageData; alt: string };
 
+/** The image without its inline blur placeholder — keeps HTML small for below-the-fold images. */
+export function noBlur(img: StaticImageData): StaticImageData {
+  const copy = { ...img };
+  delete copy.blurDataURL;
+  delete copy.blurWidth;
+  delete copy.blurHeight;
+  return copy;
+}
+
+export function lite(p: Photo): Photo {
+  return { ...p, src: noBlur(p.src) };
+}
+
 const photo = (src: StaticImageData, alt: string): Photo => ({ src, alt });
 
 export const photos = {

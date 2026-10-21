@@ -107,7 +107,6 @@ export function ServicesShowcase({ services }: { services: ShowcaseService[] }) 
                     alt={current.image.alt}
                     fill
                     sizes="40vw"
-                    placeholder="blur"
                     className="object-cover"
                   />
                 </motion.div>
@@ -152,7 +151,6 @@ export function ServicesShowcase({ services }: { services: ShowcaseService[] }) 
                   alt={s.image.alt}
                   fill
                   sizes="(min-width: 640px) 50vw, 100vw"
-                  placeholder="blur"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <span className={cn("absolute top-4 right-4 grid size-11 place-items-center rounded-xl text-ink", accentBg[s.accent])}>

@@ -19,7 +19,6 @@ export function PostCard({ post, featured = false, className }: { post: PostMeta
             src={post.cover.src}
             alt={post.cover.alt}
             fill
-            placeholder="blur"
             sizes={featured ? "(min-width: 1024px) 60vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
             className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"
           />

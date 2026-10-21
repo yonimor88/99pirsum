@@ -1,7 +1,7 @@
 import { Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
-import { LogoFull } from "@/components/brand/logo";
 import { ColorBar, Dots } from "@/components/brand/ornaments";
 import { FacebookIcon, WazeIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { Marquee } from "@/components/ui/marquee";
@@ -29,7 +29,15 @@ export function SiteFooter() {
 
       <div className="container-page grid gap-12 py-16 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr] lg:gap-10">
         <div>
-          <LogoFull className="w-44 text-paper" />
+          {/* Static file so it is cached once instead of inlined into every page */}
+          <Image
+            src="/logo-full-light.svg"
+            alt="99 פרסום ומדיה — תמיד שואפים ל-100%"
+            width={176}
+            height={135}
+            unoptimized
+            className="w-44"
+          />
           <p className="mt-6 max-w-xs leading-relaxed text-paper/65">
             פרסום, הפצה ודפוס למגזר החרדי והדתי בכל הארץ. מאז {site.foundingYear}, מאלעד לכל ריכוז חרדי ודתי.
           </p>

@@ -25,7 +25,6 @@ export function PhotoGrid({ photos, className }: { photos: Photo[]; className?: 
             <Image
               src={p.src}
               alt={p.alt}
-              placeholder="blur"
               sizes="(min-width: 1024px) 30vw, 50vw"
               className="h-auto w-full transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
             />

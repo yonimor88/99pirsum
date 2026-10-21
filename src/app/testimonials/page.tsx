@@ -37,7 +37,7 @@ export default function TestimonialsPage() {
             <Reveal>
               <figure className="mx-auto grid max-w-4xl items-center gap-10 rounded-[2rem] bg-paper-2 p-8 sm:p-12 md:grid-cols-[1fr_1.1fr]">
                 <div className="overflow-hidden rounded-2xl bg-white p-3 shadow-[0_24px_50px_-28px_rgba(20,20,20,0.5)]">
-                  <Image src={dweck.extra.image} alt={dweck.extra.caption} placeholder="blur" sizes="(min-width: 768px) 40vw, 90vw" className="h-auto w-full" />
+                  <Image src={dweck.extra.image} alt={dweck.extra.caption} sizes="(min-width: 768px) 40vw, 90vw" className="h-auto w-full" />
                 </div>
                 <figcaption>
                   <p className="font-serif text-3xl leading-snug font-medium">

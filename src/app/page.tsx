@@ -19,7 +19,7 @@ import { PinnedPhoto } from "@/components/ui/pinned-photo";
 import { Reveal } from "@/components/ui/reveal";
 import { Mark, SectionHeading } from "@/components/ui/section-heading";
 import { totals } from "@/content/cities";
-import { photos } from "@/content/media";
+import { lite, photos } from "@/content/media";
 import { posts } from "@/content/posts";
 import { services } from "@/content/services";
 import { site } from "@/content/site";
@@ -38,7 +38,7 @@ export default function HomePage() {
     summary: s.summary,
     accent: s.accent,
     icon: s.icon,
-    image: s.hero,
+    image: lite(s.hero),
   }));
 
   return (

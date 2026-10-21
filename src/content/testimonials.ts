@@ -9,6 +9,7 @@ import potchimLetter from "@/assets/images/letters/potchim-shavua.jpg";
 import xsosLetter from "@/assets/images/letters/xsos.jpg";
 import dweckLetter from "@/assets/images/letters/yosef-dweck.jpg";
 import dweckMessage from "@/assets/images/letters/yosef-dweck-message.jpg";
+import { noBlur } from "./media";
 import type { Accent } from "./service-nav";
 
 export type Testimonial = {
@@ -41,8 +42,8 @@ export const testimonials: Testimonial[] = [
       "גם בלו״זים הכי צפופים שיש ובעבודות מאתגרות, תמיד ידעתם למצוא פתרון יצירתי ולהשאיר אותנו מרוצים.",
       "תודה רבה, ומאחל שתמשיכו תמיד להוביל ולהצליח!",
     ],
-    logo: gilLogo,
-    letter: gilLetter,
+    logo: noBlur(gilLogo),
+    letter: noBlur(gilLetter),
     accent: "yellow",
   },
   {
@@ -58,9 +59,9 @@ export const testimonials: Testimonial[] = [
       "במוצאי שבת לפני ההרצאה עשיתי סיבוב עם הרכב באלעד, וממש נהניתי לראות את העבודה היפה בפריסה על כל העיר.",
       "אין ספק כי יש לי למי לפנות בפעם הבאה בעז״ה.",
     ],
-    logo: dweckLogo,
-    letter: dweckLetter,
-    extra: { image: dweckMessage, caption: "ההודעה ששלח לנו יוסף אחרי ההרצאה" },
+    logo: noBlur(dweckLogo),
+    letter: noBlur(dweckLetter),
+    extra: { image: noBlur(dweckMessage), caption: "ההודעה ששלח לנו יוסף אחרי ההרצאה" },
     accent: "magenta",
   },
   {
@@ -76,8 +77,8 @@ export const testimonials: Testimonial[] = [
       "כל צוות ״פותחים שבוע״ רוצה להודות לכם על השירות הנפלא שאנו זוכים לו, היחס האישי והמענה לכל פנייה מצידנו במהירות ובמקצועיות.",
       "נשמח גם להמליץ עליכם ללקוחות ולספר להם כמה אנחנו מרוצים מהשירות הנפלא והאיכות האנושית של כל הצוות וההנהלה שלכם.",
     ],
-    logo: potchimLogo,
-    letter: potchimLetter,
+    logo: noBlur(potchimLogo),
+    letter: noBlur(potchimLetter),
     accent: "cyan",
   },
   {
@@ -92,8 +93,8 @@ export const testimonials: Testimonial[] = [
       "אתם שם תמיד בשבילנו, בשעות לא שעות — גם בשעות הקטנות של הלילה.",
       "הלוואי שעוד תצליחו ותעלו מעלה מעלה, ושירבו עסקים ואנשים כמותכם.",
     ],
-    logo: xsosLogo,
-    letter: xsosLetter,
+    logo: noBlur(xsosLogo),
+    letter: noBlur(xsosLetter),
     accent: "green",
   },
 ];
