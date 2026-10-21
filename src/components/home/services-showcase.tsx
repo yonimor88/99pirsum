@@ -1,7 +1,6 @@
 "use client";
 
 import { ArrowUpLeft } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -20,8 +19,6 @@ export type ShowcaseService = {
   icon: ServiceIcon;
   image: Photo;
 };
-
-const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function ServicesShowcase({ services }: { services: ShowcaseService[] }) {
   const [active, setActive] = useState(0);
@@ -59,14 +56,16 @@ export function ServicesShowcase({ services }: { services: ShowcaseService[] }) 
                     >
                       {s.title}
                     </span>
-                    <motion.span
-                      className="block overflow-hidden text-muted"
-                      initial={false}
-                      animate={{ height: isActive ? "auto" : 0, opacity: isActive ? 1 : 0 }}
-                      transition={{ duration: 0.45, ease: EASE }}
+                    <span
+                      className={cn(
+                        "grid transition-[grid-template-rows,opacity] duration-500 ease-[var(--ease-out-expo)]",
+                        isActive ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+                      )}
                     >
-                      <span className="block pt-1.5 pe-6">{s.blurb}</span>
-                    </motion.span>
+                      <span className="overflow-hidden text-muted">
+                        <span className="block pt-1.5 pe-6">{s.blurb}</span>
+                      </span>
+                    </span>
                   </span>
                   <span
                     className={cn(
@@ -76,14 +75,14 @@ export function ServicesShowcase({ services }: { services: ShowcaseService[] }) 
                   >
                     <ArrowUpLeft className="size-5" aria-hidden />
                   </span>
-                  {isActive && (
-                    <motion.span
-                      layoutId="service-rail"
-                      className="absolute top-0 -right-4 bottom-0 w-1 rounded-full"
-                      style={{ backgroundColor: accentVar[s.accent] }}
-                      transition={{ duration: 0.4, ease: EASE }}
-                    />
-                  )}
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "absolute top-0 -right-4 bottom-0 w-1 rounded-full transition-transform duration-500",
+                      isActive ? "scale-y-100" : "scale-y-0",
+                    )}
+                    style={{ backgroundColor: accentVar[s.accent] }}
+                  />
                 </Link>
               </li>
             );
@@ -93,47 +92,34 @@ export function ServicesShowcase({ services }: { services: ShowcaseService[] }) 
         <div className="relative">
           <div className="sticky top-28">
             <div className="relative aspect-[4/4.6] overflow-hidden rounded-[2rem] bg-ink">
-              <AnimatePresence initial={false}>
-                <motion.div
-                  key={current.slug}
-                  className="absolute inset-0"
-                  initial={{ opacity: 0, scale: 1.08 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.7, ease: EASE }}
-                >
-                  <Image
-                    src={current.image.src}
-                    alt={current.image.alt}
-                    fill
-                    sizes="40vw"
-                    className="object-cover"
-                  />
-                </motion.div>
-              </AnimatePresence>
+              {/* All previews stacked; the active one fades in */}
+              {services.map((s, i) => (
+                <Image
+                  key={s.slug}
+                  src={s.image.src}
+                  alt={i === active ? s.image.alt : ""}
+                  aria-hidden={i !== active}
+                  fill
+                  sizes="40vw"
+                  className={cn(
+                    "object-cover transition-[opacity,scale] duration-700 ease-[var(--ease-out-expo)]",
+                    i === active ? "scale-100 opacity-100" : "scale-[1.06] opacity-0",
+                  )}
+                />
+              ))}
               <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
-              <motion.div
+              <span
                 key={`${current.slug}-badge`}
-                className={cn("absolute top-6 right-6 grid size-16 place-items-center rounded-2xl text-ink", accentBg[current.accent])}
-                initial={{ rotate: -20, scale: 0.6, opacity: 0 }}
-                animate={{ rotate: -6, scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 260, damping: 16 }}
+                className={cn(
+                  "pop-in absolute top-6 right-6 grid size-16 -rotate-6 place-items-center rounded-2xl text-ink",
+                  accentBg[current.accent],
+                )}
               >
                 <ServiceGlyph icon={current.icon} className="size-7" />
-              </motion.div>
-              <div className="absolute inset-x-0 bottom-0 p-8 text-paper">
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={current.slug}
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.35, ease: EASE }}
-                  >
-                    <p className="font-display text-3xl font-bold">{current.title}</p>
-                    <p className="mt-3 max-w-md leading-relaxed text-paper/80">{current.summary}</p>
-                  </motion.div>
-                </AnimatePresence>
+              </span>
+              <div key={current.slug} className="enter-rise absolute inset-x-0 bottom-0 p-8 text-paper">
+                <p className="font-display text-3xl font-bold">{current.title}</p>
+                <p className="mt-3 max-w-md leading-relaxed text-paper/80">{current.summary}</p>
               </div>
             </div>
           </div>

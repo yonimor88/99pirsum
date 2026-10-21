@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/testimonials", priority: 0.6 },
     { path: "/about", priority: 0.6, images: img([photos.boardReaderTall]) },
     { path: "/blog", priority: 0.6 },
+    { path: "/glossary", priority: 0.5 },
     { path: "/accessibility", priority: 0.2 },
     { path: "/privacy", priority: 0.2 },
   ];

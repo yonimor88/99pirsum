@@ -1,7 +1,10 @@
 import { extractToc, readingMinutes, renderMarkdown } from "@/lib/markdown";
 import { photos, type Photo } from "../media";
 import { body as buildingEntrancePosters } from "./building-entrance-posters";
+import { body as distributionPricing } from "./distribution-pricing";
 import { body as doorHangersGuide } from "./door-hangers-guide";
+import { body as fridgeMagnets } from "./fridge-magnets";
+import { body as harediAdvertisingGuide } from "./haredi-advertising-guide";
 import { body as harediCampaignPlanning } from "./haredi-campaign-planning";
 import { body as harediMailboxDistribution } from "./haredi-mailbox-distribution";
 import { body as streetPosterDesignRules } from "./street-poster-design-rules";
@@ -23,6 +26,39 @@ type PostSource = PostMeta & { body: string };
 
 /** Newest first. To add an article: create a file in this folder and add an entry here. */
 const sources: PostSource[] = [
+  {
+    slug: "haredi-advertising-guide",
+    title: "פרסום במגזר החרדי: המדריך המלא לעסקים",
+    description:
+      "מי הקהל, איפה הוא נמצא, אילו ערוצים באמת מגיעים אליו ומתי לפרסם — המדריך המלא לפרסום במגזר החרדי והדתי, מניסיון בשטח מאז 1994.",
+    category: "מדריך",
+    date: "2026-10-22",
+    cover: photos.boardReader,
+    relatedService: "advertising-branding",
+    body: harediAdvertisingGuide,
+  },
+  {
+    slug: "distribution-pricing",
+    title: "כמה עולה הפצת עלונים? 7 דברים שקובעים את המחיר",
+    description:
+      "ערוץ, כמות, עיר, סוג החומר ותזמון — כל מה שמשפיע על מחיר הפצת עלונים, תלי דלת והדבקת מודעות, ואיך להשוות נכון בין הצעות מחיר.",
+    category: "הפצה",
+    date: "2026-10-22",
+    cover: photos.doorDrop,
+    relatedService: "mailbox-distribution",
+    body: distributionPricing,
+  },
+  {
+    slug: "fridge-magnets",
+    title: "מגנטים למקרר לעסקים: הפרסום שנשאר במטבח",
+    description:
+      "למה מגנט מקרר הוא אחד מכלי הפרסום הכי ארוכי טווח, אילו גדלים יש, איך מעצבים מגנט שנשאר על המקרר ואיך הוא מגיע לשם.",
+    category: "דפוס",
+    date: "2026-10-22",
+    cover: photos.doorHanger2,
+    relatedService: "printing",
+    body: fridgeMagnets,
+  },
   {
     slug: "haredi-campaign-planning",
     title: "איך לתכנן קמפיין פרסום במגזר החרדי: מדריך צעד אחר צעד",

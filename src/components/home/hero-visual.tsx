@@ -1,25 +1,21 @@
-"use client";
-
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 
 import { LogoMark } from "@/components/brand/logo";
 import { CropMarks } from "@/components/brand/ornaments";
 import { PinnedPhoto } from "@/components/ui/pinned-photo";
 import { photos } from "@/content/media";
 
-/** Pinned field photos with scroll parallax, the rotating stamp and floating brand dots. */
-export function HeroVisual() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const yMain = useTransform(scrollYProgress, [0, 1], [0, 90]);
-  const ySmallA = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const ySmallB = useTransform(scrollYProgress, [0, 1], [0, 160]);
-  const rotateStamp = useTransform(scrollYProgress, [0, 1], [0, 120]);
+const drift = (px: number) => ({ "--parallax": `${px}px` }) as CSSProperties;
 
+/**
+ * Pinned field photos that drift at different speeds as the page scrolls, the
+ * rotating stamp and floating brand dots. Scroll effects are CSS scroll-driven
+ * animations (`.parallax`, `.spin-on-scroll`) — no JavaScript.
+ */
+export function HeroVisual() {
   return (
-    <div ref={ref} className="relative mx-auto aspect-[1/1.02] w-full max-w-[34rem] lg:max-w-none">
-      <motion.div className="absolute inset-x-[6%] top-[4%] bottom-[14%]" style={{ y: yMain }}>
+    <div className="relative mx-auto aspect-[1/1.02] w-full max-w-[34rem] lg:max-w-none">
+      <div className="parallax absolute inset-x-[6%] top-[4%] bottom-[14%]" style={drift(90)}>
         <div className="relative h-full">
           <CropMarks />
           <PinnedPhoto
@@ -32,23 +28,23 @@ export function HeroVisual() {
             sizes="(min-width: 1024px) 40vw, 90vw"
           />
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div className="absolute top-[-4%] left-[-4%] w-[38%]" style={{ y: ySmallA }}>
+      <div className="parallax absolute top-[-4%] left-[-4%] w-[38%]" style={drift(-60)}>
         <PinnedPhoto photo={photos.mailboxesTall} rotate={-7} intro delay={0.25} tape="corners" sizes="200px" />
-      </motion.div>
+      </div>
 
-      <motion.div className="absolute right-[-2%] bottom-[-2%] w-[44%]" style={{ y: ySmallB }}>
+      <div className="parallax absolute right-[-2%] bottom-[-2%] w-[44%]" style={drift(160)}>
         <PinnedPhoto photo={photos.doorHangersHall} rotate={5} intro delay={0.4} sizes="260px" />
-      </motion.div>
+      </div>
 
       <div
         className="pop-in absolute bottom-[10%] left-[2%] z-20 size-32 sm:size-36"
         style={{ "--intro-delay": "0.8s" } as CSSProperties}
       >
-        <motion.div style={{ rotate: rotateStamp }} className="size-full">
+        <div className="spin-on-scroll size-full">
           <Stamp />
-        </motion.div>
+        </div>
       </div>
 
       {[

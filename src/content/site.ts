@@ -50,6 +50,7 @@ export const footerCompanyNav: NavLink[] = [
   { href: "/work", label: "תמונות מהשטח" },
   { href: "/testimonials", label: "ממליצים עלינו" },
   { href: "/blog", label: "מאמרים וטיפים" },
+  { href: "/glossary", label: "מילון מונחים" },
   { href: "/contact", label: "צור קשר" },
 ];
 

@@ -29,7 +29,9 @@ const marked = new Marked({
 });
 
 export function renderMarkdown(md: string) {
-  return marked.parse(md, { async: false }) as string;
+  const html = marked.parse(md, { async: false }) as string;
+  // Wide tables scroll inside their own box instead of widening the page on phones
+  return html.replace(/<table>/g, '<div class="table-scroll"><table>').replace(/<\/table>/g, "</table></div>");
 }
 
 export function extractToc(md: string): TocItem[] {

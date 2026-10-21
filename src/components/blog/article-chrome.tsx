@@ -1,19 +1,16 @@
 "use client";
 
 import { Check, Link2 } from "lucide-react";
-import { motion, useScroll, useSpring } from "motion/react";
 import { useState } from "react";
 
 import { FacebookIcon, WhatsAppIcon } from "@/components/ui/icons";
 
+/** Scroll progress bar — a CSS scroll-driven animation (`.reading-progress`). */
 export function ReadingProgress() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
   return (
-    <motion.div
+    <div
       aria-hidden
-      className="fixed inset-x-0 top-0 z-[55] h-1 origin-right bg-[linear-gradient(to_left,var(--color-cyan),var(--color-magenta),var(--color-yellow),var(--color-green))]"
-      style={{ scaleX }}
+      className="reading-progress fixed inset-x-0 top-0 z-[55] h-1 bg-[linear-gradient(to_left,var(--color-cyan),var(--color-magenta),var(--color-yellow),var(--color-green))]"
     />
   );
 }

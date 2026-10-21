@@ -1,5 +1,6 @@
 import { ArrowUpLeft, Check, Phone } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { PostCard } from "@/components/blog/post-card";
@@ -14,6 +15,7 @@ import { PinnedPhoto } from "@/components/ui/pinned-photo";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { posts } from "@/content/posts";
 import { accentBg } from "@/content/service-nav";
+import { cities } from "@/content/cities";
 import { lite } from "@/content/media";
 import { getService, services } from "@/content/services";
 import { primaryPhone, site, whatsappLink } from "@/content/site";
@@ -238,6 +240,32 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           </Reveal>
         </div>
       </section>
+
+      {/* Cities — field services only */}
+      {service.group === "field" && (
+        <section className="pb-20">
+          <div className="container-page">
+            <Reveal>
+              <h2 className="text-3xl font-extrabold sm:text-4xl">{service.title} — באילו ערים?</h2>
+              <p className="mt-3 text-lg text-muted">
+                בכל הריכוזים החרדיים והדתיים בארץ. לנתונים ולפרטים על כל עיר:
+              </p>
+            </Reveal>
+            <ul className="mt-8 flex flex-wrap gap-2">
+              {cities.map((c) => (
+                <li key={c.slug}>
+                  <Link
+                    href={`/areas/${c.slug}`}
+                    className="inline-flex rounded-full border border-ink/15 bg-paper px-5 py-2.5 font-display font-semibold transition hover:border-ink hover:bg-ink hover:text-paper"
+                  >
+                    {service.title} {c.inName}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* Related articles */}
       {articles.length > 0 && (

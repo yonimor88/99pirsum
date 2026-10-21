@@ -1,12 +1,15 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
 import Image, { type StaticImageData } from "next/image";
 import { useCallback, useEffect, useRef } from "react";
 
 export type LightboxItem = { src: StaticImageData; alt: string; caption?: string };
 
+/**
+ * Full-screen image viewer on the native <dialog> element: the browser handles
+ * focus trapping, Escape and the backdrop. Arrow keys move between images.
+ */
 export function Lightbox({
   items,
   index,
@@ -18,9 +21,7 @@ export function Lightbox({
   onClose: () => void;
   onIndexChange: (i: number) => void;
 }) {
-  const open = index !== null;
-  const closeRef = useRef<HTMLButtonElement>(null);
-  const lastFocus = useRef<HTMLElement | null>(null);
+  const ref = useRef<HTMLDialogElement>(null);
 
   const go = useCallback(
     (delta: number) => {
@@ -31,86 +32,68 @@ export function Lightbox({
   );
 
   useEffect(() => {
-    if (!open) return;
-    lastFocus.current = document.activeElement as HTMLElement;
-    closeRef.current?.focus();
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      // RTL: left arrow moves forward
-      if (e.key === "ArrowLeft") go(1);
-      if (e.key === "ArrowRight") go(-1);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
-      lastFocus.current?.focus();
-    };
-  }, [open, onClose, go]);
+    const dialog = ref.current;
+    if (!dialog) return;
+    if (index !== null && !dialog.open) dialog.showModal();
+    if (index === null && dialog.open) dialog.close();
+  }, [index]);
 
   const item = index !== null ? items[index] : null;
 
   return (
-    <AnimatePresence>
-      {open && item && (
-        <motion.div
-          role="dialog"
-          aria-modal="true"
-          aria-label={item.alt}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/92 p-4 backdrop-blur-sm sm:p-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
+    <dialog
+      ref={ref}
+      className="lightbox"
+      aria-label={item?.alt}
+      onClose={onClose}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      onKeyDown={(e) => {
+        // RTL: left arrow moves forward
+        if (e.key === "ArrowLeft") go(1);
+        if (e.key === "ArrowRight") go(-1);
+      }}
+    >
+      {item && index !== null && (
+        <div
+          className="flex h-full w-full items-center justify-center p-4 sm:p-10"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) onClose();
+          }}
         >
           <button
-            ref={closeRef}
             type="button"
+            autoFocus
             onClick={onClose}
             className="absolute top-4 left-4 z-10 grid size-12 place-items-center rounded-full bg-paper text-ink transition hover:bg-yellow"
             aria-label="סגירה"
           >
-            <X className="size-6" />
+            <X className="size-6" aria-hidden />
           </button>
 
           {items.length > 1 && (
             <>
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  go(-1);
-                }}
+                onClick={() => go(-1)}
                 className="absolute top-1/2 right-3 z-10 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-paper/90 text-ink transition hover:bg-yellow sm:right-6"
                 aria-label="התמונה הקודמת"
               >
-                <ChevronRight className="size-6" />
+                <ChevronRight className="size-6" aria-hidden />
               </button>
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  go(1);
-                }}
+                onClick={() => go(1)}
                 className="absolute top-1/2 left-3 z-10 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-paper/90 text-ink transition hover:bg-yellow sm:left-6"
                 aria-label="התמונה הבאה"
               >
-                <ChevronLeft className="size-6" />
+                <ChevronLeft className="size-6" aria-hidden />
               </button>
             </>
           )}
 
-          <motion.figure
-            key={index}
-            className="relative flex max-h-full max-w-6xl flex-col items-center"
-            initial={{ opacity: 0, scale: 0.94, rotate: -1.5 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 220, damping: 24 }}
-            onClick={(e) => e.stopPropagation()}
-          >
+          <figure key={index} className="enter-rise relative flex max-h-full max-w-6xl flex-col items-center">
             <div className="bg-white p-2 sm:p-3">
               <Image
                 src={item.src}
@@ -123,14 +106,14 @@ export function Lightbox({
             <figcaption className="mt-4 text-center text-paper/80">
               {item.caption ?? item.alt}
               {items.length > 1 && (
-                <span className="ms-3 font-display text-sm text-paper/50 tabular-nums">
+                <span dir="ltr" className="ms-3 inline-block font-display text-sm text-paper/50 tabular-nums">
                   {index + 1} / {items.length}
                 </span>
               )}
             </figcaption>
-          </motion.figure>
-        </motion.div>
+          </figure>
+        </div>
       )}
-    </AnimatePresence>
+    </dialog>
   );
 }

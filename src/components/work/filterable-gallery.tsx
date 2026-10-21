@@ -1,10 +1,11 @@
 "use client";
 
 import { Expand } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 
+import { usePrefersLessMotion } from "@/components/a11y/motion-provider";
 import { Lightbox } from "@/components/ui/lightbox";
 import { galleryCategories, type GalleryCategory, type GalleryItem } from "@/content/media";
 import { cn } from "@/lib/cn";
@@ -12,6 +13,7 @@ import { cn } from "@/lib/cn";
 export function FilterableGallery({ items }: { items: GalleryItem[] }) {
   const [filter, setFilter] = useState<GalleryCategory | "all">("all");
   const [open, setOpen] = useState<number | null>(null);
+  const lessMotion = usePrefersLessMotion();
   const visible = useMemo(() => (filter === "all" ? items : items.filter((i) => i.category === filter)), [filter, items]);
 
   const counts = useMemo(() => {
@@ -23,7 +25,7 @@ export function FilterableGallery({ items }: { items: GalleryItem[] }) {
   const tabs = [{ id: "all" as const, label: "הכל", count: items.length }, ...galleryCategories.map((c) => ({ ...c, count: counts.get(c.id) ?? 0 }))];
 
   return (
-    <>
+    <MotionConfig reducedMotion={lessMotion ? "always" : "user"}>
       <div className="no-scrollbar -mx-5 overflow-x-auto px-5 sm:mx-0 sm:px-0">
         <div role="group" aria-label="סינון לפי סוג עבודה" className="flex w-max gap-2">
           {tabs.map((t) => {
@@ -98,6 +100,6 @@ export function FilterableGallery({ items }: { items: GalleryItem[] }) {
       </motion.ul>
 
       <Lightbox items={visible} index={open} onClose={() => setOpen(null)} onIndexChange={setOpen} />
-    </>
+    </MotionConfig>
   );
 }

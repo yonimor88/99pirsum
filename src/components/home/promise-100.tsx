@@ -1,48 +1,21 @@
-"use client";
-
 import { Camera, Clock, RefreshCw, ShieldCheck, type LucideIcon } from "lucide-react";
-import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
-import { useRef } from "react";
+import type { CSSProperties } from "react";
 
-import { usePrefersLessMotion } from "@/components/a11y/motion-provider";
 import { ColorBar, RegMark } from "@/components/brand/ornaments";
 import { cn } from "@/lib/cn";
 
 const promises: { icon: LucideIcon; title: string; text: string; at: number; color: string }[] = [
-  {
-    icon: Camera,
-    title: "תמונות מהשטח",
-    text: "אחרי כל הדבקה נשלחות אליכם תמונות ישר לוואטסאפ.",
-    at: 0.22,
-    color: "bg-yellow",
-  },
-  {
-    icon: ShieldCheck,
-    title: "פיקוח מדגמי",
-    text: "בסיום כל הפצה אנחנו בודקים בשטח שהחומר הגיע ליעדו.",
-    at: 0.42,
-    color: "bg-green",
-  },
-  {
-    icon: RefreshCw,
-    title: "הדבקה חוזרת",
-    text: "מודעה נקרעה או הושחתה? אנחנו יוצאים לתקן.",
-    at: 0.62,
-    color: "bg-cyan",
-  },
+  { icon: Camera, title: "תמונות מהשטח", text: "אחרי כל הדבקה נשלחות אליכם תמונות ישר לוואטסאפ.", at: 22, color: "bg-yellow" },
+  { icon: ShieldCheck, title: "פיקוח מדגמי", text: "בסיום כל הפצה אנחנו בודקים בשטח שהחומר הגיע ליעדו.", at: 42, color: "bg-green" },
+  { icon: RefreshCw, title: "הדבקה חוזרת", text: "מודעה נקרעה או הושחתה? אנחנו יוצאים לתקן.", at: 62, color: "bg-cyan" },
   {
     icon: Clock,
     title: "זמינות אמיתית",
     text: "״בשעות לא שעות — גם בשעות הקטנות של הלילה״, כפי שכתבו לנו לקוחות.",
-    at: 0.82,
+    at: 82,
     color: "bg-magenta",
   },
 ];
-
-export function Promise100() {
-  const lessMotion = usePrefersLessMotion();
-  return lessMotion ? <StaticPromise /> : <ScrollPromise />;
-}
 
 function Copy() {
   return (
@@ -64,36 +37,29 @@ function Copy() {
   );
 }
 
-function ScrollPromise() {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const value = useTransform(scrollYProgress, [0.04, 0.9], [0, 100], { clamp: true });
-  const display = useTransform(value, (v) => Math.round(v).toString());
-  const barWidth = useTransform(value, (v) => `${v}%`);
-  const doneScale = useTransform(value, [97, 100], [0, 1]);
-
+/**
+ * The number counts 0 → 100 and the promises light up as the section scrolls.
+ * Pure CSS (view timeline + an animated integer custom property, see globals.css);
+ * without support it shows a static 100%.
+ */
+export function Promise100() {
   return (
-    <section ref={ref} className="relative h-[280vh] bg-ink" aria-label="תמיד שואפים ל-100%">
-      <div className="sticky top-0 flex h-svh flex-col overflow-hidden">
+    <section className="promise-section relative bg-ink" aria-label="תמיד שואפים ל-100%">
+      <div className="promise-sticky flex flex-col overflow-hidden">
         <div aria-hidden className="halftone absolute inset-0 text-paper/[0.06]" />
         <div className="container-page relative grid flex-1 items-center gap-10 py-20 lg:grid-cols-[1.1fr_1fr]">
           <div className="relative">
-            <div className="flex items-start font-display leading-[0.8] font-black text-paper" dir="ltr">
-              <motion.span className="text-[34vw] tabular-nums sm:text-[28vw] lg:text-[17rem] xl:text-[20rem]">
-                {display}
-              </motion.span>
+            <p className="sr-only">תמיד שואפים ל-100%</p>
+            <div aria-hidden className="flex items-start font-display leading-[0.8] font-black text-paper" dir="ltr">
+              <span className="promise-number text-[34vw] tabular-nums sm:text-[28vw] lg:text-[17rem] xl:text-[20rem]" />
               <span className="mt-[0.12em] text-[14vw] text-yellow sm:text-[11vw] lg:text-[7rem] xl:text-[8rem]">%</span>
             </div>
-            <motion.div
-              className="absolute -top-4 right-0 flex gap-2 lg:top-0"
-              style={{ scale: doneScale, opacity: doneScale }}
-              aria-hidden
-            >
+            <div className="promise-done absolute -top-4 right-0 flex gap-2 lg:top-0" aria-hidden>
               <span className="size-5 rounded-full bg-yellow" />
               <span className="size-5 rounded-full bg-green" />
               <span className="size-5 rounded-full bg-cyan" />
               <span className="size-5 rounded-full bg-magenta" />
-            </motion.div>
+            </div>
             <div className="mt-8 hidden max-w-xl lg:block">
               <Copy />
             </div>
@@ -104,85 +70,35 @@ function ScrollPromise() {
               <Copy />
             </div>
             <ul className="space-y-3">
-              {promises.map((p) => (
-                <PromiseItem key={p.title} item={p} progress={scrollYProgress} />
-              ))}
+              {promises.map((p) => {
+                const Icon = p.icon;
+                return (
+                  <li
+                    key={p.title}
+                    className="promise-item flex items-start gap-4 rounded-3xl border border-paper/10 bg-paper/[0.04] p-5 text-paper backdrop-blur-sm"
+                    style={{ "--at": `${p.at}%` } as CSSProperties}
+                  >
+                    <span className="relative grid size-12 shrink-0 place-items-center rounded-2xl bg-paper/10">
+                      <Icon className="size-6" aria-hidden />
+                      <span className={cn("promise-dot absolute -top-1 -left-1 size-3.5 rounded-full ring-4 ring-ink", p.color)} aria-hidden />
+                    </span>
+                    <span>
+                      <span className="block font-display text-xl font-bold">{p.title}</span>
+                      <span className="mt-1 block text-paper/65">{p.text}</span>
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
 
-        <div className="relative h-1.5 w-full bg-paper/10">
-          <motion.div className="absolute inset-y-0 right-0 overflow-hidden" style={{ width: barWidth }}>
-            <ColorBar className="h-full w-[100vw]" />
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PromiseItem({
-  item,
-  progress,
-}: {
-  item: (typeof promises)[number];
-  progress: MotionValue<number>;
-}) {
-  const opacity = useTransform(progress, [item.at - 0.08, item.at], [0.25, 1]);
-  const x = useTransform(progress, [item.at - 0.08, item.at], [-24, 0]);
-  const dot = useTransform(progress, [item.at - 0.02, item.at + 0.02], [0, 1]);
-  const Icon = item.icon;
-  return (
-    <motion.li
-      style={{ opacity, x }}
-      className="flex items-start gap-4 rounded-3xl border border-paper/10 bg-paper/[0.04] p-5 text-paper backdrop-blur-sm"
-    >
-      <span className="relative grid size-12 shrink-0 place-items-center rounded-2xl bg-paper/10">
-        <Icon className="size-6" aria-hidden />
-        <motion.span
-          style={{ scale: dot }}
-          className={cn("absolute -top-1 -left-1 size-3.5 rounded-full ring-4 ring-ink", item.color)}
-          aria-hidden
-        />
-      </span>
-      <span>
-        <span className="block font-display text-xl font-bold">{item.title}</span>
-        <span className="mt-1 block text-paper/65">{item.text}</span>
-      </span>
-    </motion.li>
-  );
-}
-
-function StaticPromise() {
-  return (
-    <section className="relative bg-ink py-24" aria-label="תמיד שואפים ל-100%">
-      <div className="container-page grid items-center gap-12 lg:grid-cols-2">
-        <div>
-          <p className="font-display text-[8rem] leading-none font-black text-paper" dir="ltr">
-            100<span className="text-yellow">%</span>
-          </p>
-          <div className="mt-6">
-            <Copy />
+        <div className="relative h-1.5 w-full overflow-hidden bg-paper/10" aria-hidden>
+          <div className="promise-bar absolute inset-0">
+            <ColorBar className="h-full" />
           </div>
         </div>
-        <ul className="space-y-3">
-          {promises.map((p) => {
-            const Icon = p.icon;
-            return (
-              <li key={p.title} className="flex items-start gap-4 rounded-3xl border border-paper/10 bg-paper/[0.04] p-5 text-paper">
-                <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-paper/10">
-                  <Icon className="size-6" aria-hidden />
-                </span>
-                <span>
-                  <span className="block font-display text-xl font-bold">{p.title}</span>
-                  <span className="mt-1 block text-paper/65">{p.text}</span>
-                </span>
-              </li>
-            );
-          })}
-        </ul>
       </div>
-      <ColorBar className="absolute inset-x-0 bottom-0" />
     </section>
   );
 }

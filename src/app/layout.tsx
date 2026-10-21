@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Frank_Ruhl_Libre, Heebo, Rubik } from "next/font/google";
 
 import { a11yBootScript } from "@/components/a11y/a11y-store";
-import { MotionProvider } from "@/components/a11y/motion-provider";
 import { FloatingActions } from "@/components/layout/floating-actions";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -60,14 +59,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: a11yBootScript }} />
       </head>
       <body className="paper-grain min-h-svh">
-        <MotionProvider>
-          <SiteHeader />
-          <main id="main" tabIndex={-1} className="outline-none">
-            {children}
-          </main>
-          <SiteFooter />
-          <FloatingActions />
-        </MotionProvider>
+        <SiteHeader />
+        <main id="main" tabIndex={-1} className="outline-none">
+          {children}
+        </main>
+        <SiteFooter />
+        <FloatingActions />
         <JsonLd data={localBusinessJsonLd()} />
       </body>
     </html>

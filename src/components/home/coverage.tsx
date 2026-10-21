@@ -2,14 +2,12 @@
 
 import { ArrowUpLeft, Building, Mailbox, Newspaper } from "lucide-react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "motion/react";
 import { useId, useState, type CSSProperties } from "react";
 
 import { Counter } from "@/components/ui/counter";
 import { cities, moreCities, type City } from "@/content/cities";
 import { cn } from "@/lib/cn";
 
-const EASE = [0.16, 1, 0.3, 1] as const;
 const PER_DOT = 250;
 const maxMailboxes = Math.max(...cities.map((c) => c.mailboxes));
 const DOT_COLORS = ["bg-yellow", "bg-green", "bg-cyan", "bg-magenta"];
@@ -61,12 +59,9 @@ export function CoverageExplorer({ tone = "paper" }: { tone?: "paper" | "ink" })
                 </span>
               </span>
               <span className={cn("relative z-10 mt-3 block h-1.5 overflow-hidden rounded-full", selected ? "bg-current/15" : "bg-current/10")}>
-                <motion.span
-                  className={cn("absolute inset-y-0 right-0 rounded-full", selected ? "bg-yellow" : "bg-current/40")}
-                  initial={{ width: 0 }}
-                  whileInView={{ width: `${(c.mailboxes / maxMailboxes) * 100}%` }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1.1, ease: EASE, delay: i * 0.06 }}
+                <span
+                  className={cn("grow-x-reveal absolute inset-y-0 right-0 rounded-full", selected ? "bg-yellow" : "bg-current/40")}
+                  style={{ width: `${(c.mailboxes / maxMailboxes) * 100}%` }}
                 />
               </span>
             </button>
@@ -87,15 +82,7 @@ export function CoverageExplorer({ tone = "paper" }: { tone?: "paper" | "ink" })
         )}
       >
         <div aria-hidden className={cn("halftone absolute inset-0", dark ? "text-ink/[0.05]" : "text-paper/[0.05]")} />
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={city.slug}
-            className="relative"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.4, ease: EASE }}
-          >
+        <div key={city.slug} className="enter-rise relative">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className={cn("font-display text-sm font-semibold", dark ? "text-muted" : "text-paper/55")}>
@@ -122,8 +109,7 @@ export function CoverageExplorer({ tone = "paper" }: { tone?: "paper" | "ink" })
             </dl>
 
             <DotField city={city} dark={dark} />
-          </motion.div>
-        </AnimatePresence>
+        </div>
       </div>
     </div>
   );

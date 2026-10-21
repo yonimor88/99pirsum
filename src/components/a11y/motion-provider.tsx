@@ -1,33 +1,27 @@
 "use client";
 
-import { MotionConfig, useReducedMotion } from "motion/react";
-import { useSyncExternalStore, type ReactNode } from "react";
+import { useSyncExternalStore } from "react";
 
 import { useA11ySettings } from "./a11y-store";
 
-export function MotionProvider({ children }: { children: ReactNode }) {
-  const { noMotion } = useA11ySettings();
-  return <MotionConfig reducedMotion={noMotion ? "always" : "user"}>{children}</MotionConfig>;
-}
+const QUERY = "(prefers-reduced-motion: reduce)";
 
-const subscribeNoop = () => () => {};
-
-/** False during SSR and hydration, true afterwards. */
-export function useHydrated() {
-  return useSyncExternalStore(
-    subscribeNoop,
-    () => true,
-    () => false,
-  );
+function subscribe(onChange: () => void) {
+  const mq = window.matchMedia(QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
 }
 
 /**
  * True when the visitor asked for less motion (OS setting or our accessibility menu).
- * Always false until hydration completes, so server and client markup match.
+ * Always false during SSR and hydration, so server and client markup match.
  */
 export function usePrefersLessMotion() {
-  const system = useReducedMotion();
+  const system = useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(QUERY).matches,
+    () => false,
+  );
   const { noMotion } = useA11ySettings();
-  const hydrated = useHydrated();
-  return hydrated && (Boolean(system) || noMotion);
+  return system || noMotion;
 }

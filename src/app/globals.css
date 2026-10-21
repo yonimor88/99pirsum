@@ -202,6 +202,26 @@
   .prose-99 :where(ul, ol) {
     padding-inline-start: 1.4em;
   }
+  .prose-99 .table-scroll {
+    overflow-x: auto;
+    margin-block: 2em;
+    border-radius: 1rem;
+    border: 1px solid var(--color-paper-3);
+    background: white;
+  }
+  .prose-99 .table-scroll table {
+    margin: 0;
+    min-width: 32rem;
+    font-size: 0.95em;
+  }
+  .prose-99 :where(th, td) {
+    text-align: start;
+    padding: 0.7em 1em;
+  }
+  .prose-99 :where(thead th) {
+    background: var(--color-paper-2);
+    font-family: var(--font-display);
+  }
 }
 
 /* ------------------------------------------------------------------ *
@@ -367,6 +387,195 @@
       animation-range: entry 20% cover 45%;
     }
   }
+}
+
+@keyframes grow-x {
+  from {
+    scale: 0 1;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes parallax {
+  to {
+    translate: 0 var(--parallax, 0px);
+  }
+}
+
+@keyframes spin-scroll {
+  to {
+    rotate: 120deg;
+  }
+}
+
+/* One-shot entrances for elements that mount on interaction (re-keyed panels, menus) */
+.enter-rise {
+  animation: rise 0.45s var(--ease-out-expo) both;
+}
+.enter-fade {
+  animation: fade-in 0.6s var(--ease-out-expo) both;
+}
+html.a11y-no-motion .enter-rise,
+html.a11y-no-motion .enter-fade {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .enter-rise,
+  .enter-fade {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    /* Hero photos drift at different speeds as the page scrolls */
+    html:not(.a11y-no-motion) .parallax {
+      animation: parallax linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+    html:not(.a11y-no-motion) .spin-on-scroll {
+      animation: spin-scroll linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+    /* Article reading progress */
+    html:not(.a11y-no-motion) .reading-progress {
+      display: block;
+      animation: grow-x linear both;
+      animation-timeline: scroll(root);
+    }
+    html:not(.a11y-no-motion) .grow-x-reveal {
+      animation: grow-x linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+  }
+}
+.reading-progress {
+  display: none;
+  transform-origin: right;
+}
+.grow-x-reveal {
+  transform-origin: right;
+}
+
+/*
+ * "Why 99?" section: the number counts 0 → 100 and the promises light up as
+ * the section scrolls, driven by a view timeline. Falls back to a static 100%.
+ */
+@property --pct {
+  syntax: "<integer>";
+  initial-value: 100;
+  inherits: true;
+}
+@keyframes pct {
+  from {
+    --pct: 0;
+  }
+  to {
+    --pct: 100;
+  }
+}
+@keyframes promise-item {
+  from {
+    opacity: 0.25;
+    translate: -24px 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+.promise-number {
+  /* reserve three digits so the layout doesn't shift as the number grows */
+  display: inline-block;
+  min-width: 3ch;
+  text-align: right;
+}
+.promise-number::before {
+  counter-reset: pct var(--pct);
+  content: counter(pct);
+}
+.promise-done,
+.promise-dot {
+  scale: 1;
+}
+.promise-bar {
+  transform-origin: right;
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    html:not(.a11y-no-motion) .promise-section {
+      height: 280vh;
+      view-timeline-name: --promise;
+    }
+    html:not(.a11y-no-motion) .promise-sticky {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+    }
+    html:not(.a11y-no-motion) .promise-number,
+    html:not(.a11y-no-motion) .promise-bar {
+      animation: pct linear both;
+      animation-timeline: --promise;
+      animation-range: contain 4% contain 90%;
+    }
+    html:not(.a11y-no-motion) .promise-bar {
+      animation-name: grow-x;
+    }
+    html:not(.a11y-no-motion) .promise-item {
+      animation: promise-item linear both;
+      animation-timeline: --promise;
+      animation-range: contain calc(var(--at) - 8%) contain var(--at);
+    }
+    html:not(.a11y-no-motion) .promise-dot {
+      animation: pop linear both;
+      animation-timeline: --promise;
+      animation-range: contain calc(var(--at) - 2%) contain calc(var(--at) + 2%);
+    }
+    html:not(.a11y-no-motion) .promise-done {
+      animation: pop linear both;
+      animation-timeline: --promise;
+      animation-range: contain 87% contain 91%;
+    }
+  }
+}
+
+/* Native <dialog> lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+.lightbox::backdrop {
+  background: rgb(20 20 20 / 0.92);
+  backdrop-filter: blur(4px);
+}
+.lightbox[open] {
+  animation: fade-in 0.25s ease-out both;
+}
+html:has(dialog[open]) {
+  overflow: hidden;
 }
 
 /* Pinned photo prints: straighten and lift on hover */
