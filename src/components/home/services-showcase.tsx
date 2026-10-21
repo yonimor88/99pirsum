@@ -143,14 +143,8 @@ export function ServicesShowcase({ services }: { services: ShowcaseService[] }) 
 
       {/* Mobile / tablet: cards */}
       <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:hidden">
-        {services.map((s, i) => (
-          <motion.li
-            key={s.slug}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "0px 0px -8% 0px" }}
-            transition={{ duration: 0.6, ease: EASE, delay: (i % 2) * 0.06 }}
-          >
+        {services.map((s) => (
+          <li key={s.slug} className="reveal">
             <Link href={`/services/${s.slug}`} className="group block overflow-hidden rounded-3xl bg-paper-2">
               <div className="relative aspect-[16/10] overflow-hidden">
                 <Image
@@ -173,7 +167,7 @@ export function ServicesShowcase({ services }: { services: ShowcaseService[] }) 
                 <ArrowUpLeft className="mt-1 size-5 shrink-0" aria-hidden />
               </div>
             </Link>
-          </motion.li>
+          </li>
         ))}
       </ul>
     </>

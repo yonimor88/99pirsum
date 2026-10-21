@@ -23,7 +23,9 @@ export function Counter({
   suffix?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
+  // Fire as soon as any part is on screen: counters near the bottom edge of the
+  // first screen must still count up without the visitor scrolling.
+  const inView = useInView(ref, { once: true });
   const lessMotion = usePrefersLessMotion();
   const started = useRef(false);
 

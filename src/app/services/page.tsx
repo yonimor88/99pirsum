@@ -11,7 +11,7 @@ import { services } from "@/content/services";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "השירותים שלנו",
+  title: "שירותי פרסום והפצה למגזר החרדי",
   description:
     "הפצה בתיבות דואר, הדבקת מודעות, מודעות בכניסות בניינים, תלי דלת, עלונים בבתי כנסת, דפוס, שילוט, קונסטרוקציה, מיתוג ובניית אתרים — הכל אצל גורם אחד.",
   path: "/services",
@@ -22,9 +22,9 @@ export default function ServicesPage() {
     <>
       <PageHero
         eyebrow="השירותים שלנו"
-        title="כל הדרכים להגיע לקהל."
+        title="שירותי פרסום והפצה למגזר החרדי."
         crumbs={[{ name: "שירותים", path: "/services" }]}
-        description="עשרה שירותים, צוות אחד. אנחנו מתאימים לכל לקוח את התמהיל הנכון לו — ולכיסו — מתוך כל ערוצי הפרסום הקיימים במגזר החרדי והדתי."
+        description="כל הדרכים להגיע לקהל — עשרה שירותים, צוות אחד. אנחנו מתאימים לכל לקוח את התמהיל הנכון לו — ולכיסו — מתוך כל ערוצי הפרסום הקיימים במגזר החרדי והדתי."
       >
         <ButtonLink href="/contact" size="lg">
           לא בטוחים מה מתאים? דברו איתנו

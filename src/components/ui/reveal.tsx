@@ -1,80 +1,55 @@
-"use client";
+import type { CSSProperties, ReactNode } from "react";
 
-import { motion, stagger, type Variants } from "motion/react";
-import type { ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
-const EASE = [0.16, 1, 0.3, 1] as const;
+/*
+ * Scroll reveals use native CSS scroll-driven animations (`.reveal` in
+ * globals.css): no JavaScript, nothing to hydrate, and content is visible
+ * without JS or in browsers that don't support them.
+ */
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
+  /** Stagger step, 0–0.3 */
   delay?: number;
   y?: number;
   as?: "div" | "li" | "section" | "article" | "span";
 };
 
-/** Fade-and-rise once when scrolled into view. */
-export function Reveal({ children, className, delay = 0, y = 28, as = "div" }: RevealProps) {
-  const Component = motion[as];
+/** Fade-and-rise as the element scrolls into view. */
+export function Reveal({ children, className, delay = 0, y = 28, as: Tag = "div" }: RevealProps) {
   return (
-    <Component
-      className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-      transition={{ duration: 0.8, ease: EASE, delay }}
+    <Tag
+      className={cn("reveal", className)}
+      style={{ "--reveal-delay": delay, "--rise-y": `${y}px` } as CSSProperties}
     >
       {children}
-    </Component>
+    </Tag>
   );
 }
 
-const groupVariants: Variants = {
-  hidden: {},
-  show: { transition: { delayChildren: stagger(0.08) } },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 26 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
-};
-
+/** Children reveal with a small stagger across each row of three. */
 export function RevealGroup({
   children,
   className,
-  as = "div",
+  as: Tag = "div",
 }: {
   children: ReactNode;
   className?: string;
   as?: "div" | "ul" | "ol";
 }) {
-  const Component = motion[as];
-  return (
-    <Component
-      className={className}
-      variants={groupVariants}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-    >
-      {children}
-    </Component>
-  );
+  return <Tag className={cn("reveal-group", className)}>{children}</Tag>;
 }
 
 export function RevealItem({
   children,
   className,
-  as = "div",
+  as: Tag = "div",
 }: {
   children: ReactNode;
   className?: string;
   as?: "div" | "li" | "article";
 }) {
-  const Component = motion[as];
-  return (
-    <Component className={className} variants={itemVariants}>
-      {children}
-    </Component>
-  );
+  return <Tag className={cn("reveal", className)}>{children}</Tag>;
 }

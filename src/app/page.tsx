@@ -12,6 +12,7 @@ import { Promise100 } from "@/components/home/promise-100";
 import { ServicesShowcase } from "@/components/home/services-showcase";
 import { TestimonialLetters } from "@/components/home/testimonial-letters";
 import { TickerBands } from "@/components/home/ticker-bands";
+import { JsonLd } from "@/components/seo/json-ld";
 import { ButtonLink } from "@/components/ui/button";
 import { Counter } from "@/components/ui/counter";
 import { PinnedPhoto } from "@/components/ui/pinned-photo";
@@ -23,9 +24,10 @@ import { posts } from "@/content/posts";
 import { services } from "@/content/services";
 import { site } from "@/content/site";
 import { testimonials } from "@/content/testimonials";
+import { rssAlternate, websiteJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", types: rssAlternate },
 };
 
 export default function HomePage() {
@@ -80,8 +82,8 @@ export default function HomePage() {
                 </>
               }
             />
-            <Reveal delay={0.1}>
-              <dl className="flex gap-8 sm:gap-12">
+            <Reveal delay={0.1} className="w-full sm:w-auto">
+              <dl className="grid grid-cols-3 gap-4 sm:flex sm:gap-12">
                 {[
                   { v: totals.mailboxes, l: "תיבות דואר" },
                   { v: totals.buildings, l: "בניינים" },
@@ -89,7 +91,7 @@ export default function HomePage() {
                 ].map((t) => (
                   <div key={t.l} className="flex flex-col">
                     <dt className="order-2 text-sm text-muted">{t.l}</dt>
-                    <dd className="order-1 font-display text-3xl font-black tabular-nums sm:text-4xl">
+                    <dd className="order-1 font-display text-2xl font-black tabular-nums sm:text-4xl">
                       <Counter value={t.v} />
                     </dd>
                   </div>
@@ -257,6 +259,8 @@ export default function HomePage() {
       <div className="border-t border-ink/10 bg-paper-2/50">
         <ContactSection index="08" />
       </div>
+
+      <JsonLd data={websiteJsonLd()} />
     </>
   );
 }

@@ -1,16 +1,13 @@
 "use client";
 
 import { FileText, Quote } from "lucide-react";
-import { motion } from "motion/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 
 import { Lightbox } from "@/components/ui/lightbox";
 import { accentBg } from "@/content/service-nav";
 import type { Testimonial } from "@/content/testimonials";
 import { cn } from "@/lib/cn";
-
-const EASE = [0.16, 1, 0.3, 1] as const;
 
 /** Testimonials shown as letters on paper; the original scan opens in a lightbox. */
 export function TestimonialLetters({ items, full = false }: { items: Testimonial[]; full?: boolean }) {
@@ -21,14 +18,10 @@ export function TestimonialLetters({ items, full = false }: { items: Testimonial
     <>
       <div className="grid gap-8 md:grid-cols-2 lg:gap-10">
         {items.map((t, i) => (
-          <motion.article
+          <article
             key={t.id}
-            className="relative flex flex-col rounded-[1.75rem] bg-white p-7 shadow-[0_30px_60px_-36px_rgba(20,20,20,0.45)] sm:p-9"
-            initial={{ opacity: 0, y: 40, rotate: i % 2 ? 2.5 : -2.5 }}
-            whileInView={{ opacity: 1, y: 0, rotate: i % 2 ? 0.8 : -0.8 }}
-            whileHover={{ rotate: 0, y: -4 }}
-            viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-            transition={{ duration: 0.8, ease: EASE, delay: (i % 2) * 0.1 }}
+            className="reveal relative flex rotate-(--rot) flex-col rounded-[1.75rem] bg-white p-7 shadow-[0_30px_60px_-36px_rgba(20,20,20,0.45)] transition-[rotate] duration-500 hover:rotate-0 sm:p-9"
+            style={{ "--rot": `${i % 2 ? 0.8 : -0.8}deg`, "--reveal-delay": (i % 2) * 0.15 } as CSSProperties}
           >
             <span className={cn("absolute inset-x-9 top-0 h-1.5 rounded-b-full", accentBg[t.accent])} aria-hidden />
             <div className="flex items-start justify-between gap-6">
@@ -68,7 +61,7 @@ export function TestimonialLetters({ items, full = false }: { items: Testimonial
                 למכתב המקורי
               </button>
             </footer>
-          </motion.article>
+          </article>
         ))}
       </div>
       <Lightbox items={letters} index={open} onClose={() => setOpen(null)} onIndexChange={setOpen} />

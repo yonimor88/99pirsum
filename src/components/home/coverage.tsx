@@ -1,8 +1,9 @@
 "use client";
 
-import { Building, Mailbox, Newspaper } from "lucide-react";
+import { ArrowUpLeft, Building, Mailbox, Newspaper } from "lucide-react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { useId, useState } from "react";
+import { useId, useState, type CSSProperties } from "react";
 
 import { Counter } from "@/components/ui/counter";
 import { cities, moreCities, type City } from "@/content/cities";
@@ -102,6 +103,16 @@ export function CoverageExplorer({ tone = "paper" }: { tone?: "paper" | "ink" })
                 </p>
                 <h3 className="mt-1 text-5xl font-black sm:text-6xl">{city.name}</h3>
               </div>
+              <Link
+                href={`/areas/${city.slug}`}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-4 py-2 font-display text-sm font-semibold transition",
+                  dark ? "bg-ink text-paper hover:bg-ink-3" : "bg-paper text-ink hover:bg-yellow",
+                )}
+              >
+                פרסום {city.inName}
+                <ArrowUpLeft className="size-4" aria-hidden />
+              </Link>
             </div>
 
             <dl className="mt-8 grid grid-cols-3 gap-3 sm:gap-4">
@@ -153,12 +164,10 @@ function DotField({ city, dark }: { city: City; dark: boolean }) {
     <div className="mt-8">
       <div className="flex flex-wrap gap-1.5" aria-hidden>
         {Array.from({ length: count }).map((_, i) => (
-          <motion.span
+          <span
             key={i}
-            className={cn("size-2.5 rounded-full sm:size-3", DOT_COLORS[i % 4])}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3, delay: 0.15 + i * 0.006, ease: EASE }}
+            className={cn("pop-in size-2.5 rounded-full sm:size-3", DOT_COLORS[i % 4])}
+            style={{ "--intro-delay": `${0.15 + i * 0.006}s` } as CSSProperties}
           />
         ))}
       </div>

@@ -13,7 +13,15 @@ import { cn } from "@/lib/cn";
 
 const initial: LeadState = { status: "idle" };
 
-export function ContactForm({ defaultService, tone = "paper" }: { defaultService?: string; tone?: "paper" | "white" }) {
+export function ContactForm({
+  defaultService,
+  defaultCity,
+  tone = "paper",
+}: {
+  defaultService?: string;
+  defaultCity?: string;
+  tone?: "paper" | "white";
+}) {
   const [state, action, pending] = useActionState(submitLead, initial);
   const id = useId();
 
@@ -115,7 +123,13 @@ export function ContactForm({ defaultService, tone = "paper" }: { defaultService
                 </select>
               </Field>
               <Field label="עיר (לא חובה)" htmlFor={`${id}-city`}>
-                <input id={`${id}-city`} name="city" className={fieldClass} placeholder="למשל: בני ברק" />
+                <input
+                  id={`${id}-city`}
+                  name="city"
+                  defaultValue={defaultCity}
+                  className={fieldClass}
+                  placeholder="למשל: בני ברק"
+                />
               </Field>
             </div>
             <Field label="ספרו לנו קצת (לא חובה)" htmlFor={`${id}-message`}>
@@ -128,7 +142,7 @@ export function ContactForm({ defaultService, tone = "paper" }: { defaultService
               />
             </Field>
             {/* honeypot */}
-            <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+            <div aria-hidden className="pointer-events-none absolute size-0 overflow-hidden opacity-0">
               <label>
                 חברה
                 <input name="company" tabIndex={-1} autoComplete="off" />

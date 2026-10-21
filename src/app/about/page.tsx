@@ -12,7 +12,7 @@ import { site } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "מי אנחנו",
+  title: "מי אנחנו — פרסום למגזר החרדי מאז 1994",
   description:
     "99 פרסום ומדיה — המומחים בפרסום למגזר החרדי והדתי. מאז 1994 מאלעד, עם צוות קבוע, שיתופי פעולה עם הגורמים המובילים בשוק ושירות מהרעיון ועד ההפצה.",
   path: "/about",

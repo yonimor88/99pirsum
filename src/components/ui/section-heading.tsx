@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import { RegMark } from "@/components/brand/ornaments";
 import { cn } from "@/lib/cn";
@@ -66,13 +66,15 @@ export function SectionHeading({
   );
 }
 
-/** Highlighter-marker underline behind a word. */
+/**
+ * Highlighter-marker stroke behind a phrase. Drawn as an inline background with
+ * `box-decoration-break: clone`, so it wraps across lines instead of forcing the
+ * phrase onto one line (which overflowed narrow phones).
+ */
 export function Mark({ children, color = "yellow" }: { children: ReactNode; color?: "yellow" | "cyan" | "green" | "magenta" }) {
-  const bg = { yellow: "bg-yellow", cyan: "bg-cyan", green: "bg-green", magenta: "bg-magenta" }[color];
   return (
-    <span className="relative inline-block whitespace-nowrap">
-      <span aria-hidden className={cn("absolute inset-x-[-0.08em] bottom-[0.08em] -z-0 h-[0.36em] -skew-x-6 opacity-80", bg)} />
-      <span className="relative">{children}</span>
+    <span className="mark-hl" style={{ "--mark": `var(--color-${color})` } as CSSProperties}>
+      {children}
     </span>
   );
 }

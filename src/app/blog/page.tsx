@@ -5,7 +5,7 @@ import { posts } from "@/content/posts";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "מאמרים וטיפים",
+  title: "מאמרים וטיפים על פרסום במגזר החרדי",
   description:
     "מדריכים, טיפים ואסטרטגיות לפרסום אפקטיבי במגזר החרדי והדתי: הפצה בתיבות דואר, מודעות רחוב, תלי דלת, בתי כנסת ותכנון קמפיין.",
   path: "/blog",
@@ -17,9 +17,9 @@ export default function BlogPage() {
     <>
       <PageHero
         eyebrow="מאמרים וטיפים"
-        title="כל מה שרציתם לדעת על פרסום במגזר."
+        title="מאמרים על פרסום במגזר החרדי."
         crumbs={[{ name: "מאמרים", path: "/blog" }]}
-        description="מדריכים, טיפים ואסטרטגיות מהשטח — כדי שהפרסום הבא שלכם יעבוד טוב יותר."
+        description="כל מה שרציתם לדעת: מדריכים, טיפים ואסטרטגיות מהשטח — כדי שהפרסום הבא שלכם יעבוד טוב יותר."
       />
       <section className="pb-24">
         <div className="container-page">

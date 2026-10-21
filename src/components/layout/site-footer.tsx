@@ -5,7 +5,7 @@ import { LogoFull } from "@/components/brand/logo";
 import { ColorBar, Dots } from "@/components/brand/ornaments";
 import { FacebookIcon, WazeIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { Marquee } from "@/components/ui/marquee";
-import { allCityNames } from "@/content/cities";
+import { cities, moreCities } from "@/content/cities";
 import { serviceNav } from "@/content/service-nav";
 import { footerCompanyNav, legalNav, site, wazeLink, whatsappLink } from "@/content/site";
 
@@ -14,6 +14,7 @@ const year = process.env.NEXT_PUBLIC_BUILD_YEAR;
 export function SiteFooter() {
   return (
     <footer className="relative overflow-hidden bg-ink text-paper">
+      <div aria-hidden>
       <Marquee duration="60s" className="border-b border-paper/10 py-6" trackClassName="gap-10 pe-10">
         {Array.from({ length: 4 }).map((_, i) => (
           <span key={i} className="flex items-center gap-10">
@@ -24,6 +25,7 @@ export function SiteFooter() {
           </span>
         ))}
       </Marquee>
+      </div>
 
       <div className="container-page grid gap-12 py-16 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr] lg:gap-10">
         <div>
@@ -63,7 +65,7 @@ export function SiteFooter() {
         </div>
 
         <nav aria-label="שירותים">
-          <h2 className="font-display text-sm font-bold text-paper/45">שירותים</h2>
+          <h2 className="font-display text-sm font-bold text-paper/60">שירותים</h2>
           <ul className="mt-5 space-y-2.5">
             {serviceNav.map((s) => (
               <li key={s.slug}>
@@ -76,7 +78,7 @@ export function SiteFooter() {
         </nav>
 
         <nav aria-label="החברה">
-          <h2 className="font-display text-sm font-bold text-paper/45">החברה</h2>
+          <h2 className="font-display text-sm font-bold text-paper/60">החברה</h2>
           <ul className="mt-5 space-y-2.5">
             {footerCompanyNav.map((l) => (
               <li key={l.href}>
@@ -89,7 +91,7 @@ export function SiteFooter() {
         </nav>
 
         <div>
-          <h2 className="font-display text-sm font-bold text-paper/45">דברו איתנו</h2>
+          <h2 className="font-display text-sm font-bold text-paper/60">דברו איתנו</h2>
           <ul className="mt-5 space-y-3.5">
             {site.phones.map((p) => (
               <li key={p.href}>
@@ -114,10 +116,20 @@ export function SiteFooter() {
               </a>
             </li>
           </ul>
-          <h2 className="mt-8 font-display text-sm font-bold text-paper/45">אזורי הפצה</h2>
+          <h2 className="mt-8 font-display text-sm font-bold text-paper/60">אזורי הפצה</h2>
           <ul className="mt-3 flex flex-wrap gap-1.5">
-            {allCityNames.map((c) => (
-              <li key={c} className="rounded-full border border-paper/15 px-3 py-1 text-sm text-paper/70">
+            {cities.map((c) => (
+              <li key={c.slug}>
+                <Link
+                  href={`/areas/${c.slug}`}
+                  className="block rounded-full border border-paper/15 px-3 py-1 text-sm text-paper/75 transition hover:border-paper hover:text-paper"
+                >
+                  {c.name}
+                </Link>
+              </li>
+            ))}
+            {moreCities.map((c) => (
+              <li key={c} className="rounded-full border border-paper/15 px-3 py-1 text-sm text-paper/75">
                 {c}
               </li>
             ))}

@@ -139,6 +139,20 @@
     mask-image: linear-gradient(90deg, transparent 0 2px, black 2px calc(100% - 2px), transparent calc(100% - 2px));
   }
 
+  /* Highlighter stroke that wraps with the text */
+  .mark-hl {
+    background-image: linear-gradient(
+      to bottom,
+      transparent 58%,
+      color-mix(in srgb, var(--mark) 85%, transparent) 58%,
+      color-mix(in srgb, var(--mark) 85%, transparent) 90%,
+      transparent 90%
+    );
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding-inline: 0.06em;
+  }
+
   .link-underline {
     background-image: linear-gradient(currentColor, currentColor);
     background-size: 0% 2px;
@@ -188,6 +202,185 @@
   .prose-99 :where(ul, ol) {
     padding-inline-start: 1.4em;
   }
+}
+
+/* ------------------------------------------------------------------ *
+ * Motion in CSS — runs on first paint, needs no JavaScript.
+ * ------------------------------------------------------------------ */
+
+/*
+ * Print "misregistration": cyan / magenta / yellow plates start offset and
+ * snap into register. The plates are pseudo-elements, so the heading text
+ * appears once in the DOM (for search engines) and once to screen readers.
+ */
+.misreg {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+}
+.misreg-text {
+  position: relative;
+  display: inline-block;
+}
+.misreg::before,
+.misreg::after,
+.misreg-text::before {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: multiply;
+  opacity: 0;
+}
+.misreg::before {
+  color: var(--color-cyan);
+  --mx: -0.07em;
+  --my: -0.035em;
+}
+.misreg::after {
+  color: var(--color-magenta);
+  --mx: 0.055em;
+  --my: 0.05em;
+}
+.misreg-text::before {
+  color: var(--color-yellow);
+  --mx: -0.03em;
+  --my: 0.075em;
+}
+
+@keyframes misreg {
+  0% {
+    opacity: 1;
+    transform: translate(var(--mx), var(--my));
+  }
+  70% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-y, 18px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pin-intro {
+  from {
+    opacity: 0;
+    scale: 1.12;
+    translate: 0 20px;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    scale: 0;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -8px;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.a11y-no-motion) .misreg::before,
+  html:not(.a11y-no-motion) .misreg::after,
+  html:not(.a11y-no-motion) .misreg-text::before {
+    animation: misreg 1.5s cubic-bezier(0.65, 0, 0.35, 1) calc(var(--mr-delay, 0s) + 0.3s) both;
+  }
+
+  /* Time-based entrance for above-the-fold content */
+  html:not(.a11y-no-motion) .intro-rise {
+    animation: rise 0.8s var(--ease-out-expo) var(--intro-delay, 0s) both;
+  }
+  html:not(.a11y-no-motion) .pin-intro {
+    animation: pin-intro 0.9s var(--ease-out-back) var(--intro-delay, 0s) backwards;
+  }
+  html:not(.a11y-no-motion) .pop-in {
+    animation: pop 0.45s var(--ease-out-back) var(--intro-delay, 0s) both;
+  }
+  html:not(.a11y-no-motion) .float-dot {
+    animation:
+      pop 0.45s var(--ease-out-back) var(--intro-delay, 0s) both,
+      float 4s ease-in-out calc(var(--intro-delay, 0s) + 0.6s) infinite;
+  }
+
+  /* Scroll-driven reveals; browsers without support simply show the content */
+  @supports (animation-timeline: view()) {
+    html:not(.a11y-no-motion) .reveal {
+      animation: rise linear backwards;
+      animation-timeline: view();
+      animation-range: entry calc(var(--reveal-delay, 0) * 40%) entry calc(55% + var(--reveal-delay, 0) * 40%);
+    }
+    html:not(.a11y-no-motion) .reveal-group > :nth-child(3n + 2) {
+      --reveal-delay: 0.15;
+    }
+    html:not(.a11y-no-motion) .reveal-group > :nth-child(3n + 3) {
+      --reveal-delay: 0.3;
+    }
+    html:not(.a11y-no-motion) .pin-reveal {
+      animation: pin-intro linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 65%;
+    }
+    html:not(.a11y-no-motion) .draw-reveal {
+      animation: draw linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 45%;
+    }
+  }
+}
+
+/* Pinned photo prints: straighten and lift on hover */
+.pinned {
+  rotate: var(--rot, 0deg);
+  transition:
+    rotate 0.5s var(--ease-out-back),
+    scale 0.5s var(--ease-out-back),
+    box-shadow 0.5s;
+}
+.pinned:hover {
+  rotate: 0deg;
+  scale: 1.03;
+  z-index: 20;
 }
 
 @utility no-scrollbar {

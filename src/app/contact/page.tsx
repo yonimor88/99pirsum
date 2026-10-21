@@ -11,7 +11,7 @@ import { mapsLink, site, wazeLink } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "צור קשר",
+  title: "צור קשר — הצעת מחיר לפרסום והפצה",
   description: `דברו עם 99 פרסום ומדיה: ${site.phones[0].display}, וואטסאפ או טופס הצעת מחיר. ${site.address.full}.`,
   path: "/contact",
 });
@@ -21,7 +21,7 @@ export default function ContactPage() {
     <>
       <PageHero
         eyebrow="צור קשר"
-        title="בואו נדבר."
+        title="צור קשר — בואו נדבר."
         crumbs={[{ name: "צור קשר", path: "/contact" }]}
         description="ספרו לנו מה אתם רוצים לפרסם, איפה ולמי — ונחזור אליכם עם הצעה מסודרת. מעדיפים לדבר? אנחנו כאן בטלפון ובוואטסאפ."
       />

@@ -2,6 +2,7 @@ import { ArrowUpLeft, Check, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { PostCard } from "@/components/blog/post-card";
 import { ContactForm } from "@/components/contact/contact-form";
 import { CtaBand, Faq, PageHero } from "@/components/layout/page-blocks";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -11,6 +12,7 @@ import { ServiceGlyph, WhatsAppIcon } from "@/components/ui/icons";
 import { PhotoGrid } from "@/components/ui/photo-grid";
 import { PinnedPhoto } from "@/components/ui/pinned-photo";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
+import { posts } from "@/content/posts";
 import { accentBg } from "@/content/service-nav";
 import { getService, services } from "@/content/services";
 import { primaryPhone, site, whatsappLink } from "@/content/site";
@@ -26,7 +28,7 @@ export async function generateMetadata({ params }: PageProps<"/services/[slug]">
   const service = getService(slug);
   if (!service) return {};
   return pageMetadata({
-    title: service.title,
+    title: service.seoTitle,
     description: service.metaDescription,
     path: `/services/${service.slug}`,
     image: {
@@ -44,6 +46,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
   if (!service) notFound();
 
   const related = service.related.map((r) => getService(r)).filter((s) => s !== undefined);
+  const articles = posts.filter((p) => p.relatedService === service.slug || service.related.includes(p.relatedService)).slice(0, 3);
 
   return (
     <>
@@ -234,6 +237,22 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           </Reveal>
         </div>
       </section>
+
+      {/* Related articles */}
+      {articles.length > 0 && (
+        <section className="pb-20">
+          <div className="container-page">
+            <Reveal>
+              <h2 className="text-3xl font-extrabold sm:text-4xl">מאמרים שכדאי לקרוא</h2>
+            </Reveal>
+            <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+              {articles.map((p) => (
+                <PostCard key={p.slug} post={p} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Related */}
       <section className="pb-8">

@@ -34,6 +34,8 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
   });
   return {
     ...meta,
+    // Long article titles skip the brand suffix so search results don't truncate them
+    title: post.title.length > 44 ? { absolute: post.title } : post.title,
     openGraph: {
       ...meta.openGraph,
       type: "article",

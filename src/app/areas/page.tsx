@@ -12,7 +12,7 @@ import { serviceNav } from "@/content/service-nav";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "אזורי הפצה",
+  title: "אזורי הפצה: בני ברק, ירושלים, בית שמש, אלעד ועוד",
   description:
     "הפצה, הדבקה ופרסום בבני ברק, ירושלים, בית שמש, ביתר עילית, מודיעין עילית, אלעד, אשדוד ועוד. כ-150,000 תיבות דואר, יותר מ-13,000 בניינים ו-1,170 לוחות מודעות.",
   path: "/areas",
@@ -25,9 +25,9 @@ export default function AreasPage() {
     <>
       <PageHero
         eyebrow="אזורי הפצה"
-        title="איפה שהקהל שלכם — שם אנחנו."
+        title="אזורי הפצה: בכל ריכוז חרדי ודתי."
         crumbs={[{ name: "אזורי הפצה", path: "/areas" }]}
-        description="אנחנו פועלים בכל הערים המרכזיות במגזר החרדי והדתי, ובכל מקום שיש בו ריכוז חרדי ודתי. אלה המספרים שאנחנו מכסים בשטח."
+        description="איפה שהקהל שלכם — שם אנחנו. אנחנו פועלים בכל הערים המרכזיות במגזר החרדי והדתי, ובכל מקום שיש בו ריכוז חרדי ודתי. אלה המספרים שאנחנו מכסים בשטח."
         aside={
           <div className="relative mx-auto max-w-md lg:max-w-none">
             <PinnedPhoto photo={photos.cityAerial} rotate={-2} priority imageClassName="aspect-[4/3]" />
@@ -115,7 +115,9 @@ export default function AreasPage() {
                 {cities.map((c) => (
                   <tr key={c.slug}>
                     <th scope="row" className="p-4 text-start font-display text-lg font-bold">
-                      {c.name}
+                      <Link href={`/areas/${c.slug}`} className="underline decoration-ink/20 underline-offset-4 hover:decoration-ink">
+                        {c.name}
+                      </Link>
                       {c.note && <span className="ms-2 text-sm font-normal text-muted">({c.note})</span>}
                     </th>
                     <td className="p-4 tabular-nums">{c.buildings.toLocaleString("he-IL")}</td>

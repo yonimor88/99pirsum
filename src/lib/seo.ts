@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 
 import { allCityNames } from "@/content/cities";
+import { serviceNav } from "@/content/service-nav";
 import { site } from "@/content/site";
 
 export function absoluteUrl(path = "/") {
   return new URL(path, site.url).toString();
 }
+
+export const rssAlternate = { "application/rss+xml": [{ url: "/blog/feed.xml", title: "מאמרים — 99 פרסום ומדיה" }] };
 
 const defaultOgImage = {
   src: "/opengraph-image.png",
@@ -30,7 +33,7 @@ export function pageMetadata({
   return {
     title,
     description,
-    alternates: { canonical: path },
+    alternates: { canonical: path, types: rssAlternate },
     openGraph: {
       type,
       title,
@@ -54,8 +57,27 @@ export function localBusinessJsonLd() {
     slogan: site.tagline,
     description: site.description,
     url: site.url,
-    logo: absoluteUrl("/icon.svg"),
-    image: absoluteUrl("/opengraph-image.png"),
+    logo: absoluteUrl("/logo.png"),
+    image: [absoluteUrl("/opengraph-image.png"), absoluteUrl("/logo.png")],
+    geo: { "@type": "GeoCoordinates", latitude: site.geo.latitude, longitude: site.geo.longitude },
+    hasMap: `https://www.google.com/maps/search/?api=1&query=${site.geo.latitude},${site.geo.longitude}`,
+    knowsAbout: [
+      "פרסום במגזר החרדי",
+      "הפצת עלונים",
+      "הדבקת מודעות",
+      "תלי דלת",
+      "עלוני שבת",
+      "דפוס דיגיטלי",
+      "שילוט",
+    ],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "שירותי פרסום והפצה",
+      itemListElement: serviceNav.map((s) => ({
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: s.title, url: absoluteUrl(`/services/${s.slug}`) },
+      })),
+    },
     telephone: "+972-50-844-5450",
     email: site.email,
     foundingDate: String(site.foundingYear),
@@ -75,6 +97,20 @@ export function localBusinessJsonLd() {
       areaServed: "IL",
       availableLanguage: ["Hebrew"],
     })),
+  };
+}
+
+/** Tells Google the site's name (shown above results) and links it to the business. */
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": absoluteUrl("/#website"),
+    name: site.name,
+    alternateName: ["99 פרסום", "99pirsum"],
+    url: absoluteUrl("/"),
+    inLanguage: "he-IL",
+    publisher: { "@id": absoluteUrl("/#business") },
   };
 }
 

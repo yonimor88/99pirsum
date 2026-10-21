@@ -1,12 +1,14 @@
-"use client";
-
-import { motion } from "motion/react";
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
 import type { Photo } from "@/content/media";
 import { cn } from "@/lib/cn";
 
-/** A photo print taped to the wall. Straightens and lifts on hover. */
+/**
+ * A photo print taped to the wall. Straightens and lifts on hover.
+ * `intro` plays a time-based entrance (for above-the-fold heroes); otherwise the
+ * print is revealed as it scrolls into view. Pure CSS — see `.pinned` in globals.css.
+ */
 export function PinnedPhoto({
   photo,
   rotate = -3,
@@ -14,38 +16,35 @@ export function PinnedPhoto({
   imageClassName,
   sizes = "(min-width: 1024px) 30vw, 80vw",
   priority = false,
+  intro = false,
   delay = 0,
   tape = "top",
   caption,
   fill = false,
 }: {
-  fill?: boolean;
   photo: Photo;
   rotate?: number;
   className?: string;
   imageClassName?: string;
   sizes?: string;
   priority?: boolean;
+  intro?: boolean;
   delay?: number;
   tape?: "top" | "corners" | "none";
   caption?: string;
+  fill?: boolean;
 }) {
   return (
-    <motion.figure
+    <figure
       className={cn(
-        "relative bg-white p-2 pb-2 shadow-[0_24px_50px_-24px_rgba(20,20,20,0.55)] sm:p-2.5",
+        "pinned relative bg-white p-2 pb-2 shadow-[0_24px_50px_-24px_rgba(20,20,20,0.55)] sm:p-2.5",
+        intro ? "pin-intro" : "pin-reveal",
         caption && "pb-10 sm:pb-11",
         className,
       )}
-      initial={{ opacity: 0, scale: 1.12, rotate: rotate * 2.5, y: 20 }}
-      whileInView={{ opacity: 1, scale: 1, rotate, y: 0 }}
-      whileHover={{ rotate: 0, scale: 1.03, y: -6, zIndex: 20 }}
-      viewport={{ once: true, margin: "0px 0px -8% 0px" }}
-      transition={{ type: "spring", stiffness: 140, damping: 18, delay }}
+      style={{ "--rot": `${rotate}deg`, "--intro-delay": `${delay}s` } as CSSProperties}
     >
-      {tape === "top" && (
-        <span className="tape -top-3 left-1/2 -translate-x-1/2 -rotate-3" aria-hidden />
-      )}
+      {tape === "top" && <span className="tape -top-3 left-1/2 -translate-x-1/2 -rotate-3" aria-hidden />}
       {tape === "corners" && (
         <>
           <span className="tape -top-2 -right-6 w-16 rotate-[38deg]" aria-hidden />
@@ -60,6 +59,7 @@ export function PinnedPhoto({
           placeholder="blur"
           preload={priority}
           loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : undefined}
           className={cn("h-full w-full object-cover", imageClassName)}
         />
       </div>
@@ -68,6 +68,6 @@ export function PinnedPhoto({
           {caption}
         </figcaption>
       )}
-    </motion.figure>
+    </figure>
   );
 }

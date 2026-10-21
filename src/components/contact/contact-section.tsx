@@ -16,7 +16,7 @@ export function ContactDetails() {
             href={p.href}
             className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-paper p-4 transition hover:border-ink"
           >
-            <span className="grid size-12 place-items-center rounded-xl bg-yellow text-ink">
+            <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-yellow text-ink">
               <Phone className="size-5" aria-hidden />
             </span>
             <span>
@@ -35,7 +35,7 @@ export function ContactDetails() {
           rel="noopener noreferrer"
           className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-paper p-4 transition hover:border-ink"
         >
-          <span className="grid size-12 place-items-center rounded-xl bg-whatsapp text-ink">
+          <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-whatsapp text-ink">
             <WhatsAppIcon className="size-6" />
           </span>
           <span>
@@ -49,12 +49,12 @@ export function ContactDetails() {
           href={`mailto:${site.email}`}
           className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-paper p-4 transition hover:border-ink"
         >
-          <span className="grid size-12 place-items-center rounded-xl bg-cyan text-ink">
+          <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-cyan text-ink">
             <Mail className="size-5" aria-hidden />
           </span>
-          <span>
+          <span className="min-w-0">
             <span className="block text-sm text-muted">אימייל</span>
-            <span className="block font-display text-xl font-bold">{site.email}</span>
+            <span className="block font-display text-lg font-bold break-all sm:text-xl">{site.email}</span>
           </span>
         </a>
       </li>
@@ -65,7 +65,7 @@ export function ContactDetails() {
           rel="noopener noreferrer"
           className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-paper p-4 transition hover:border-ink"
         >
-          <span className="grid size-12 place-items-center rounded-xl bg-magenta text-paper">
+          <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-magenta text-paper">
             <MapPin className="size-5" aria-hidden />
           </span>
           <span className="flex-1">

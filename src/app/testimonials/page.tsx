@@ -8,7 +8,7 @@ import { testimonials } from "@/content/testimonials";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "ממליצים עלינו",
+  title: "ממליצים עלינו: מכתבי המלצה מלקוחות",
   description:
     "מכתבי המלצה מלקוחות 99 פרסום ומדיה — גיל גרופ, פותחים שבוע, אקסוס, יוסף דוויק ועוד. לקוחות שעובדים איתנו כבר יותר מעשור.",
   path: "/testimonials",
@@ -20,7 +20,7 @@ export default function TestimonialsPage() {
     <>
       <PageHero
         eyebrow="ממליצים עלינו"
-        title="מה הלקוחות כותבים עלינו."
+        title="ממליצים עלינו: מה הלקוחות כותבים."
         crumbs={[{ name: "ממליצים עלינו", path: "/testimonials" }]}
         description="חלק מהלקוחות שלנו עובדים איתנו כבר יותר מעשור. אלה המכתבים שהם שלחו לנו, וליד כל אחד — המקור המלא לעיון."
       />

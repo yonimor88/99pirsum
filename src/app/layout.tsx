@@ -18,6 +18,8 @@ const frank = Frank_Ruhl_Libre({
   variable: "--font-frank",
   display: "swap",
   weight: ["400", "500", "700"],
+  // only used for testimonial quotes further down the page
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -28,7 +30,6 @@ export const metadata: Metadata = {
   },
   description: site.description,
   applicationName: site.name,
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "he_IL",
