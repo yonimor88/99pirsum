@@ -16,8 +16,9 @@ import { mainNav, primaryPhone, whatsappLink } from "@/content/site";
 import { cn } from "@/lib/cn";
 
 /*
- * Menus stay in the DOM (inert while closed) and animate with CSS transitions,
- * so the header needs no animation library and every service link is in the HTML.
+ * Menus mount on first use (keeping the initial page light), then stay in the DOM
+ * (inert while closed). They animate with CSS transitions; the first opening
+ * uses @starting-style (Tailwind's `starting:` variant) for its entry.
  */
 export function SiteHeader() {
   const pathname = usePathname();
@@ -25,6 +26,8 @@ export function SiteHeader() {
   const [megaOpen, setMegaOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [megaMounted, setMegaMounted] = useState(false);
+  const [menuMounted, setMenuMounted] = useState(false);
   const megaTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const megaOpenedAt = useRef(0);
   const state = useRef({ menuOpen, megaOpen });
@@ -82,6 +85,7 @@ export function SiteHeader() {
   const openMega = () => {
     if (megaTimer.current) clearTimeout(megaTimer.current);
     if (!megaOpen) megaOpenedAt.current = window.scrollY;
+    setMegaMounted(true);
     setMegaOpen(true);
   };
   const scheduleCloseMega = () => {
@@ -186,7 +190,10 @@ export function SiteHeader() {
               <button
                 type="button"
                 className="grid size-11 place-items-center rounded-full bg-ink text-paper lg:hidden"
-                onClick={() => setMenuOpen(true)}
+                onClick={() => {
+                  setMenuMounted(true);
+                  setMenuOpen(true);
+                }}
                 aria-label="פתיחת תפריט"
                 aria-expanded={menuOpen}
                 aria-controls="mobile-menu"
@@ -198,166 +205,177 @@ export function SiteHeader() {
         </div>
 
         {/* Mega menu */}
-        <div
-          id="mega-menu"
-          inert={!megaOpen}
-          className={cn(
-            "absolute inset-x-0 top-full hidden transition-[opacity,translate,visibility] duration-300 ease-[var(--ease-out-expo)] lg:block",
-            megaOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-3 opacity-0",
-          )}
-          onMouseEnter={openMega}
-          onMouseLeave={scheduleCloseMega}
-        >
-          <div className="container-page">
-            <div className="grid grid-cols-[1fr_1fr_1fr_17rem] gap-8 rounded-b-[2rem] border border-t-0 border-ink/8 bg-paper p-8 shadow-[0_40px_80px_-40px_rgba(20,20,20,0.45)]">
-              {serviceGroups.map((group) => (
-                <div key={group.id}>
-                  <p className="font-display text-xs font-bold tracking-wide text-muted">{group.title}</p>
-                  <ul className="mt-4 space-y-1">
-                    {serviceNav
-                      .filter((s) => s.group === group.id)
-                      .map((s) => (
-                        <li key={s.slug}>
-                          <Link
-                            href={`/services/${s.slug}`}
-                            onClick={closeAll}
-                            className="group flex items-start gap-3 rounded-2xl p-2.5 transition-colors hover:bg-paper-2"
-                          >
-                            <span
-                              className={cn(
-                                "grid size-10 shrink-0 place-items-center rounded-xl text-ink transition-transform duration-300 group-hover:-rotate-6",
-                                accentBg[s.accent],
-                              )}
+        {megaMounted && (
+          <div
+            id="mega-menu"
+            inert={!megaOpen}
+            className={cn(
+              "absolute inset-x-0 top-full hidden transition-[opacity,translate,visibility] duration-300 ease-[var(--ease-out-expo)] lg:block",
+              megaOpen
+                ? "visible translate-y-0 opacity-100 starting:-translate-y-3 starting:opacity-0"
+                : "invisible -translate-y-3 opacity-0",
+            )}
+            onMouseEnter={openMega}
+            onMouseLeave={scheduleCloseMega}
+          >
+            <div className="container-page">
+              <div className="grid grid-cols-[1fr_1fr_1fr_17rem] gap-8 rounded-b-[2rem] border border-t-0 border-ink/8 bg-paper p-8 shadow-[0_40px_80px_-40px_rgba(20,20,20,0.45)]">
+                {serviceGroups.map((group) => (
+                  <div key={group.id}>
+                    <p className="font-display text-xs font-bold tracking-wide text-muted">{group.title}</p>
+                    <ul className="mt-4 space-y-1">
+                      {serviceNav
+                        .filter((s) => s.group === group.id)
+                        .map((s) => (
+                          <li key={s.slug}>
+                            <Link
+                              href={`/services/${s.slug}`}
+                              onClick={closeAll}
+                              className="group flex items-start gap-3 rounded-2xl p-2.5 transition-colors hover:bg-paper-2"
                             >
-                              <ServiceGlyph icon={s.icon} className="size-5" />
-                            </span>
-                            <span>
-                              <span className="block font-display font-semibold text-ink">{s.title}</span>
-                              <span className="mt-0.5 block text-sm leading-snug text-muted">{s.blurb}</span>
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                  </ul>
-                </div>
-              ))}
-              <Link
-                href="/services"
-                onClick={closeAll}
-                className="group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-ink p-5 text-paper"
-              >
-                <Image
-                  src={megaPhoto}
-                  alt=""
-                  fill
-                  sizes="17rem"
-                  className="object-cover opacity-55 transition-transform duration-700 group-hover:scale-105"
-                />
-                <span className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
-                <span className="relative">
-                  <Dots />
-                  <span className="mt-3 block font-display text-xl font-bold">כל השירותים</span>
-                  <span className="mt-1 block text-sm text-paper/70">לא בטוחים מה מתאים לכם? נשמח לייעץ.</span>
-                  <span className="mt-4 inline-flex items-center gap-1.5 font-display text-sm font-semibold text-yellow">
-                    לסקירה המלאה
-                    <ArrowUpLeft className="size-4 transition-transform group-hover:-translate-x-0.5 group-hover:-translate-y-0.5" />
+                              <span
+                                className={cn(
+                                  "grid size-10 shrink-0 place-items-center rounded-xl text-ink transition-transform duration-300 group-hover:-rotate-6",
+                                  accentBg[s.accent],
+                                )}
+                              >
+                                <ServiceGlyph icon={s.icon} className="size-5" />
+                              </span>
+                              <span>
+                                <span className="block font-display font-semibold text-ink">{s.title}</span>
+                                <span className="mt-0.5 block text-sm leading-snug text-muted">{s.blurb}</span>
+                              </span>
+                            </Link>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                ))}
+                <Link
+                  href="/services"
+                  onClick={closeAll}
+                  className="group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-ink p-5 text-paper"
+                >
+                  <Image
+                    src={megaPhoto}
+                    alt=""
+                    fill
+                    sizes="17rem"
+                    className="object-cover opacity-55 transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <span className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
+                  <span className="relative">
+                    <Dots />
+                    <span className="mt-3 block font-display text-xl font-bold">כל השירותים</span>
+                    <span className="mt-1 block text-sm text-paper/70">לא בטוחים מה מתאים לכם? נשמח לייעץ.</span>
+                    <span className="mt-4 inline-flex items-center gap-1.5 font-display text-sm font-semibold text-yellow">
+                      לסקירה המלאה
+                      <ArrowUpLeft className="size-4 transition-transform group-hover:-translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </span>
                   </span>
-                </span>
-              </Link>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </header>
 
       {/* Mobile menu */}
-      <div
-        id="mobile-menu"
-        role="dialog"
-        aria-modal="true"
-        aria-label="תפריט"
-        inert={!menuOpen}
-        className={cn(
-          "fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-ink text-paper transition-[clip-path,visibility] duration-600 ease-[var(--ease-out-expo)] lg:hidden",
-          menuOpen ? "visible [clip-path:circle(150%_at_2.5rem_2.25rem)]" : "invisible [clip-path:circle(0%_at_2.5rem_2.25rem)]",
-        )}
-      >
-        <div className="container-page flex h-[4.5rem] shrink-0 items-center justify-between">
-          <Link href="/" onClick={closeAll} aria-label="דף הבית">
-            <LogoMark className="h-9 w-auto text-paper" title="" />
-          </Link>
-          <button
-            type="button"
-            onClick={() => setMenuOpen(false)}
-            className="grid size-11 place-items-center rounded-full bg-paper text-ink"
-            aria-label="סגירת תפריט"
-          >
-            <X className="size-5" aria-hidden />
-          </button>
-        </div>
+      {menuMounted && (
+        <div
+          id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="תפריט"
+          inert={!menuOpen}
+          className={cn(
+            "fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-ink text-paper transition-[clip-path,visibility] duration-600 ease-[var(--ease-out-expo)] lg:hidden",
+            menuOpen
+              ? "visible [clip-path:circle(150%_at_2.5rem_2.25rem)] starting:[clip-path:circle(0%_at_2.5rem_2.25rem)]"
+              : "invisible [clip-path:circle(0%_at_2.5rem_2.25rem)]",
+          )}
+        >
+          <div className="container-page flex h-[4.5rem] shrink-0 items-center justify-between">
+            <Link href="/" onClick={closeAll} aria-label="דף הבית">
+              <LogoMark className="h-9 w-auto text-paper" title="" />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setMenuOpen(false)}
+              className="grid size-11 place-items-center rounded-full bg-paper text-ink"
+              aria-label="סגירת תפריט"
+            >
+              <X className="size-5" aria-hidden />
+            </button>
+          </div>
 
-        <nav aria-label="ניווט ראשי (נייד)" className="container-page flex-1 pt-6 pb-10">
-          <ul className="space-y-1">
-            {[{ href: "/", label: "דף הבית" }, ...mainNav, { href: "/contact", label: "צור קשר" }].map((item, i) => (
-              <li
-                key={item.href}
-                className={cn(
-                  "transition-[opacity,translate] duration-500 ease-[var(--ease-out-expo)]",
-                  menuOpen ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0",
-                )}
-                style={{ transitionDelay: menuOpen ? `${150 + i * 50}ms` : "0ms" }}
-              >
-                <Link
-                  href={item.href}
-                  onClick={closeAll}
+          <nav aria-label="ניווט ראשי (נייד)" className="container-page flex-1 pt-6 pb-10">
+            <ul className="space-y-1">
+              {[{ href: "/", label: "דף הבית" }, ...mainNav, { href: "/contact", label: "צור קשר" }].map((item, i) => (
+                <li
+                  key={item.href}
                   className={cn(
-                    "flex items-center justify-between border-b border-paper/10 py-3.5 font-display text-3xl font-bold",
-                    (item.href === "/" ? pathname === "/" : isActive(item.href)) && "text-yellow",
+                    "transition-[opacity,translate] duration-500 ease-[var(--ease-out-expo)]",
+                    menuOpen ? "translate-x-0 opacity-100 starting:translate-x-10 starting:opacity-0" : "translate-x-10 opacity-0",
                   )}
+                  style={{ transitionDelay: menuOpen ? `${150 + i * 50}ms` : "0ms" }}
                 >
-                  {item.label}
-                  <ArrowUpLeft className="size-6 text-paper/40" aria-hidden />
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <div
-            className={cn("mt-8 transition-opacity duration-500", menuOpen ? "opacity-100 delay-500" : "opacity-0")}
-          >
-            <p className="font-display text-sm font-semibold text-paper/50">השירותים שלנו</p>
-            <ul className="mt-3 grid grid-cols-2 gap-2">
-              {serviceNav.map((s) => (
-                <li key={s.slug}>
                   <Link
-                    href={`/services/${s.slug}`}
+                    href={item.href}
                     onClick={closeAll}
-                    className="flex items-center gap-2 rounded-xl bg-paper/5 px-3 py-2.5 text-sm leading-tight"
+                    className={cn(
+                      "flex items-center justify-between border-b border-paper/10 py-3.5 font-display text-3xl font-bold",
+                      (item.href === "/" ? pathname === "/" : isActive(item.href)) && "text-yellow",
+                    )}
                   >
-                    <span className={cn("size-2 shrink-0 rounded-full", accentBg[s.accent])} aria-hidden />
-                    {s.title}
+                    {item.label}
+                    <ArrowUpLeft className="size-6 text-paper/40" aria-hidden />
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
 
-          <div className="mt-8 grid grid-cols-2 gap-3">
-            <a href={primaryPhone.href} className={buttonClasses({ variant: "paper", size: "lg", className: "w-full" })}>
-              <Phone className="size-5" aria-hidden />
-              התקשרו
-            </a>
-            <a
-              href={whatsappLink()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={buttonClasses({ variant: "whatsapp", size: "lg", className: "w-full" })}
+            <div
+              className={cn(
+                "mt-8 transition-opacity duration-500",
+                menuOpen ? "opacity-100 delay-500 starting:opacity-0" : "opacity-0",
+              )}
             >
-              <WhatsAppIcon className="size-5" />
-              וואטסאפ
-            </a>
-          </div>
-        </nav>
-      </div>
+              <p className="font-display text-sm font-semibold text-paper/50">השירותים שלנו</p>
+              <ul className="mt-3 grid grid-cols-2 gap-2">
+                {serviceNav.map((s) => (
+                  <li key={s.slug}>
+                    <Link
+                      href={`/services/${s.slug}`}
+                      onClick={closeAll}
+                      className="flex items-center gap-2 rounded-xl bg-paper/5 px-3 py-2.5 text-sm leading-tight"
+                    >
+                      <span className={cn("size-2 shrink-0 rounded-full", accentBg[s.accent])} aria-hidden />
+                      {s.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-8 grid grid-cols-2 gap-3">
+              <a href={primaryPhone.href} className={buttonClasses({ variant: "paper", size: "lg", className: "w-full" })}>
+                <Phone className="size-5" aria-hidden />
+                התקשרו
+              </a>
+              <a
+                href={whatsappLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonClasses({ variant: "whatsapp", size: "lg", className: "w-full" })}
+              >
+                <WhatsAppIcon className="size-5" />
+                וואטסאפ
+              </a>
+            </div>
+          </nav>
+        </div>
+      )}
     </>
   );
 }

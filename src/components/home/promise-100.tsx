@@ -75,7 +75,7 @@ export function Promise100() {
                 return (
                   <li
                     key={p.title}
-                    className="promise-item flex items-start gap-4 rounded-3xl border border-paper/10 bg-paper/[0.04] p-5 text-paper backdrop-blur-sm"
+                    className="promise-item flex items-start gap-4 rounded-3xl border border-paper/10 bg-paper/[0.04] p-5 text-paper"
                     style={{ "--at": `${p.at}%` } as CSSProperties}
                   >
                     <span className="relative grid size-12 shrink-0 place-items-center rounded-2xl bg-paper/10">

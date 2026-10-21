@@ -2,13 +2,13 @@
 
 import { ArrowUpLeft, Building, Mailbox, Newspaper } from "lucide-react";
 import Link from "next/link";
-import { useId, useState, type CSSProperties } from "react";
+import { useId, useState } from "react";
 
 import { Counter } from "@/components/ui/counter";
 import { cities, moreCities, type City } from "@/content/cities";
 import { cn } from "@/lib/cn";
 
-const PER_DOT = 250;
+const PER_DOT = 500;
 const maxMailboxes = Math.max(...cities.map((c) => c.mailboxes));
 const DOT_COLORS = ["bg-yellow", "bg-green", "bg-cyan", "bg-magenta"];
 
@@ -148,13 +148,9 @@ function DotField({ city, dark }: { city: City; dark: boolean }) {
   const count = Math.round(city.mailboxes / PER_DOT);
   return (
     <div className="mt-8">
-      <div className="flex flex-wrap gap-1.5" aria-hidden>
+      <div className="enter-fade flex flex-wrap gap-2" aria-hidden>
         {Array.from({ length: count }).map((_, i) => (
-          <span
-            key={i}
-            className={cn("pop-in size-2.5 rounded-full sm:size-3", DOT_COLORS[i % 4])}
-            style={{ "--intro-delay": `${0.15 + i * 0.006}s` } as CSSProperties}
-          />
+          <span key={i} className={cn("size-3 rounded-full sm:size-3.5", DOT_COLORS[i % 4])} />
         ))}
       </div>
       <p className={cn("mt-4 text-sm", dark ? "text-muted" : "text-paper/55")}>
