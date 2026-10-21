@@ -1,26 +1,255 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ------------------------------------------------------------------ *
+ * 99 פרסום ומדיה — design tokens
+ * Ink + paper, with the four process dots from the logo as accents.
+ * ------------------------------------------------------------------ */
+@theme {
+  --color-paper: #f6f2ea;
+  --color-paper-2: #ece6da;
+  --color-paper-3: #e2dacb;
+  --color-ink: #141414;
+  --color-ink-2: #1f1f1f;
+  --color-ink-3: #2b2b2b;
+  --color-muted: #5c574f;
+  --color-muted-2: #8a8378;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-yellow: #fdbe52;
+  --color-cyan: #0db5e8;
+  --color-green: #49bb82;
+  --color-magenta: #b357a1;
+  /* darker accents for text on paper (AA contrast) */
+  --color-green-ink: #1f7a4d;
+  --color-magenta-ink: #8c3a7c;
+  --color-cyan-ink: #04709a;
+  --color-whatsapp: #25d366;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --font-display: var(--font-rubik), "Rubik", system-ui, sans-serif;
+  --font-sans: var(--font-heebo), "Heebo", system-ui, sans-serif;
+  --font-serif: var(--font-frank), "Frank Ruhl Libre", Georgia, serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-marquee-reverse: marquee-reverse var(--marquee-duration, 40s) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(50%);
+    }
+  }
+  @keyframes marquee-reverse {
+    from {
+      transform: translateX(50%);
+    }
+    to {
+      transform: translateX(0);
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: 6rem;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    font-feature-settings: "kern";
+  }
+
+  ::selection {
+    background: var(--color-yellow);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-cyan);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-[1320px] px-5 sm:px-8 lg:px-12;
+  }
+
+  /* Eyebrow label used above section headings */
+  .eyebrow {
+    @apply inline-flex items-center gap-2.5 font-display text-sm font-semibold tracking-wide text-muted;
+  }
+
+  /* Subtle paper grain over the whole page */
+  .paper-grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .paper-grain::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.22 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Halftone dot field */
+  .halftone {
+    background-image: radial-gradient(circle at center, currentColor 1.1px, transparent 1.4px);
+    background-size: 14px 14px;
+  }
+  .halftone-fade {
+    mask-image: radial-gradient(ellipse at center, black 10%, transparent 70%);
+  }
+
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px currentColor;
+  }
+
+  /* Masking tape for pinned photos */
+  .tape {
+    position: absolute;
+    z-index: 2;
+    width: 5.5rem;
+    height: 1.6rem;
+    background: rgb(253 190 82 / 0.75);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    mask-image: linear-gradient(90deg, transparent 0 2px, black 2px calc(100% - 2px), transparent calc(100% - 2px));
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 2px;
+    background-position: 100% 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.35s var(--ease-out-expo);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 2px;
+  }
+
+  /* Article typography */
+  .prose-99 {
+    @apply prose prose-lg max-w-none;
+    --tw-prose-body: var(--color-ink-3);
+    --tw-prose-headings: var(--color-ink);
+    --tw-prose-links: var(--color-ink);
+    --tw-prose-bold: var(--color-ink);
+    --tw-prose-bullets: var(--color-magenta);
+    --tw-prose-counters: var(--color-magenta-ink);
+    --tw-prose-quotes: var(--color-ink);
+    --tw-prose-quote-borders: var(--color-yellow);
+    --tw-prose-hr: var(--color-paper-3);
+    line-height: 1.85;
+  }
+  .prose-99 :where(h2) {
+    @apply font-display text-3xl font-extrabold tracking-tight;
+    margin-top: 2.2em;
+  }
+  .prose-99 :where(h3) {
+    @apply font-display text-2xl font-bold;
+  }
+  .prose-99 :where(a) {
+    text-decoration-color: var(--color-cyan);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+  .prose-99 :where(blockquote) {
+    @apply font-serif text-2xl font-medium not-italic;
+    border-inline-start-width: 4px;
+    padding-inline-start: 1.25em;
+  }
+  .prose-99 :where(blockquote p::before, blockquote p::after) {
+    content: none;
+  }
+  .prose-99 :where(ul, ol) {
+    padding-inline-start: 1.4em;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Accessibility modes (toggled from the accessibility menu)
+ * ------------------------------------------------------------------ */
+html.a11y-text-1 {
+  font-size: 112.5%;
+}
+html.a11y-text-2 {
+  font-size: 125%;
+}
+html.a11y-readable body,
+html.a11y-readable h1,
+html.a11y-readable h2,
+html.a11y-readable h3,
+html.a11y-readable h4 {
+  font-family: Arial, "Segoe UI", system-ui, sans-serif !important;
+  letter-spacing: 0.01em;
+}
+html.a11y-links a {
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 3px;
+  outline: 2px dashed var(--color-magenta-ink);
+  outline-offset: 2px;
+}
+html.a11y-contrast {
+  --color-paper: #ffffff;
+  --color-paper-2: #ffffff;
+  --color-paper-3: #ffffff;
+  --color-muted: #000000;
+  --color-muted-2: #000000;
+  --color-ink: #000000;
+  --color-ink-2: #000000;
+  --color-ink-3: #000000;
+}
+html.a11y-contrast img {
+  filter: contrast(1.1);
+}
+html.a11y-contrast .paper-grain::before,
+html.a11y-contrast .halftone {
+  display: none;
+}
+html.a11y-no-motion *,
+html.a11y-no-motion *::before,
+html.a11y-no-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-marquee-reverse {
+    animation: none;
+  }
 }

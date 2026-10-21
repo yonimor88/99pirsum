@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 99 פרסום ומדיה — 99pirsum.com
 
-## Getting Started
+The website of **99 פרסום ומדיה**: advertising, distribution and printing for the Haredi and religious sector in Israel since 1994.
 
-First, run the development server:
+Built with **Next.js 16** (App Router, Cache Components), **Tailwind CSS 4**, **Motion** and TypeScript. Hebrew, right-to-left, fully static.
+
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # production build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things live
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| What | Where |
+| --- | --- |
+| Business details (phones, email, address, WhatsApp) | `src/content/site.ts` |
+| Services (10 pages: copy, facts, FAQs, photos) | `src/content/services.ts`, `src/content/service-nav.ts` |
+| Coverage numbers per city | `src/content/cities.ts` |
+| Testimonials (from the clients' letters) | `src/content/testimonials.ts` |
+| Client logos | `src/content/clients.ts` |
+| Photos and gallery categories | `src/content/media.ts`, images in `src/assets/images` |
+| Blog articles (Markdown) | `src/content/posts/` |
+| Design tokens (colors, fonts, utilities) | `src/app/globals.css` |
+| Logo (true vector, from the original `.ai` file) | `src/components/brand/` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Adding a blog article
 
-## Learn More
+1. Create `src/content/posts/my-article.ts` exporting `body` (Markdown).
+2. Add an entry at the top of the `sources` list in `src/content/posts/index.ts` (title, description, date, cover photo, related service).
 
-To learn more about Next.js, take a look at the following resources:
+### Adding photos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Put the image in `src/assets/images/work/`, import it in `src/content/media.ts`, give it a Hebrew `alt`, and add it to `gallery` with a category.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contact form
 
-## Deploy on Vercel
+The form posts to a server action (`src/app/contact/actions.ts`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- With `RESEND_API_KEY` set, leads are emailed to `CONTACT_TO_EMAIL` (default `99Pirsum@gmail.com`) through [Resend](https://resend.com).
+- Without it, visitors get a one-click button that sends the same details over WhatsApp, so no lead is lost.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See `.env.example`. On Vercel, set these under Project → Settings → Environment Variables.
+
+## SEO
+
+- Per-page metadata, Open Graph image, `sitemap.xml`, `robots.txt`, web manifest.
+- JSON-LD: `AdvertisingAgency` (local business), `Service`, `BlogPosting`, `FAQPage`, `BreadcrumbList`.
+- All old WordPress URLs (Hebrew slugs such as `/מי-אנחנו/`, `/תלי-דלת/`) permanently redirect to the new pages. See `next.config.ts`.
+
+## Accessibility
+
+Skip link, keyboard navigation, focus styles, semantic structure, alt text, `prefers-reduced-motion` support, and a built-in accessibility menu (text size, high contrast, link highlighting, readable font, stop animations). The accessibility statement is at `/accessibility`.
+
+## Deploy
+
+Import the GitHub repo in Vercel (framework preset: Next.js, no extra settings needed). Then point the `99pirsum.com` domain at the Vercel project.

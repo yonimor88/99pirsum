@@ -1,69 +1,262 @@
-import Image from "next/image";
+import { ArrowUpLeft } from "lucide-react";
+import type { Metadata } from "next";
 
-export default function Home() {
+import { PostCard } from "@/components/blog/post-card";
+import { ContactSection } from "@/components/contact/contact-section";
+import { ClientsWall } from "@/components/home/clients-wall";
+import { CoverageExplorer } from "@/components/home/coverage";
+import { FieldWall } from "@/components/home/field-wall";
+import { Hero } from "@/components/home/hero";
+import { Process } from "@/components/home/process";
+import { Promise100 } from "@/components/home/promise-100";
+import { ServicesShowcase } from "@/components/home/services-showcase";
+import { TestimonialLetters } from "@/components/home/testimonial-letters";
+import { TickerBands } from "@/components/home/ticker-bands";
+import { ButtonLink } from "@/components/ui/button";
+import { Counter } from "@/components/ui/counter";
+import { PinnedPhoto } from "@/components/ui/pinned-photo";
+import { Reveal } from "@/components/ui/reveal";
+import { Mark, SectionHeading } from "@/components/ui/section-heading";
+import { totals } from "@/content/cities";
+import { photos } from "@/content/media";
+import { posts } from "@/content/posts";
+import { services } from "@/content/services";
+import { site } from "@/content/site";
+import { testimonials } from "@/content/testimonials";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+export default function HomePage() {
+  const showcase = services.map((s) => ({
+    slug: s.slug,
+    title: s.title,
+    blurb: s.blurb,
+    summary: s.summary,
+    accent: s.accent,
+    icon: s.icon,
+    image: s.hero,
+  }));
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <Hero />
+      <TickerBands />
+
+      {/* Services */}
+      <section className="py-20 lg:py-28">
+        <div className="container-page">
+          <SectionHeading
+            index="01"
+            eyebrow="השירותים שלנו"
+            title={
+              <>
+                כל מה שהמסר שלכם צריך.
+                <br />
+                <Mark>תחת קורת גג אחת.</Mark>
+              </>
+            }
+            description="מתכננים, מעצבים, מדפיסים ומפיצים — כך שאתם מדברים עם גורם אחד, ואנחנו דואגים לכל השאר."
+          />
+          <ServicesShowcase services={showcase} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+      </section>
+
+      <Promise100 />
+
+      {/* Coverage */}
+      <section className="py-24 lg:py-32">
+        <div className="container-page">
+          <div className="flex flex-wrap items-end justify-between gap-10">
+            <SectionHeading
+              index="02"
+              eyebrow="אזורי הפצה"
+              title={
+                <>
+                  בכל מקום שיש ריכוז חרדי ודתי —
+                  <br />
+                  <Mark color="cyan">אנחנו שם.</Mark>
+                </>
+              }
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <Reveal delay={0.1}>
+              <dl className="flex gap-8 sm:gap-12">
+                {[
+                  { v: totals.mailboxes, l: "תיבות דואר" },
+                  { v: totals.buildings, l: "בניינים" },
+                  { v: totals.boards, l: "לוחות מודעות" },
+                ].map((t) => (
+                  <div key={t.l} className="flex flex-col">
+                    <dt className="order-2 text-sm text-muted">{t.l}</dt>
+                    <dd className="order-1 font-display text-3xl font-black tabular-nums sm:text-4xl">
+                      <Counter value={t.v} />
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </Reveal>
+          </div>
+          <div className="mt-14">
+            <CoverageExplorer />
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* Process */}
+      <section className="border-y border-ink/10 bg-paper-2/60 py-24 lg:py-28">
+        <div className="container-page">
+          <SectionHeading
+            index="03"
+            eyebrow="איך זה עובד"
+            title={
+              <>
+                ארבעה צעדים,
+                <br />
+                <Mark color="magenta">אפס כאבי ראש.</Mark>
+              </>
+            }
+            description="אין צורך לתאם בין מעצב, בית דפוס, חברת הפצה ומדביקים. אנחנו מנהלים את הכל — ואתם מקבלים תמונות."
+          />
+          <Process />
+        </div>
+      </section>
+
+      <FieldWall />
+
+      {/* Testimonials */}
+      <section className="relative py-24 lg:py-32">
+        <div className="container-page">
+          <SectionHeading
+            index="05"
+            eyebrow="ממליצים עלינו"
+            title={
+              <>
+                לקוחות שחוזרים —
+                <br />
+                <Mark color="green">שנה אחרי שנה.</Mark>
+              </>
+            }
+          />
+          <Reveal delay={0.1}>
+            <figure className="relative mx-auto mt-16 max-w-4xl text-center">
+              <blockquote className="font-serif text-3xl leading-snug font-medium text-balance sm:text-4xl lg:text-5xl">
+                ״אם תמונה אחת שווה אלף מילים, אז סיבוב אחד באלעד שווה אלף תמונות.״
+              </blockquote>
+              <figcaption className="mt-6 font-display text-muted">
+                <span className="font-semibold text-ink">יוסף דוויק</span> · אחרי סבב הדבקה בלוחות המודעות באלעד
+              </figcaption>
+            </figure>
+          </Reveal>
+          <div className="mt-16">
+            <TestimonialLetters items={testimonials} />
+          </div>
+          <div className="mt-12 text-center">
+            <ButtonLink href="/testimonials" variant="outline">
+              לכל ההמלצות
+              <ArrowUpLeft className="size-4" aria-hidden />
+            </ButtonLink>
+          </div>
+        </div>
+      </section>
+
+      {/* Clients */}
+      <section className="pb-24 lg:pb-32">
+        <div className="container-page mb-10 text-center">
+          <Reveal>
+            <p className="eyebrow justify-center">בין לקוחותינו</p>
+            <p className="mx-auto mt-3 max-w-2xl font-display text-2xl font-bold sm:text-3xl">
+              עמותות, חברות מובילות ולקוחות פרטיים מכל התחומים והמגזרים
+            </p>
+          </Reveal>
+        </div>
+        <ClientsWall />
+      </section>
+
+      {/* About teaser */}
+      <section className="relative overflow-hidden bg-ink py-24 text-paper lg:py-32">
+        <div aria-hidden className="halftone absolute inset-0 text-paper/[0.05]" />
+        <div className="container-page relative grid items-center gap-16 lg:grid-cols-2">
+          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+            <PinnedPhoto photo={photos.boardPosterCrew2} rotate={-3} imageClassName="aspect-[4/3]" />
+            <div className="absolute -bottom-12 -left-3 w-[34%] sm:-left-8">
+              <PinnedPhoto photo={photos.synagogueTall3} rotate={6} delay={0.2} imageClassName="aspect-[3/4]" />
+            </div>
+          </div>
+          <div>
+            <SectionHeading
+              index="06"
+              eyebrow="מי אנחנו"
+              tone="paper"
+              title={
+                <>
+                  מאלעד, מאז {site.foundingYear}.
+                  <br />
+                  <span className="text-yellow">לכל הארץ.</span>
+                </>
+              }
+              description={
+                <>
+                  ההיכרות שלנו עם עולם הפרסום במגזר החרדי והדתי החלה בשנת {site.foundingYear} בעיר אלעד. מאז צברנו
+                  ניסיון עשיר ושיתופי פעולה עם הגורמים המובילים בשוק — ולמדנו שלקוח שרוצה לפרסם לא צריך לרדוף
+                  אחרי עשרה ספקים. הוא צריך גורם מקצועי אחד.
+                </>
+              }
+            />
+            <Reveal delay={0.2}>
+              <ul className="mt-8 flex flex-wrap gap-2">
+                {["שקיפות", "אמינות", "מקצועיות", "יחס אישי"].map((v, i) => (
+                  <li
+                    key={v}
+                    className="flex items-center gap-2 rounded-full border border-paper/20 px-4 py-2 font-display font-semibold"
+                  >
+                    <span className={["size-2 rounded-full bg-yellow", "size-2 rounded-full bg-green", "size-2 rounded-full bg-cyan", "size-2 rounded-full bg-magenta"][i]} />
+                    {v}
+                  </li>
+                ))}
+              </ul>
+              <ButtonLink href="/about" variant="paper" className="mt-10">
+                הסיפור שלנו
+                <ArrowUpLeft className="size-4" aria-hidden />
+              </ButtonLink>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Blog */}
+      <section className="py-24 lg:py-32">
+        <div className="container-page">
+          <div className="flex flex-wrap items-end justify-between gap-8">
+            <SectionHeading
+              index="07"
+              eyebrow="מאמרים וטיפים"
+              title={
+                <>
+                  רוצים לדעת עוד?
+                  <br />
+                  <Mark color="yellow">הכנו לכם מדריכים.</Mark>
+                </>
+              }
+            />
+            <ButtonLink href="/blog" variant="outline">
+              לכל המאמרים
+              <ArrowUpLeft className="size-4" aria-hidden />
+            </ButtonLink>
+          </div>
+          <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {posts.slice(0, 3).map((p, i) => (
+              <Reveal key={p.slug} delay={i * 0.08}>
+                <PostCard post={p} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="border-t border-ink/10 bg-paper-2/50">
+        <ContactSection index="08" />
+      </div>
+    </>
   );
 }
