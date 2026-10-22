@@ -45,7 +45,7 @@ function Copy() {
 export function Promise100() {
   return (
     <section className="promise-section relative bg-ink" aria-label="תמיד שואפים ל-100%">
-      <div className="promise-sticky flex flex-col overflow-hidden">
+      <div className="promise-sticky flex flex-col overflow-clip">
         <div aria-hidden className="halftone absolute inset-0 text-paper/[0.06]" />
         <div className="container-page relative grid flex-1 items-center gap-10 py-20 lg:grid-cols-[1.1fr_1fr]">
           <div className="relative">
@@ -93,7 +93,7 @@ export function Promise100() {
           </div>
         </div>
 
-        <div className="relative h-1.5 w-full overflow-hidden bg-paper/10" aria-hidden>
+        <div className="relative h-1.5 w-full overflow-clip bg-paper/10" aria-hidden>
           <div className="promise-bar absolute inset-0">
             <ColorBar className="h-full" />
           </div>

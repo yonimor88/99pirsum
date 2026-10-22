@@ -131,13 +131,13 @@ function Stat({
   return (
     <div
       className={cn(
-        "flex flex-col rounded-2xl p-4 sm:p-5",
+        "@container flex min-w-0 flex-col rounded-2xl p-3 sm:p-5",
         highlight ? "bg-yellow text-ink" : dark ? "bg-paper-2" : "bg-paper/[0.07]",
       )}
     >
       <Icon className="order-1 size-5 opacity-70" aria-hidden />
       <dt className="order-3 mt-1 text-sm opacity-75">{label}</dt>
-      <dd className="order-2 mt-3 font-display text-2xl font-extrabold tabular-nums sm:text-4xl">
+      <dd className="order-2 mt-3 font-display text-[clamp(1rem,17cqi,2.25rem)] leading-none font-extrabold whitespace-nowrap tabular-nums">
         <Counter value={value} duration={1.2} />
       </dd>
     </div>
