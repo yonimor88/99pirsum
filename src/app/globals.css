@@ -517,38 +517,72 @@ html.a11y-no-motion .enter-fade {
 }
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    html:not(.a11y-no-motion) .promise-section {
-      height: 280vh;
-      view-timeline-name: --promise;
-    }
-    html:not(.a11y-no-motion) .promise-sticky {
-      position: sticky;
-      top: 0;
-      height: 100svh;
-    }
-    html:not(.a11y-no-motion) .promise-number,
-    html:not(.a11y-no-motion) .promise-bar {
+    /*
+     * Phones, tablets and short screens: the content is taller than one
+     * screen, so pinning it would clip the lower cards. Instead each piece
+     * animates on its own as it scrolls into view.
+     */
+    html:not(.a11y-no-motion) .promise-number {
       animation: pct linear both;
-      animation-timeline: --promise;
-      animation-range: contain 4% contain 90%;
-    }
-    html:not(.a11y-no-motion) .promise-bar {
-      animation-name: grow-x;
-    }
-    html:not(.a11y-no-motion) .promise-item {
-      animation: promise-item linear both;
-      animation-timeline: --promise;
-      animation-range: contain calc(var(--at) - 8%) contain var(--at);
-    }
-    html:not(.a11y-no-motion) .promise-dot {
-      animation: pop linear both;
-      animation-timeline: --promise;
-      animation-range: contain calc(var(--at) - 2%) contain calc(var(--at) + 2%);
+      animation-timeline: view();
+      animation-range: entry 100% cover 50%;
     }
     html:not(.a11y-no-motion) .promise-done {
       animation: pop linear both;
-      animation-timeline: --promise;
-      animation-range: contain 87% contain 91%;
+      animation-timeline: view();
+      animation-range: cover 45% cover 52%;
+    }
+    html:not(.a11y-no-motion) .promise-item {
+      animation: promise-item linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 35%;
+    }
+    html:not(.a11y-no-motion) .promise-dot {
+      animation: pop linear both;
+      animation-timeline: view();
+      animation-range: cover 30% cover 40%;
+    }
+    html:not(.a11y-no-motion) .promise-bar {
+      animation: grow-x linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+
+    /* Large, tall screens: everything fits, so pin the panel and scrub. */
+    @media (min-width: 1024px) and (min-height: 760px) {
+      html:not(.a11y-no-motion) .promise-section {
+        height: 280vh;
+        view-timeline-name: --promise;
+      }
+      html:not(.a11y-no-motion) .promise-sticky {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+      }
+      html:not(.a11y-no-motion) .promise-number,
+      html:not(.a11y-no-motion) .promise-bar {
+        animation: pct linear both;
+        animation-timeline: --promise;
+        animation-range: contain 4% contain 90%;
+      }
+      html:not(.a11y-no-motion) .promise-bar {
+        animation-name: grow-x;
+      }
+      html:not(.a11y-no-motion) .promise-item {
+        animation: promise-item linear both;
+        animation-timeline: --promise;
+        animation-range: contain calc(var(--at) - 8%) contain var(--at);
+      }
+      html:not(.a11y-no-motion) .promise-dot {
+        animation: pop linear both;
+        animation-timeline: --promise;
+        animation-range: contain calc(var(--at) - 2%) contain calc(var(--at) + 2%);
+      }
+      html:not(.a11y-no-motion) .promise-done {
+        animation: pop linear both;
+        animation-timeline: --promise;
+        animation-range: contain 87% contain 91%;
+      }
     }
   }
 }
