@@ -24,6 +24,10 @@ import tiferetDesktop from "@/assets/images/sites/tiferet-desktop.webp";
 import tiferetDesktopLong from "@/assets/images/sites/tiferet-desktop-long.webp";
 import tiferetMobile from "@/assets/images/sites/tiferet-mobile.webp";
 import tiferetMobileLong from "@/assets/images/sites/tiferet-mobile-long.webp";
+import malbusheiDesktop from "@/assets/images/sites/malbushei-desktop.webp";
+import malbusheiDesktopLong from "@/assets/images/sites/malbushei-desktop-long.webp";
+import malbusheiMobile from "@/assets/images/sites/malbushei-mobile.webp";
+import malbusheiMobileLong from "@/assets/images/sites/malbushei-mobile-long.webp";
 import pirsumDesktop from "@/assets/images/sites/99pirsum-desktop.webp";
 import pirsumDesktopLong from "@/assets/images/sites/99pirsum-desktop-long.webp";
 import pirsumMobile from "@/assets/images/sites/99pirsum-mobile.webp";
@@ -191,5 +195,23 @@ export const concepts: Website[] = [
     glow: "#b5832c",
     concept: true,
     shots: { desktop: tiferetDesktop, mobile: tiferetMobile, desktopLong: tiferetDesktopLong, mobileLong: tiferetMobileLong },
+  },
+  {
+    slug: "malbushei-kavod",
+    name: "מלבושי כבוד",
+    url: "https://malbushei-kavod.vercel.app",
+    domain: "malbushei-kavod.vercel.app",
+    industry: "חליפות וכובעים",
+    headline: "חנות בגדים שנראית כמו מגזין אופנה.",
+    summary:
+      "אתר לבוטיק חליפות וכובעים לגברים: שחור־לבן של מגזין אופנה, כותרות ענק ונגיעה אחת של בורדו — כמו גיליון חדש שנפתח על המסך.",
+    challenge: "לגרום לחתן ולאבא שלו להגיע למדידה — ולהבין מראש מה מקבלים בחבילת חתן.",
+    solution:
+      "לוקבוק לחול, לשבת ולשמחה שמתדפדף כמו מגזין, חתן ״בלתי נראה״ שמתלבש פריט אחר פריט בגלילה, מדריך כובעים שבו הכובע משנה צורה, טבלת מידות חיה וקביעת מדידה לפי תאריך עברי.",
+    features: ["לוקבוק מתדפדף", "חבילות חתן", "מדריך כובעים", "קביעת מדידה", "מצב שבת"],
+    palette: ["#0d0d0d", "#f3f2ef", "#6e1823", "#8b8985", "#262626"],
+    glow: "#8e2332",
+    concept: true,
+    shots: { desktop: malbusheiDesktop, mobile: malbusheiMobile, desktopLong: malbusheiDesktopLong, mobileLong: malbusheiMobileLong },
   },
 ];
