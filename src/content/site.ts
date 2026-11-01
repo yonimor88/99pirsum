@@ -28,6 +28,7 @@ export const primaryPhone = site.phones[0];
 
 /** Direct line for website projects (/websites and the web & digital service). */
 export const websitesPhone = { display: "054-397-1020", href: "tel:+972543971020" } as const;
+export const websitesEmail = "yoni99pirsum@gmail.com";
 
 export function whatsappLink(text = "שלום, הגעתי מהאתר ואשמח לקבל הצעת מחיר") {
   return `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(text)}`;

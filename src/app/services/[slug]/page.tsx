@@ -18,7 +18,7 @@ import { accentBg } from "@/content/service-nav";
 import { cities } from "@/content/cities";
 import { lite } from "@/content/media";
 import { getService, services } from "@/content/services";
-import { primaryPhone, site, websitesPhone, whatsappLink } from "@/content/site";
+import { primaryPhone, site, websitesEmail, websitesPhone, whatsappLink } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
@@ -167,6 +167,14 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
                   וואטסאפ
                 </ButtonAnchor>
               </div>
+              {service.slug === "web-digital" && (
+                <p className="mt-4 text-center text-sm text-paper/60">
+                  או במייל:{" "}
+                  <a href={`mailto:${websitesEmail}`} className="font-semibold break-all text-paper hover:text-yellow">
+                    {websitesEmail}
+                  </a>
+                </p>
+              )}
             </div>
           </aside>
         </div>

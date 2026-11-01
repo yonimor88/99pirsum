@@ -7,7 +7,7 @@ import { FacebookIcon, WazeIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { Marquee } from "@/components/ui/marquee";
 import { cities, moreCities } from "@/content/cities";
 import { serviceNav } from "@/content/service-nav";
-import { footerCompanyNav, legalNav, site, wazeLink, websitesPhone, whatsappLink } from "@/content/site";
+import { footerCompanyNav, legalNav, site, wazeLink, websitesEmail, websitesPhone, whatsappLink } from "@/content/site";
 
 const year = process.env.NEXT_PUBLIC_BUILD_YEAR;
 
@@ -124,6 +124,13 @@ export function SiteFooter() {
               <a href={`mailto:${site.email}`} className="group flex items-center gap-3">
                 <Mail className="size-4 text-cyan" aria-hidden />
                 <span className="group-hover:text-cyan">{site.email}</span>
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${websitesEmail}`} className="group flex items-center gap-3">
+                <Mail className="size-4 text-cyan" aria-hidden />
+                <span className="group-hover:text-cyan">{websitesEmail}</span>
+                <span className="text-sm text-paper/50">בניית אתרים</span>
               </a>
             </li>
             <li>

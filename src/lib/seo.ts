@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { allCityNames } from "@/content/cities";
 import { serviceNav } from "@/content/service-nav";
-import { site, websitesPhone } from "@/content/site";
+import { site, websitesEmail, websitesPhone } from "@/content/site";
 
 export function absoluteUrl(path = "/") {
   return new URL(path, site.url).toString();
@@ -90,9 +90,10 @@ export function localBusinessJsonLd() {
     },
     areaServed: allCityNames.map((name) => ({ "@type": "City", name })),
     sameAs: [site.facebook],
-    contactPoint: [...site.phones, websitesPhone].map((p) => ({
+    contactPoint: [...site.phones.map((p) => ({ ...p, email: undefined })), { ...websitesPhone, email: websitesEmail }].map((p) => ({
       "@type": "ContactPoint",
       telephone: p.href.replace("tel:", ""),
+      ...(p.email && { email: p.email }),
       contactType: "sales",
       areaServed: "IL",
       availableLanguage: ["Hebrew"],

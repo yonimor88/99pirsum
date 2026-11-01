@@ -4,7 +4,7 @@ import { Dots } from "@/components/brand/ornaments";
 import { WazeIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { Reveal } from "@/components/ui/reveal";
 import { Mark, SectionHeading } from "@/components/ui/section-heading";
-import { site, wazeLink, websitesPhone, whatsappLink } from "@/content/site";
+import { site, wazeLink, websitesEmail, websitesPhone, whatsappLink } from "@/content/site";
 import { ContactForm } from "./contact-form";
 
 export function ContactDetails() {
@@ -71,6 +71,20 @@ export function ContactDetails() {
           <span className="min-w-0">
             <span className="block text-sm text-muted">אימייל</span>
             <span className="block font-display text-lg font-bold break-all sm:text-xl">{site.email}</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a
+          href={`mailto:${websitesEmail}`}
+          className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-paper p-4 transition hover:border-ink"
+        >
+          <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-yellow text-ink">
+            <Mail className="size-5" aria-hidden />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-sm text-muted">אימייל לבניית אתרים</span>
+            <span className="block font-display text-lg font-bold break-all sm:text-xl">{websitesEmail}</span>
           </span>
         </a>
       </li>

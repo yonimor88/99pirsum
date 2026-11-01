@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePrefersLessMotion } from "@/components/a11y/motion-provider";
 import { buttonClasses } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/ui/icons";
-import { websitesPhone, whatsappLink } from "@/content/site";
+import { websitesEmail, websitesPhone, whatsappLink } from "@/content/site";
 import { BrowserFrame } from "./device-frames";
 
 const DOMAINS = ["העסק-שלכם.co.il", "your-business.co.il", "המותג-הבא.com"];
@@ -85,6 +85,12 @@ export function YourSiteNext() {
                 </span>
               </a>
             </div>
+            <p className="mt-5 text-paper/60">
+              או במייל:{" "}
+              <a href={`mailto:${websitesEmail}`} className="font-semibold text-paper underline-offset-4 hover:text-yellow hover:underline">
+                {websitesEmail}
+              </a>
+            </p>
           </div>
 
           <m.div

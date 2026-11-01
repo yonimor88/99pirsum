@@ -1,7 +1,7 @@
 import { cities, moreCities } from "@/content/cities";
 import { posts } from "@/content/posts";
 import { services } from "@/content/services";
-import { site, websitesPhone } from "@/content/site";
+import { site, websitesEmail, websitesPhone } from "@/content/site";
 import { websites } from "@/content/websites";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -16,7 +16,7 @@ ${site.name} היא חברת פרסום, הפצה ודפוס שמתמחה במג
 
 - כתובת: ${site.address.full}
 - טלפון: ${site.phones.map((p) => p.display).join(", ")}
-- בניית אתרים: ${websitesPhone.display}
+- בניית אתרים: ${websitesPhone.display}, ${websitesEmail}
 - אימייל: ${site.email}
 - וואטסאפ: https://wa.me/${site.whatsappNumber}
 - ימי הפצה והדבקה קבועים: שני וחמישי. חלוקה בבתי כנסת: חמישי ושישי.
