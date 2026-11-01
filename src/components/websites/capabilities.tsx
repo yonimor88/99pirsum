@@ -40,7 +40,7 @@ export function Capabilities({
         className="bg-ink text-paper md:col-span-4"
         icon={<Zap className="size-5" aria-hidden />}
         title="ציונים מושלמים מגוגל"
-        text="כל אתר עובר את הבדיקה של Google Lighthouse — מהירות, נגישות, קוד נקי וקידום בגוגל. אלה הציונים האמיתיים של האתרים שבנינו."
+        text="כל אתר עובר את כלי הבדיקה של גוגל — מהירות, נגישות, איכות וקידום. אלה הציונים האמיתיים של האתרים שבנינו."
         dark
       >
         <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-4">
@@ -64,7 +64,7 @@ export function Capabilities({
         className="bg-paper-2 md:col-span-2"
         icon={<Search className="size-5" aria-hidden />}
         title="מוכן לגוגל מהיום הראשון"
-        text="כותרות, תיאורים, Schema ומפת אתר בכל עמוד."
+        text="כל עמוד בנוי כך שגוגל ימצא אותו ויבין אותו."
       >
         <SearchDemo />
       </Tile>
