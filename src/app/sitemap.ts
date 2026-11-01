@@ -4,10 +4,11 @@ import { cities } from "@/content/cities";
 import { gallery, photos, type Photo } from "@/content/media";
 import { posts } from "@/content/posts";
 import { services } from "@/content/services";
+import { websites } from "@/content/websites";
 import { absoluteUrl } from "@/lib/seo";
 
 /** Bump when page content changes. */
-const SITE_UPDATED = "2026-10-22";
+const SITE_UPDATED = "2026-11-01";
 
 const img = (list: Photo[]) => [...new Set(list.map((p) => absoluteUrl(p.src.src)))];
 
@@ -18,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/contact", priority: 0.9 },
     { path: "/areas", priority: 0.8, images: img([photos.cityAerial]) },
     { path: "/work", priority: 0.7, images: img(gallery) },
+    { path: "/websites", priority: 0.7, images: websites.map((w) => absoluteUrl(w.shots.desktop.src)) },
     { path: "/testimonials", priority: 0.6 },
     { path: "/about", priority: 0.6, images: img([photos.boardReaderTall]) },
     { path: "/blog", priority: 0.6 },

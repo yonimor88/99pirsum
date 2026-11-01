@@ -48,6 +48,7 @@ export const footerCompanyNav: NavLink[] = [
   { href: "/about", label: "מי אנחנו" },
   { href: "/areas", label: "אזורי הפצה" },
   { href: "/work", label: "תמונות מהשטח" },
+  { href: "/websites", label: "אתרים שבנינו" },
   { href: "/testimonials", label: "ממליצים עלינו" },
   { href: "/blog", label: "מאמרים וטיפים" },
   { href: "/glossary", label: "מילון מונחים" },

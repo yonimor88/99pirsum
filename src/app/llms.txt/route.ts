@@ -2,6 +2,7 @@ import { cities, moreCities } from "@/content/cities";
 import { posts } from "@/content/posts";
 import { services } from "@/content/services";
 import { site } from "@/content/site";
+import { websites } from "@/content/websites";
 import { absoluteUrl } from "@/lib/seo";
 
 /** Plain-text summary of the business for AI assistants and answer engines (llmstxt.org). */
@@ -42,6 +43,7 @@ ${posts.map((p) => `- [${p.title}](${absoluteUrl(`/blog/${p.slug}`)}): ${p.descr
 - [מי אנחנו](${absoluteUrl("/about")})
 - [ממליצים עלינו](${absoluteUrl("/testimonials")})
 - [תמונות מהשטח](${absoluteUrl("/work")})
+- [אתרים שבנינו](${absoluteUrl("/websites")}): ${websites.map((w) => `${w.name} (${w.url})`).join(", ")}
 - [מילון מונחים](${absoluteUrl("/glossary")})
 - [צור קשר והצעת מחיר](${absoluteUrl("/contact")})
 `;
