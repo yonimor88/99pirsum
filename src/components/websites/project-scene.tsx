@@ -26,12 +26,12 @@ const pop: Variants = {
 };
 
 /**
- * One project. On large screens the scene pins to the viewport while the page
- * scrolls, and the live site's full-page capture scrolls inside the laptop and
- * phone. On phones it's a normal block and the captures scroll as it passes.
+ * One project. The live site's full-page capture scrolls inside the laptop and
+ * phone while they stay pinned to the viewport. On large screens the whole
+ * scene pins; on phones only the devices pin, and the story follows below.
  */
 export function ProjectScene({ site, index, total }: { site: Website; index: number; total: number }) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const lessMotion = usePrefersLessMotion();
   const flip = index % 2 === 1;
 
@@ -48,46 +48,52 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
   const number = String(index + 1).padStart(2, "0");
 
   return (
-    <section ref={ref} aria-labelledby={`site-${site.slug}`} className="relative lg:h-[300vh]">
+    <section aria-labelledby={`site-${site.slug}`} className="relative lg:h-[300vh]">
+      {/* Scroll track: the whole scene on large screens, the devices' pin track on phones. Same height on both. */}
+      <div ref={ref} aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[300vh]" />
       <div className="lg:sticky lg:top-0 lg:flex lg:h-svh lg:items-center">
-        <div className="container-page grid items-center gap-12 py-16 lg:grid-cols-12 lg:gap-14 lg:py-0">
+        <div className="container-page grid items-center gap-12 pb-16 lg:grid-cols-12 lg:gap-14 lg:pb-0">
           {/* Devices */}
-          <div className={cn("relative lg:col-span-7", flip && "lg:order-2")}>
-            <m.div
-              aria-hidden
-              className="absolute inset-[8%] -z-10 rounded-full opacity-50 blur-[90px]"
-              style={{ backgroundColor: site.glow, scale: lessMotion ? 1 : glowScale }}
-            />
-            <div className="[perspective:1600px]">
-              <m.div style={lessMotion ? undefined : { scale: enterScale, rotateX: enterTilt, y: exitLift }} className="origin-bottom">
-                <BrowserFrame domain={site.domain} tone="dark">
-                  <m.div style={{ y: desktopY }} className="absolute inset-x-0 top-0 will-change-transform">
-                    <Image
-                      src={site.shots.desktopLong}
-                      alt={`צילום מסך מלא של האתר ${site.name}`}
-                      sizes="(min-width: 1024px) 52vw, 92vw"
-                      className="h-auto w-full"
-                    />
+          <div className={cn("h-[300vh] lg:col-span-7 lg:h-auto", flip && "lg:order-2")}>
+            <div className="sticky top-0 flex h-svh items-center lg:static lg:block lg:h-auto">
+              <div className="relative w-full">
+                <m.div
+                  aria-hidden
+                  className="absolute inset-[8%] -z-10 rounded-full opacity-50 blur-[90px]"
+                  style={{ backgroundColor: site.glow, scale: lessMotion ? 1 : glowScale }}
+                />
+                <div className="[perspective:1600px]">
+                  <m.div style={lessMotion ? undefined : { scale: enterScale, rotateX: enterTilt, y: exitLift }} className="origin-bottom">
+                    <BrowserFrame domain={site.domain} tone="dark">
+                      <m.div style={{ y: desktopY }} className="absolute inset-x-0 top-0 will-change-transform">
+                        <Image
+                          src={site.shots.desktopLong}
+                          alt={`צילום מסך מלא של האתר ${site.name}`}
+                          sizes="(min-width: 1024px) 52vw, 92vw"
+                          className="h-auto w-full"
+                        />
+                      </m.div>
+                      {/* scroll progress */}
+                      <m.span
+                        aria-hidden
+                        className="absolute inset-x-0 bottom-0 h-1 origin-right"
+                        style={{ scaleX: progress, backgroundColor: site.glow }}
+                      />
+                    </BrowserFrame>
                   </m.div>
-                  {/* scroll progress */}
-                  <m.span
-                    aria-hidden
-                    className="absolute inset-x-0 bottom-0 h-1 origin-right"
-                    style={{ scaleX: progress, backgroundColor: site.glow }}
-                  />
-                </BrowserFrame>
-              </m.div>
-            </div>
-            <m.div
-              className={cn("absolute -bottom-10 w-[26%] sm:-bottom-14", flip ? "-right-2 sm:-right-6" : "-left-2 sm:-left-6")}
-              style={lessMotion ? undefined : { y: phoneLift }}
-            >
-              <PhoneFrame className={flip ? "rotate-[5deg]" : "-rotate-[5deg]"}>
-                <m.div style={{ y: phoneY }} className="absolute inset-x-0 top-0 will-change-transform">
-                  <Image src={site.shots.mobileLong} alt={`האתר ${site.name} בטלפון`} sizes="(min-width: 1024px) 14vw, 26vw" className="h-auto w-full" />
+                </div>
+                <m.div
+                  className={cn("absolute -bottom-10 w-[26%] sm:-bottom-14", flip ? "-right-2 sm:-right-6" : "-left-2 sm:-left-6")}
+                  style={lessMotion ? undefined : { y: phoneLift }}
+                >
+                  <PhoneFrame className={flip ? "rotate-[5deg]" : "-rotate-[5deg]"}>
+                    <m.div style={{ y: phoneY }} className="absolute inset-x-0 top-0 will-change-transform">
+                      <Image src={site.shots.mobileLong} alt={`האתר ${site.name} בטלפון`} sizes="(min-width: 1024px) 14vw, 26vw" className="h-auto w-full" />
+                    </m.div>
+                  </PhoneFrame>
                 </m.div>
-              </PhoneFrame>
-            </m.div>
+              </div>
+            </div>
           </div>
 
           {/* Story */}
