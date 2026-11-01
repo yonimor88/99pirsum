@@ -5,6 +5,7 @@ import { a11yBootScript } from "@/components/a11y/a11y-store";
 import { FloatingActions } from "@/components/layout/floating-actions";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { SmoothScroll } from "@/components/layout/smooth-scroll";
 import { JsonLd } from "@/components/seo/json-ld";
 import { promoBootScript } from "@/content/promo";
 import { site } from "@/content/site";
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <SiteFooter />
         <FloatingActions />
+        <SmoothScroll />
         <JsonLd data={localBusinessJsonLd()} />
       </body>
     </html>

@@ -683,6 +683,18 @@ html.a11y-no-motion *::after {
   scroll-behavior: auto !important;
 }
 
+/* Lenis smooth scrolling (src/components/layout/smooth-scroll.tsx); the package doesn't export its CSS */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee,
   .animate-marquee-reverse {
