@@ -6,6 +6,7 @@ import { FloatingActions } from "@/components/layout/floating-actions";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { JsonLd } from "@/components/seo/json-ld";
+import { promoBootScript } from "@/content/promo";
 import { site } from "@/content/site";
 import { localBusinessJsonLd } from "@/lib/seo";
 import "./globals.css";
@@ -57,9 +58,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: a11yBootScript }} />
+        <script dangerouslySetInnerHTML={{ __html: promoBootScript }} />
       </head>
       <body className="paper-grain min-h-svh">
         <SiteHeader />
+        {/* room for the promo strip at the top of the fixed header */}
+        <div aria-hidden className="hidden h-10 [.promo-on_&]:block" />
         <main id="main" tabIndex={-1} className="outline-none">
           {children}
         </main>

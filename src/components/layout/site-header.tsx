@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 
 import megaPhoto from "@/assets/images/work/board-reader.jpg";
 import { LogoMark } from "@/components/brand/logo";
+import { PromoBanner } from "@/components/layout/promo-banner";
 import { Dots } from "@/components/brand/ornaments";
 import { buttonClasses } from "@/components/ui/button";
 import { ServiceGlyph, WhatsAppIcon } from "@/components/ui/icons";
@@ -126,6 +127,7 @@ export function SiteHeader() {
         )}
         onMouseLeave={scheduleCloseMega}
       >
+        <PromoBanner />
         <div
           className={cn(
             "transition-[background-color,box-shadow,backdrop-filter] duration-500",

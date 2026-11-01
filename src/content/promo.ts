@@ -1,0 +1,19 @@
+/**
+ * Limited-time websites offer, shown as a strip above the header on every page.
+ * It switches itself off at `ends`: the boot script below only adds the
+ * `promo-on` class to <html> before then, so nothing flashes after it expires.
+ */
+export const promo = {
+  id: "websites-2026-11",
+  label: "מבצע",
+  text: "אתר החל מ-500 ש״ח לזמן מוגבל",
+  price: "500 ש״ח",
+  until: "עד 15 בנובמבר",
+  href: "/websites",
+  /** End of 15 November, Israel time */
+  ends: "2026-11-16T00:00:00+02:00",
+} as const;
+
+export const PROMO_DISMISS_KEY = "99p-promo-dismissed";
+
+export const promoBootScript = `(function(){try{if(Date.now()<${Date.parse(promo.ends)}&&localStorage.getItem("${PROMO_DISMISS_KEY}")!=="${promo.id}")document.documentElement.classList.add("promo-on");}catch(e){}})();`;
