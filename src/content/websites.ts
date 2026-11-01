@@ -28,6 +28,14 @@ import malbusheiDesktop from "@/assets/images/sites/malbushei-desktop.webp";
 import malbusheiDesktopLong from "@/assets/images/sites/malbushei-desktop-long.webp";
 import malbusheiMobile from "@/assets/images/sites/malbushei-mobile.webp";
 import malbusheiMobileLong from "@/assets/images/sites/malbushei-mobile-long.webp";
+import kitchenDesktop from "@/assets/images/sites/kitchen-desktop.webp";
+import kitchenDesktopLong from "@/assets/images/sites/kitchen-desktop-long.webp";
+import kitchenMobile from "@/assets/images/sites/kitchen-mobile.webp";
+import kitchenMobileLong from "@/assets/images/sites/kitchen-mobile-long.webp";
+import neveDesktop from "@/assets/images/sites/neve-desktop.webp";
+import neveDesktopLong from "@/assets/images/sites/neve-desktop-long.webp";
+import neveMobile from "@/assets/images/sites/neve-mobile.webp";
+import neveMobileLong from "@/assets/images/sites/neve-mobile-long.webp";
 import pirsumDesktop from "@/assets/images/sites/99pirsum-desktop.webp";
 import pirsumDesktopLong from "@/assets/images/sites/99pirsum-desktop-long.webp";
 import pirsumMobile from "@/assets/images/sites/99pirsum-mobile.webp";
@@ -213,5 +221,41 @@ export const concepts: Website[] = [
     glow: "#8e2332",
     concept: true,
     shots: { desktop: malbusheiDesktop, mobile: malbusheiMobile, desktopLong: malbusheiDesktopLong, mobileLong: malbusheiMobileLong },
+  },
+  {
+    slug: "neve-oren",
+    name: "נווה אורן",
+    url: "https://neve-oren.vercel.app",
+    domain: "neve-oren.vercel.app",
+    industry: "פרויקט מגורים",
+    headline: "דירה שבוחרים מתוך השרטוט.",
+    summary:
+      "אתר לפרויקט מגורים חדש בבית שמש, שבנוי כמו סט שרטוטים של אדריכל: הבניינים מסתרטטים ועולים קומה אחר קומה, והשמש חוצה את השמיים בגלילה.",
+    challenge: "זוגות צעירים והורים שקונים לילדים רוצים לדעת הכול לפני שמגיעים למשרד המכירות: מה פנוי, כמה זה עולה ומה יש ליד הבית.",
+    solution:
+      "חזית בניין שבה כל דירה לחיצה, תוכנית דירה שמשורטטת מול העיניים עם מרפסת סוכה ומטבח בשרי־חלבי, מפת קהילה עם דקות הליכה לבתי כנסת ולמוסדות, ומחשבון משכנתא — והכול נשלח לוואטסאפ.",
+    features: ["איתור דירה אינטראקטיבי", "תוכניות דירה", "מפת קהילה", "מחשבון משכנתא", "מצב שבת"],
+    palette: ["#22201c", "#f4efe6", "#b4532a", "#c9b99c", "#a39b8e"],
+    glow: "#b4532a",
+    concept: true,
+    shots: { desktop: neveDesktop, mobile: neveMobile, desktopLong: neveDesktopLong, mobileLong: neveMobileLong },
+  },
+  {
+    slug: "shabbat-kitchen",
+    name: "המטבח של שבת",
+    url: "https://shabbat-kitchen.vercel.app",
+    domain: "shabbat-kitchen.vercel.app",
+    industry: "אוכל מוכן לשבת",
+    headline: "אתר שמריח כמו יום שישי.",
+    summary:
+      "אתר לטייק אווי לשבת: צבעוני, שמח ומאויר ביד — סיר צ׳ולנט מעלה אדים, חלה שנקלעת מול העיניים ותפריט שמתחלף לפי פרשת השבוע.",
+    challenge: "משפחות גדולות מזמינות כל שבוע, ממהרות, ולפעמים מטלפון כשר — וההזמנה חייבת להגיע עד יום חמישי.",
+    solution:
+      "תפריט שבועי לפי פרשה עם מגש הזמנה שהמנות קופצות אליו, שעון ספירה לאחור עד סגירת ההזמנות, סלי שבת למשפחה, תפריטי חג ופסח, ושליחת ההזמנה בוואטסאפ או בטלפון.",
+    features: ["תפריט לפי פרשה", "מגש הזמנה", "ספירה לאחור", "סלי שבת", "מצב שבת"],
+    palette: ["#3b2015", "#fbf3e4", "#d63c24", "#f2a516", "#6b7a2a"],
+    glow: "#f2a516",
+    concept: true,
+    shots: { desktop: kitchenDesktop, mobile: kitchenMobile, desktopLong: kitchenDesktopLong, mobileLong: kitchenMobileLong },
   },
 ];
