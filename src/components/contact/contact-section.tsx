@@ -4,7 +4,7 @@ import { Dots } from "@/components/brand/ornaments";
 import { WazeIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { Reveal } from "@/components/ui/reveal";
 import { Mark, SectionHeading } from "@/components/ui/section-heading";
-import { site, wazeLink, whatsappLink } from "@/content/site";
+import { site, wazeLink, websitesPhone, whatsappLink } from "@/content/site";
 import { ContactForm } from "./contact-form";
 
 export function ContactDetails() {
@@ -30,6 +30,22 @@ export function ContactDetails() {
       ))}
       <li>
         <a
+          href={websitesPhone.href}
+          className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-paper p-4 transition hover:border-ink"
+        >
+          <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-yellow text-ink">
+            <Phone className="size-5" aria-hidden />
+          </span>
+          <span>
+            <span className="block text-sm text-muted">בניית אתרים</span>
+            <span dir="ltr" className="block font-display text-2xl font-bold tabular-nums">
+              {websitesPhone.display}
+            </span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a
           href={whatsappLink()}
           target="_blank"
           rel="noopener noreferrer"
@@ -49,7 +65,7 @@ export function ContactDetails() {
           href={`mailto:${site.email}`}
           className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-paper p-4 transition hover:border-ink"
         >
-          <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-cyan text-ink">
+          <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-yellow text-ink">
             <Mail className="size-5" aria-hidden />
           </span>
           <span className="min-w-0">

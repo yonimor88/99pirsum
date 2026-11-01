@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePrefersLessMotion } from "@/components/a11y/motion-provider";
 import { buttonClasses } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/ui/icons";
-import { primaryPhone, whatsappLink } from "@/content/site";
+import { websitesPhone, whatsappLink } from "@/content/site";
 import { BrowserFrame } from "./device-frames";
 
 const DOMAINS = ["העסק-שלכם.co.il", "your-business.co.il", "המותג-הבא.com"];
@@ -78,10 +78,10 @@ export function YourSiteNext() {
                 להשאיר פרטים
                 <ArrowUpLeft className="size-5" aria-hidden />
               </Link>
-              <a href={primaryPhone.href} className={buttonClasses({ variant: "outline-light", size: "lg" })}>
+              <a href={websitesPhone.href} className={buttonClasses({ variant: "outline-light", size: "lg" })}>
                 <Phone className="size-5" aria-hidden />
                 <span dir="ltr" className="tabular-nums">
-                  {primaryPhone.display}
+                  {websitesPhone.display}
                 </span>
               </a>
             </div>

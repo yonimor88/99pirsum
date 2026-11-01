@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUpLeft } from "lucide-react";
+import { ArrowDown, ArrowUpLeft, Phone } from "lucide-react";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 
@@ -19,7 +19,7 @@ import { ProcessSteps } from "@/components/websites/process-steps";
 import { ProjectScene } from "@/components/websites/project-scene";
 import { YourSiteNext } from "@/components/websites/your-site-next";
 import { lite, photos } from "@/content/media";
-import { whatsappLink } from "@/content/site";
+import { websitesPhone, whatsappLink } from "@/content/site";
 import { websites } from "@/content/websites";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
@@ -103,6 +103,12 @@ export default function WebsitesPage() {
                 >
                   <WhatsAppIcon className="size-5 text-whatsapp" />
                   אני רוצה אתר כזה
+                </ButtonAnchor>
+                <ButtonAnchor href={websitesPhone.href} variant="outline" size="lg">
+                  <Phone className="size-5" aria-hidden />
+                  <span dir="ltr" className="tabular-nums">
+                    {websitesPhone.display}
+                  </span>
                 </ButtonAnchor>
                 <ButtonAnchor href="#projects" variant="outline" size="lg">
                   לעבודות

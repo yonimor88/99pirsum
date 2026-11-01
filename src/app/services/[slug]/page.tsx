@@ -18,7 +18,7 @@ import { accentBg } from "@/content/service-nav";
 import { cities } from "@/content/cities";
 import { lite } from "@/content/media";
 import { getService, services } from "@/content/services";
-import { primaryPhone, site, whatsappLink } from "@/content/site";
+import { primaryPhone, site, websitesPhone, whatsappLink } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
@@ -49,6 +49,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
   if (!service) notFound();
 
   const related = service.related.map((r) => getService(r)).filter((s) => s !== undefined);
+  const phone = service.slug === "web-digital" ? websitesPhone : primaryPhone;
   const articles = posts.filter((p) => p.relatedService === service.slug || service.related.includes(p.relatedService)).slice(0, 3);
 
   return (
@@ -148,10 +149,10 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
               <p className="mt-2 font-display text-2xl font-bold">מדברים איתנו ישירות.</p>
               <p className="mt-3 text-paper/70">נשמח להתאים לכם את השירות ולתת הצעת מחיר מסודרת.</p>
               <div className="mt-6 grid gap-3">
-                <ButtonAnchor href={primaryPhone.href} variant="paper" size="lg" className="w-full">
+                <ButtonAnchor href={phone.href} variant="paper" size="lg" className="w-full">
                   <Phone className="size-5" aria-hidden />
                   <span dir="ltr" className="tabular-nums">
-                    {primaryPhone.display}
+                    {phone.display}
                   </span>
                 </ButtonAnchor>
                 <ButtonAnchor
