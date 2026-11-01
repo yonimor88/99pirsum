@@ -137,7 +137,7 @@ export function SiteHeader() {
           <div className="container-page flex h-[4.5rem] items-center gap-6 lg:h-20">
             <Link href="/" onClick={closeAll} className="group flex shrink-0 items-center gap-3" aria-label="99 פרסום ומדיה — דף הבית">
               <LogoMark className="h-9 w-auto text-ink transition-transform duration-500 group-hover:-rotate-3 lg:h-10" title="" />
-              <span className="hidden flex-col leading-none sm:flex">
+              <span className="hidden flex-col leading-none sm:flex lg:hidden xl:flex">
                 <span className="font-display text-[1.05rem] font-bold text-ink">פרסום ומדיה</span>
                 <span className="mt-1 text-xs text-muted">תמיד שואפים ל-100%</span>
               </span>
@@ -151,7 +151,7 @@ export function SiteHeader() {
                       <button
                         type="button"
                         className={cn(
-                          "relative flex items-center gap-1.5 rounded-full px-4 py-2 font-display font-medium text-ink transition-colors hover:bg-ink/5",
+                          "relative flex items-center gap-1.5 rounded-full px-3 py-2 font-display font-medium whitespace-nowrap text-ink transition-colors hover:bg-ink/5 xl:px-4",
                           (megaOpen || isActive(item.href)) && "bg-ink/5",
                         )}
                         aria-expanded={megaOpen}
@@ -170,10 +170,15 @@ export function SiteHeader() {
                       <Link
                         href={item.href}
                         onClick={closeAll}
-                        className="group relative flex rounded-full px-4 py-2 font-display font-medium text-ink transition-colors hover:bg-ink/5"
+                        className="group relative flex rounded-full px-3 py-2 font-display font-medium whitespace-nowrap text-ink transition-colors hover:bg-ink/5 xl:px-4"
                         aria-current={isActive(item.href) ? "page" : undefined}
                       >
                         {item.label}
+                        {item.badge && (
+                          <span className="absolute -top-1 -left-1.5 rounded-full bg-magenta px-1.5 text-[0.62rem] leading-4 font-bold text-paper">
+                            {item.badge}
+                          </span>
+                        )}
                         {isActive(item.href) && (
                           <span className="pop-in absolute -bottom-0.5 left-1/2 size-1.5 -translate-x-1/2 rounded-full bg-magenta" />
                         )}
@@ -187,7 +192,7 @@ export function SiteHeader() {
             <div className="ms-auto flex items-center gap-2 lg:ms-0">
               <a
                 href={primaryPhone.href}
-                className="hidden items-center gap-2 rounded-full px-3 py-2 font-display font-semibold text-ink tabular-nums transition-colors hover:bg-ink/5 xl:flex"
+                className="hidden items-center gap-2 rounded-full px-3 py-2 font-display font-semibold whitespace-nowrap text-ink tabular-nums transition-colors hover:bg-ink/5 xl:flex"
                 dir="ltr"
               >
                 <span>{primaryPhone.display}</span>
@@ -344,7 +349,12 @@ export function SiteHeader() {
                       (item.href === "/" ? pathname === "/" : isActive(item.href)) && "text-yellow",
                     )}
                   >
-                    {item.label}
+                    <span className="flex items-center gap-3">
+                      {item.label}
+                      {"badge" in item && item.badge && (
+                        <span className="rounded-full bg-magenta px-2 py-0.5 font-sans text-xs font-bold text-paper">{item.badge}</span>
+                      )}
+                    </span>
                     <ArrowUpLeft className="size-6 text-paper/40" aria-hidden />
                   </Link>
                 </li>

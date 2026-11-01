@@ -12,6 +12,7 @@ import { Promise100 } from "@/components/home/promise-100";
 import { ServicesShowcase } from "@/components/home/services-showcase";
 import { TestimonialLetters } from "@/components/home/testimonial-letters";
 import { TickerBands } from "@/components/home/ticker-bands";
+import { WebsitesSpotlight } from "@/components/home/websites-spotlight";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ButtonLink } from "@/components/ui/button";
 import { Counter } from "@/components/ui/counter";
@@ -45,6 +46,7 @@ export default function HomePage() {
     <>
       <Hero />
       <TickerBands />
+      <WebsitesSpotlight />
 
       {/* Services */}
       <section className="py-20 lg:py-28">

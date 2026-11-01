@@ -5,6 +5,7 @@ import { body as distributionPricing } from "./distribution-pricing";
 import { body as doorHangersGuide } from "./door-hangers-guide";
 import { body as fridgeMagnets } from "./fridge-magnets";
 import { body as harediAdvertisingGuide } from "./haredi-advertising-guide";
+import { body as harediBusinessWebsite } from "./haredi-business-website";
 import { body as harediCampaignPlanning } from "./haredi-campaign-planning";
 import { body as harediMailboxDistribution } from "./haredi-mailbox-distribution";
 import { body as streetPosterDesignRules } from "./street-poster-design-rules";
@@ -26,6 +27,17 @@ type PostSource = PostMeta & { body: string };
 
 /** Newest first. To add an article: create a file in this folder and add an entry here. */
 const sources: PostSource[] = [
+  {
+    slug: "haredi-business-website",
+    title: "אתר לעסק במגזר החרדי: מה חשוב לדעת לפני שבונים",
+    description:
+      "סינון, טלפון כשר, תאריך עברי ומצב שבת — מה שונה באתר לקהל החרדי והדתי, מה חייב להיות בו ואיך מחברים אותו לפרסום המודפס.",
+    category: "אתרים",
+    date: "2026-11-01",
+    cover: photos.websitesCollage,
+    relatedService: "web-digital",
+    body: harediBusinessWebsite,
+  },
   {
     slug: "haredi-advertising-guide",
     title: "פרסום במגזר החרדי: המדריך המלא לעסקים",

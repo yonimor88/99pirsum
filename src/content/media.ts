@@ -54,6 +54,7 @@ import synagogueTall1 from "@/assets/images/work/synagogue-tall-1.jpg";
 import synagogueTall2 from "@/assets/images/work/synagogue-tall-2.jpg";
 import synagogueTall3 from "@/assets/images/work/synagogue-tall-3.jpg";
 import webDesign from "@/assets/images/work/web-design.jpg";
+import websitesCollage from "@/assets/images/work/websites-collage.jpg";
 
 export type Photo = { src: StaticImageData; alt: string };
 
@@ -74,6 +75,7 @@ const photo = (src: StaticImageData, alt: string): Photo => ({ src, alt });
 
 export const photos = {
   boardReader: photo(boardReader, "אברך עוצר לקרוא את לוח המודעות ברחוב"),
+  websitesCollage: photo(websitesCollage, "אתרים שעיצבנו ובנינו לעסקים במגזר החרדי"),
   boardReaderTall: photo(boardReaderTall, "עובר אורח קורא מודעות על לוח מודעות עירוני"),
   boardPosterCrew: photo(boardPosterCrew, "עובד הדבקה מדביק מודעה חדשה על לוח מודעות"),
   boardPosterCrew2: photo(boardPosterCrew2, "לוח מודעות עירוני מלא במודעות טריות"),

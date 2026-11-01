@@ -37,10 +37,11 @@ export function whatsappLink(text = "שלום, הגעתי מהאתר ואשמח 
 export const wazeLink = `https://waze.com/ul?q=${encodeURIComponent(site.address.full)}&navigate=yes`;
 export const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.address.full)}`;
 
-export type NavLink = { href: string; label: string };
+export type NavLink = { href: string; label: string; badge?: string };
 
 export const mainNav: NavLink[] = [
   { href: "/services", label: "שירותים" },
+  { href: "/websites", label: "אתרים", badge: "חדש" },
   { href: "/areas", label: "אזורי הפצה" },
   { href: "/work", label: "מהשטח" },
   { href: "/testimonials", label: "ממליצים" },
