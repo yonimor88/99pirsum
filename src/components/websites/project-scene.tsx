@@ -48,14 +48,25 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
   const number = String(index + 1).padStart(2, "0");
 
   return (
-    <section aria-labelledby={`site-${site.slug}`} className="relative lg:h-[300vh]">
-      {/* Scroll track: the whole scene on large screens, the devices' pin track on phones. Same height on both. */}
-      <div ref={ref} aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[300vh]" />
+    <section
+      aria-labelledby={`site-${site.slug}`}
+      // --dev-h: rough height of the devices on phones (browser frame + the phone hanging below it)
+      className="relative [--dev-h:calc((100vw-2.5rem)*0.625+4.5rem)] sm:[--dev-h:calc((100vw-4rem)*0.625+5.5rem)] lg:h-[300vh]"
+    >
+      {/*
+        Scroll ruler for the capture animation. Large screens: the whole pinned scene. Phones: only the devices
+        pin, vertically centred, for 200vh — the ruler is shifted up by that centring offset so the mapping is the same.
+      */}
+      <div
+        ref={ref}
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-[calc(var(--dev-h)/2_-_50svh)] h-[300vh] lg:top-0"
+      />
       <div className="lg:sticky lg:top-0 lg:flex lg:h-svh lg:items-center">
         <div className="container-page grid items-center gap-12 pb-16 lg:grid-cols-12 lg:gap-14 lg:pb-0">
           {/* Devices */}
-          <div className={cn("h-[300vh] lg:col-span-7 lg:h-auto", flip && "lg:order-2")}>
-            <div className="sticky top-0 flex h-svh items-center lg:static lg:block lg:h-auto">
+          <div className={cn("h-[calc(200vh_+_var(--dev-h))] lg:col-span-7 lg:h-auto", flip && "lg:order-2")}>
+            <div className="sticky top-[calc(50svh_-_var(--dev-h)/2)] lg:static">
               <div className="relative w-full">
                 <m.div
                   aria-hidden
@@ -109,8 +120,9 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
                 {number}
               </span>
               <span className="flex flex-col gap-1">
-                <span className="text-xs tracking-widest text-paper/40 tabular-nums">
+                <span className="flex items-center gap-2 text-xs tracking-widest text-paper/40 tabular-nums">
                   {number} / {String(total).padStart(2, "0")}
+                  {site.concept && <span className="rounded-full bg-yellow px-2 py-0.5 font-bold tracking-normal text-ink">אתר קונספט</span>}
                 </span>
                 <span className="inline-flex items-center gap-2 rounded-full border border-paper/15 px-3 py-1 text-sm text-paper/80">
                   <span className="size-2 rounded-full" style={{ backgroundColor: site.glow }} />

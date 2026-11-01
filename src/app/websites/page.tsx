@@ -20,7 +20,7 @@ import { ProjectScene } from "@/components/websites/project-scene";
 import { YourSiteNext } from "@/components/websites/your-site-next";
 import { lite, photos } from "@/content/media";
 import { websitesPhone, whatsappLink } from "@/content/site";
-import { websites } from "@/content/websites";
+import { concepts, websites } from "@/content/websites";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -180,6 +180,25 @@ export default function WebsitesPage() {
         <div className="relative pb-24 lg:pb-10">
           {websites.map((site, i) => (
             <ProjectScene key={site.slug} site={site} index={i} total={websites.length} />
+          ))}
+        </div>
+
+        {/* Concept sites */}
+        <div id="concepts" className="container-page relative scroll-mt-24 border-t border-paper/10 pt-20 lg:pt-28">
+          <SectionHeading
+            tone="paper"
+            eyebrow="אתרי קונספט"
+            title={
+              <span id="concepts-title">
+                למגזר החרדי. <span className="text-yellow">עד הפרט האחרון.</span>
+              </span>
+            }
+            description="עסקים לדוגמה — אתרים אמיתיים וחיים. כל אחד עם מצב שבת, תאריך עברי, טלפון בכל מקום (גם למי שמחזיק מכשיר כשר), ועובד יפה גם כשנטפרי או רימון חוסמים תמונות."
+          />
+        </div>
+        <div className="relative pb-24 lg:pb-10">
+          {concepts.map((site, i) => (
+            <ProjectScene key={site.slug} site={site} index={i} total={concepts.length} />
           ))}
         </div>
       </section>
