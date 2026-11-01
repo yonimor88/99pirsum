@@ -83,6 +83,12 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           <WhatsAppIcon className="size-5 text-green-ink group-hover/btn:text-paper" />
           וואטסאפ
         </ButtonAnchor>
+        {service.slug === "web-digital" && (
+          <ButtonLink href="/websites" variant="yellow" size="lg">
+            לאתרים שבנינו
+            <ArrowUpLeft className="size-5" aria-hidden />
+          </ButtonLink>
+        )}
       </PageHero>
 
       {/* Facts strip */}
