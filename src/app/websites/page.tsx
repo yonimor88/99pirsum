@@ -54,7 +54,7 @@ const faq = [
   },
   {
     q: "האתר יופיע בגוגל?",
-    a: "כל אתר נבנה כך שגוגל יבין אותו: כותרת ותיאור לכל עמוד, מבנה מסודר ומהירות טעינה גבוהה. כל האתרים בעמוד הזה קיבלו ציון 100 בבדיקת הקידום של גוגל.",
+    a: "כל אתר נבנה כך שגוגל יבין אותו: כותרת ותיאור לכל עמוד, מבנה מסודר ומהירות טעינה גבוהה. כל אתרי הלקוחות בעמוד הזה קיבלו ציון 100 בבדיקת הקידום של גוגל.",
   },
   {
     q: "האתר יהיה מהיר ויציב?",
@@ -71,6 +71,13 @@ const faq = [
 ];
 
 const ticker = ["עיצוב אישי", "מהירות", "קידום בגוגל", "מותאם לנייד", "נגישות", "פניות לוואטסאפ", "אנימציות", "חוויית משתמש"];
+
+const allSites = [...websites, ...concepts];
+
+/** Clients and concepts alternate in the hero deck, so both show up from the first few cards. */
+const deckSites = Array.from({ length: Math.max(websites.length, concepts.length) }, (_, i) => [websites[i], concepts[i]])
+  .flat()
+  .filter((s) => s !== undefined);
 
 export default function WebsitesPage() {
   return (
@@ -117,7 +124,7 @@ export default function WebsitesPage() {
               </div>
               <dl className="intro-rise mt-12 grid max-w-lg grid-cols-3 gap-px overflow-hidden rounded-2xl bg-ink/10" style={{ "--intro-delay": "0.35s" } as CSSProperties}>
                 <div className="bg-paper p-4">
-                  <dt className="text-xs text-muted sm:text-sm">ציון SEO בכל האתרים</dt>
+                  <dt className="text-xs text-muted sm:text-sm">ציון SEO באתרי הלקוחות</dt>
                   <dd className="mt-1 font-display text-3xl font-black tabular-nums sm:text-4xl">
                     <Counter value={100} />
                   </dd>
@@ -135,12 +142,13 @@ export default function WebsitesPage() {
               </dl>
             </div>
             <HeroDeck
-              sites={websites.map(({ slug, name, domain, industry, glow, shots }) => ({
+              sites={deckSites.map(({ slug, name, domain, industry, glow, concept, shots }) => ({
                 slug,
                 name,
                 domain,
                 industry,
                 glow,
+                concept,
                 shots: { desktop: shots.desktop, mobile: shots.mobile },
               }))}
             />
@@ -171,10 +179,10 @@ export default function WebsitesPage() {
             eyebrow="תיק עבודות"
             title={
               <span id="projects-title">
-                ארבעה עסקים. <span className="text-yellow">ארבעה עולמות.</span>
+                {allSites.length} אתרים. <span className="text-yellow">{allSites.length} עולמות.</span>
               </span>
             }
-            description="גללו לאט — האתרים זזים בתוך המסכים בדיוק כמו אצל הגולשים. כל מה שאתם רואים הוא צילום של האתר החי."
+            description={`אתרים של לקוחות שלנו, ועוד ${concepts.length} אתרי קונספט למגזר החרדי. גללו לאט — האתרים זזים בתוך המסכים בדיוק כמו אצל הגולשים. כל מה שאתם רואים הוא צילום של האתר החי.`}
           />
         </div>
         <div className="relative pb-24 lg:pb-10">
@@ -218,7 +226,7 @@ export default function WebsitesPage() {
           <div className="mt-12">
             <Capabilities
               scores={scores}
-              scoreNote="ממוצע ארבעת האתרים בבדיקת Google Lighthouse במחשב, נובמבר 2026."
+              scoreNote={`ממוצע ${websites.length} אתרי הלקוחות בבדיקת Google Lighthouse במחשב, נובמבר 2026.`}
               palettes={websites.map((w) => w.palette)}
               fieldPhoto={lite(photos.doorHanger)}
             />

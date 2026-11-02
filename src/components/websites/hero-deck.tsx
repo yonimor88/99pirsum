@@ -1,6 +1,6 @@
 "use client";
 
-import { Gauge, Search, Smartphone } from "lucide-react";
+import { ChevronLeft, ChevronRight, Gauge, Search, Smartphone } from "lucide-react";
 import { AnimatePresence, m, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
 import Image from "next/image";
 import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
@@ -19,8 +19,9 @@ const SLOTS = [
   { x: "6%", y: "-21%", rotate: -4.5, scale: 0.84, opacity: 0.75 },
   { x: "-3%", y: "-30%", rotate: 5, scale: 0.76, opacity: 0.5 },
 ];
+const BACK = SLOTS[SLOTS.length - 1];
 
-type DeckSite = Pick<Website, "slug" | "name" | "domain" | "industry" | "glow"> & {
+type DeckSite = Pick<Website, "slug" | "name" | "domain" | "industry" | "glow" | "concept"> & {
   shots: Pick<Website["shots"], "desktop" | "mobile">;
 };
 
@@ -30,6 +31,7 @@ export function HeroDeck({ sites }: { sites: DeckSite[] }) {
   const [paused, setPaused] = useState(false);
   const lessMotion = usePrefersLessMotion();
   const ref = useRef<HTMLDivElement>(null);
+  const n = sites.length;
 
   // Mouse tilt
   const px = useMotionValue(0);
@@ -46,10 +48,15 @@ export function HeroDeck({ sites }: { sites: DeckSite[] }) {
     if (paused || lessMotion) return;
     const id = setTimeout(() => {
       setCycled(true);
-      setActive((a) => (a + 1) % sites.length);
+      setActive((a) => (a + 1) % n);
     }, CYCLE_MS);
     return () => clearTimeout(id);
-  }, [active, paused, lessMotion, sites.length]);
+  }, [active, paused, lessMotion, n]);
+
+  const go = (i: number) => {
+    setCycled(true);
+    setActive((i + n) % n);
+  };
 
   const onMove = (e: PointerEvent<HTMLDivElement>) => {
     if (e.pointerType !== "mouse") return;
@@ -83,23 +90,25 @@ export function HeroDeck({ sites }: { sites: DeckSite[] }) {
 
           <m.div style={{ rotateX, rotateY, transformStyle: "preserve-3d" }} className="relative aspect-[16/11.4]">
             {sites.map((site, i) => {
-              const slot = (i - active + sites.length) % sites.length;
+              const slot = (i - active + n) % n;
+              const justLeftFront = cycled && slot === n - 1;
+              // Only the visible cards (and the one flying to the back) are mounted
+              if (slot >= SLOTS.length && !justLeftFront) return null;
               const s = SLOTS[Math.min(slot, SLOTS.length - 1)];
-              const justLeftFront = cycled && slot === sites.length - 1;
               return (
                 <m.div
                   key={site.slug}
                   className="absolute inset-x-[4%] bottom-0 origin-bottom"
-                  style={{ zIndex: 40 - slot * 10 }}
-                  initial={{ opacity: 0, y: "30%", rotateX: -30, scale: 0.9 }}
+                  style={{ zIndex: 40 - Math.min(slot, SLOTS.length) * 10 }}
+                  initial={cycled ? { ...BACK, opacity: 0 } : { opacity: 0, y: "30%", rotateX: -30, scale: 0.9 }}
                   animate={
                     justLeftFront
                       ? {
-                          x: ["0%", "-75%", s.x],
-                          y: ["0%", "8%", s.y],
-                          rotate: [-1.5, -14, s.rotate],
-                          scale: [1, 0.9, s.scale],
-                          opacity: [1, 0, s.opacity],
+                          x: ["0%", "-75%", BACK.x],
+                          y: ["0%", "8%", BACK.y],
+                          rotate: [-1.5, -14, BACK.rotate],
+                          scale: [1, 0.9, BACK.scale],
+                          opacity: [1, 0, 0],
                           rotateX: 0,
                         }
                       : { ...s, rotateX: 0 }
@@ -107,7 +116,7 @@ export function HeroDeck({ sites }: { sites: DeckSite[] }) {
                   transition={
                     justLeftFront
                       ? { duration: 1.1, ease: [0.65, 0, 0.35, 1], times: [0, 0.45, 1] }
-                      : { type: "spring", stiffness: 140, damping: 20, delay: cycled ? 0.12 * slot : 0.15 + 0.12 * (sites.length - slot) }
+                      : { type: "spring", stiffness: 140, damping: 20, delay: cycled ? 0.12 * slot : 0.15 + 0.12 * (SLOTS.length - slot) }
                   }
                 >
                   <BrowserFrame domain={site.domain}>
@@ -157,38 +166,75 @@ export function HeroDeck({ sites }: { sites: DeckSite[] }) {
         </div>
       </m.div>
 
-      {/* Site switcher with a story-style timer */}
-      <div role="group" aria-label="בחירת אתר להצגה" className="relative z-50 mt-16 flex flex-wrap justify-center gap-2 sm:mt-20">
-        {sites.map((site, i) => {
-          const on = i === active;
-          return (
-            <button
-              key={site.slug}
-              type="button"
-              aria-pressed={on}
-              onClick={() => {
-                setCycled(true);
-                setActive(i);
-              }}
-              className={cn(
-                "relative overflow-hidden rounded-full border px-4 py-2 font-display text-sm font-semibold transition-colors",
-                on ? "border-ink bg-ink text-paper" : "border-ink/15 bg-paper/70 text-ink hover:border-ink/40",
-              )}
+      {/* Caption, prev/next and a story-style progress strip, one segment per site */}
+      <div className="relative z-50 mt-16 sm:mt-20">
+        <div className="flex items-center justify-between gap-4">
+          <button
+            type="button"
+            onClick={() => go(active - 1)}
+            aria-label="האתר הקודם"
+            className="grid size-10 shrink-0 place-items-center rounded-full border border-ink/15 bg-paper/70 transition-colors hover:border-ink"
+          >
+            <ChevronRight className="size-5" aria-hidden />
+          </button>
+          <AnimatePresence mode="wait" initial={false}>
+            <m.p
+              key={current.slug}
+              className="flex min-w-0 flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-center"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
             >
-              {on && !paused && !lessMotion && (
-                <m.span
-                  key={`${site.slug}-${active}`}
-                  aria-hidden
-                  className="absolute inset-y-0 right-0 bg-paper/20"
-                  initial={{ width: "0%" }}
-                  animate={{ width: "100%" }}
-                  transition={{ duration: CYCLE_MS / 1000, ease: "linear" }}
-                />
-              )}
-              <span className="relative">{site.name}</span>
-            </button>
-          );
-        })}
+              <span className="font-display text-lg font-bold">{current.name}</span>
+              <span className="text-sm text-muted">{current.industry}</span>
+              {current.concept && <span className="rounded-full bg-ink px-2 py-0.5 text-[0.7rem] font-semibold text-paper">קונספט</span>}
+            </m.p>
+          </AnimatePresence>
+          <button
+            type="button"
+            onClick={() => go(active + 1)}
+            aria-label="האתר הבא"
+            className="grid size-10 shrink-0 place-items-center rounded-full border border-ink/15 bg-paper/70 transition-colors hover:border-ink"
+          >
+            <ChevronLeft className="size-5" aria-hidden />
+          </button>
+        </div>
+
+        <div role="group" aria-label="בחירת אתר להצגה" className="mt-4 flex gap-1.5">
+          {sites.map((site, i) => {
+            const on = i === active;
+            return (
+              <button
+                key={site.slug}
+                type="button"
+                aria-pressed={on}
+                aria-label={`${site.name}${site.concept ? " (קונספט)" : ""}`}
+                title={site.name}
+                onClick={() => go(i)}
+                className="group/seg relative flex-1 py-2"
+              >
+                <span
+                  className={cn(
+                    "relative block h-1 overflow-hidden rounded-full transition-colors",
+                    i < active ? "bg-ink/60" : "bg-ink/15 group-hover/seg:bg-ink/35",
+                  )}
+                >
+                  {on && (
+                    <m.span
+                      key={`${site.slug}-${active}`}
+                      aria-hidden
+                      className="absolute inset-y-0 right-0 bg-ink"
+                      initial={{ width: paused || lessMotion ? "100%" : "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: paused || lessMotion ? 0 : CYCLE_MS / 1000, ease: "linear" }}
+                    />
+                  )}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
       <p className="sr-only" aria-live="polite">
         מוצג כעת: {current.name}, {current.industry}
