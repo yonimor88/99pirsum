@@ -14,11 +14,12 @@ import "./globals.css";
 
 const rubik = Rubik({ subsets: ["hebrew", "latin"], variable: "--font-rubik", display: "swap" });
 const heebo = Heebo({ subsets: ["hebrew", "latin"], variable: "--font-heebo", display: "swap" });
+// Variable font (300–900), so no `weight` list: Google serves every static weight from the same file,
+// and Turbopack fails the build on the duplicate URLs
 const frank = Frank_Ruhl_Libre({
   subsets: ["hebrew", "latin"],
   variable: "--font-frank",
   display: "swap",
-  weight: ["400", "500", "700"],
   // only used for testimonial quotes further down the page
   preload: false,
 });
