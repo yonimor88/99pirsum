@@ -40,6 +40,10 @@ import adashaDesktop from "@/assets/images/sites/adasha-desktop.webp";
 import adashaDesktopLong from "@/assets/images/sites/adasha-desktop-long.webp";
 import adashaMobile from "@/assets/images/sites/adasha-mobile.webp";
 import adashaMobileLong from "@/assets/images/sites/adasha-mobile-long.webp";
+import chevyonDesktop from "@/assets/images/sites/chevyon-desktop.webp";
+import chevyonDesktopLong from "@/assets/images/sites/chevyon-desktop-long.webp";
+import chevyonMobile from "@/assets/images/sites/chevyon-mobile.webp";
+import chevyonMobileLong from "@/assets/images/sites/chevyon-mobile-long.webp";
 import pirsumDesktop from "@/assets/images/sites/99pirsum-desktop.webp";
 import pirsumDesktopLong from "@/assets/images/sites/99pirsum-desktop-long.webp";
 import pirsumMobile from "@/assets/images/sites/99pirsum-mobile.webp";
@@ -279,5 +283,24 @@ export const concepts: Website[] = [
     glow: "#ff4d3a",
     concept: true,
     shots: { desktop: adashaDesktop, mobile: adashaMobile, desktopLong: adashaDesktopLong, mobileLong: adashaMobileLong },
+  },
+  {
+    slug: "chevyon",
+    name: "חביון",
+    url: "https://chevyon.vercel.app",
+    domain: "chevyon.vercel.app",
+    industry: "סטודיו כושר לנשים",
+    headline: "מבחוץ זכוכית חלבית. מבפנים — שלך.",
+    summary:
+      "אתר לסטודיו כושר לנשים בלבד למגזר החרדי: פילאטיס מכשירים, כוח, הריון ואחרי לידה, ומשחקייה לקטנים. זכוכית חלבית, שזיף עמוק ונגיעה של משמש — וחלון מקושת שנפתח בגלילה עד שהסטודיו ממלא את המסך.",
+    challenge:
+      "אישה חרדית צריכה לדעת עוד לפני שהיא באה שאין גברים, שאין מצלמות, שאי אפשר לראות פנימה מהרחוב ושיש מי שישמור על הקטנים — בלי שתצטרך לשאול.",
+    solution:
+      "סיור אינטראקטיבי בתוכנית הסטודיו מהכניסה הנפרדת ועד המשחקייה, מערכת שעות לפי ימי השבוע עם סינון ושריון מקום בוואטסאפ, שאלון קצר שממליץ על שיעור, שעון יום עם ״כמה עמוס עכשיו״, הרשמה גם מטלפון כשר — ומצב שבת.",
+    features: ["סיור פרטיות אינטראקטיבי", "מערכת שעות ושריון מקום", "שאלון התאמת שיעור", "מצב שבת", "מותאם לנטפרי"],
+    palette: ["#3a2742", "#fbf9f6", "#a893c9", "#ee9f75", "#24182a"],
+    glow: "#a893c9",
+    concept: true,
+    shots: { desktop: chevyonDesktop, mobile: chevyonMobile, desktopLong: chevyonDesktopLong, mobileLong: chevyonMobileLong },
   },
 ];
