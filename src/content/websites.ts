@@ -12,22 +12,22 @@ import hezkiDesktop from "@/assets/images/sites/hezki-desktop.webp";
 import hezkiDesktopLong from "@/assets/images/sites/hezki-desktop-long.webp";
 import hezkiMobile from "@/assets/images/sites/hezki-mobile.webp";
 import hezkiMobileLong from "@/assets/images/sites/hezki-mobile-long.webp";
-import haketerDesktop from "@/assets/images/sites/haketer-desktop.webp";
-import haketerDesktopLong from "@/assets/images/sites/haketer-desktop-long.webp";
-import haketerMobile from "@/assets/images/sites/haketer-mobile.webp";
-import haketerMobileLong from "@/assets/images/sites/haketer-mobile-long.webp";
+import hanezerDesktop from "@/assets/images/sites/hanezer-desktop.webp";
+import hanezerDesktopLong from "@/assets/images/sites/hanezer-desktop-long.webp";
+import hanezerMobile from "@/assets/images/sites/hanezer-mobile.webp";
+import hanezerMobileLong from "@/assets/images/sites/hanezer-mobile-long.webp";
 import stamDesktop from "@/assets/images/sites/stam-desktop.webp";
 import stamDesktopLong from "@/assets/images/sites/stam-desktop-long.webp";
 import stamMobile from "@/assets/images/sites/stam-mobile.webp";
 import stamMobileLong from "@/assets/images/sites/stam-mobile-long.webp";
-import tiferetDesktop from "@/assets/images/sites/tiferet-desktop.webp";
-import tiferetDesktopLong from "@/assets/images/sites/tiferet-desktop-long.webp";
-import tiferetMobile from "@/assets/images/sites/tiferet-mobile.webp";
-import tiferetMobileLong from "@/assets/images/sites/tiferet-mobile-long.webp";
-import malbusheiDesktop from "@/assets/images/sites/malbushei-desktop.webp";
-import malbusheiDesktopLong from "@/assets/images/sites/malbushei-desktop-long.webp";
-import malbusheiMobile from "@/assets/images/sites/malbushei-mobile.webp";
-import malbusheiMobileLong from "@/assets/images/sites/malbushei-mobile-long.webp";
+import lishkatDesktop from "@/assets/images/sites/lishkat-desktop.webp";
+import lishkatDesktopLong from "@/assets/images/sites/lishkat-desktop-long.webp";
+import lishkatMobile from "@/assets/images/sites/lishkat-mobile.webp";
+import lishkatMobileLong from "@/assets/images/sites/lishkat-mobile-long.webp";
+import shachorDesktop from "@/assets/images/sites/shachor-desktop.webp";
+import shachorDesktopLong from "@/assets/images/sites/shachor-desktop-long.webp";
+import shachorMobile from "@/assets/images/sites/shachor-mobile.webp";
+import shachorMobileLong from "@/assets/images/sites/shachor-mobile-long.webp";
 import kitchenDesktop from "@/assets/images/sites/kitchen-desktop.webp";
 import kitchenDesktopLong from "@/assets/images/sites/kitchen-desktop-long.webp";
 import kitchenMobile from "@/assets/images/sites/kitchen-mobile.webp";
@@ -36,6 +36,10 @@ import neveDesktop from "@/assets/images/sites/neve-desktop.webp";
 import neveDesktopLong from "@/assets/images/sites/neve-desktop-long.webp";
 import neveMobile from "@/assets/images/sites/neve-mobile.webp";
 import neveMobileLong from "@/assets/images/sites/neve-mobile-long.webp";
+import adashaDesktop from "@/assets/images/sites/adasha-desktop.webp";
+import adashaDesktopLong from "@/assets/images/sites/adasha-desktop-long.webp";
+import adashaMobile from "@/assets/images/sites/adasha-mobile.webp";
+import adashaMobileLong from "@/assets/images/sites/adasha-mobile-long.webp";
 import pirsumDesktop from "@/assets/images/sites/99pirsum-desktop.webp";
 import pirsumDesktopLong from "@/assets/images/sites/99pirsum-desktop-long.webp";
 import pirsumMobile from "@/assets/images/sites/99pirsum-mobile.webp";
@@ -151,10 +155,10 @@ export const websites: Website[] = [
  */
 export const concepts: Website[] = [
   {
-    slug: "haketer",
-    name: "אולמי הכתר",
-    url: "https://haketer.vercel.app",
-    domain: "haketer.vercel.app",
+    slug: "hechal-hanezer",
+    name: "היכל הנזר",
+    url: "https://hechal-hanezer.vercel.app",
+    domain: "hechal-hanezer.vercel.app",
     industry: "אולם שמחות",
     headline: "הזמנה לחתונה — שהפכה לאתר.",
     summary:
@@ -166,7 +170,7 @@ export const concepts: Website[] = [
     palette: ["#1d3a2f", "#faf6ec", "#b08d57", "#d8be8a", "#29251f"],
     glow: "#b08d57",
     concept: true,
-    shots: { desktop: haketerDesktop, mobile: haketerMobile, desktopLong: haketerDesktopLong, mobileLong: haketerMobileLong },
+    shots: { desktop: hanezerDesktop, mobile: hanezerMobile, desktopLong: hanezerDesktopLong, mobileLong: hanezerMobileLong },
   },
   {
     slug: "stam-hadar",
@@ -187,14 +191,14 @@ export const concepts: Website[] = [
     shots: { desktop: stamDesktop, mobile: stamMobile, desktopLong: stamDesktopLong, mobileLong: stamMobileLong },
   },
   {
-    slug: "tiferet",
-    name: "כולל תפארת",
-    url: "https://kollel-tiferet.vercel.app",
-    domain: "kollel-tiferet.vercel.app",
+    slug: "lishkat-hagazit",
+    name: "כולל לשכת הגזית",
+    url: "https://lishkat-hagazit.vercel.app",
+    domain: "lishkat-hagazit.vercel.app",
     industry: "מוסד תורני ותרומות",
     headline: "קמפיין שמרגישים שהוא חי.",
     summary:
-      "אתר תרומות לכולל אברכים בירושלים: אבן ירושלמית באור יום, קמפיין שנבנה אבן על אבן ותרומות שנכנסות בזמן אמת, הנצחות והוראות קבע.",
+      "אתר תרומות לכולל אברכים בירושלים, הקרוי על שם לשכת הגזית: אבן ירושלמית באור יום, קמפיין שנבנה אבן על אבן ותרומות שנכנסות בזמן אמת, הנצחות והוראות קבע.",
     challenge: "לגרום לתורם להרגיש שהתרומה שלו משנה — עכשיו — ולתת לו לתרום גם מטלפון כשר.",
     solution:
       "קיר קמפיין חי שנבנה אבן אחר אבן עם הכפלת תרומות, בחירת סכום והקדשה (לע״נ, לרפואה, להצלחה), כרטיסי הנצחה, סדר יום מונפש ותרומה בטלפון מכל מקום באתר — שעוצרת בשבת.",
@@ -202,17 +206,17 @@ export const concepts: Website[] = [
     palette: ["#3e4a2c", "#f4ecdd", "#b5832c", "#e0b25a", "#2a2117"],
     glow: "#b5832c",
     concept: true,
-    shots: { desktop: tiferetDesktop, mobile: tiferetMobile, desktopLong: tiferetDesktopLong, mobileLong: tiferetMobileLong },
+    shots: { desktop: lishkatDesktop, mobile: lishkatMobile, desktopLong: lishkatDesktopLong, mobileLong: lishkatMobileLong },
   },
   {
-    slug: "malbushei-kavod",
-    name: "מלבושי כבוד",
-    url: "https://malbushei-kavod.vercel.app",
-    domain: "malbushei-kavod.vercel.app",
+    slug: "shachor-bordo",
+    name: "שחור ובורדו",
+    url: "https://shachor-bordo.vercel.app",
+    domain: "shachor-bordo.vercel.app",
     industry: "חליפות וכובעים",
     headline: "חנות בגדים שנראית כמו מגזין אופנה.",
     summary:
-      "אתר לבוטיק חליפות וכובעים לגברים: שחור־לבן של מגזין אופנה, כותרות ענק ונגיעה אחת של בורדו — כמו גיליון חדש שנפתח על המסך.",
+      "אתר לבוטיק חליפות וכובעים לגברים: שחור־לבן של מגזין אופנה, כותרות ענק ונגיעה אחת של בורדו — שגם נתנה לחנות את שמה, כמו גיליון חדש שנפתח על המסך.",
     challenge: "לגרום לחתן ולאבא שלו להגיע למדידה — ולהבין מראש מה מקבלים בחבילת חתן.",
     solution:
       "לוקבוק לחול, לשבת ולשמחה שמתדפדף כמו מגזין, חתן ״בלתי נראה״ שמתלבש פריט אחר פריט בגלילה, מדריך כובעים שבו הכובע משנה צורה, טבלת מידות חיה וקביעת מדידה לפי תאריך עברי.",
@@ -220,7 +224,7 @@ export const concepts: Website[] = [
     palette: ["#0d0d0d", "#f3f2ef", "#6e1823", "#8b8985", "#262626"],
     glow: "#8e2332",
     concept: true,
-    shots: { desktop: malbusheiDesktop, mobile: malbusheiMobile, desktopLong: malbusheiDesktopLong, mobileLong: malbusheiMobileLong },
+    shots: { desktop: shachorDesktop, mobile: shachorMobile, desktopLong: shachorDesktopLong, mobileLong: shachorMobileLong },
   },
   {
     slug: "neve-oren",
@@ -257,5 +261,23 @@ export const concepts: Website[] = [
     glow: "#f2a516",
     concept: true,
     shots: { desktop: kitchenDesktop, mobile: kitchenMobile, desktopLong: kitchenDesktopLong, mobileLong: kitchenMobileLong },
+  },
+  {
+    slug: "adasha-niggun",
+    name: "עדשה וניגון",
+    url: "https://adasha-niggun.vercel.app",
+    domain: "adasha-niggun.vercel.app",
+    industry: "צילום שמחות ואולפן",
+    headline: "שני עולמות. אתר אחד.",
+    summary:
+      "אתר לצלם שמחות ולאולפן הקלטות תחת קורת גג אחת: מסך פתיחה שנחצה לעדשה ולניגון, גלריה שנגללת כמו סליל צילום — ומיקסר אמיתי שאפשר לנגן בו.",
+    challenge: "להציג שני עסקים, צילום ואולפן, בלי לבלבל — ולהראות שמחות בלי אף תמונה של אנשים.",
+    solution:
+      "מסך פתיחה מפוצל שמתרחב לצד שמעניין אתכם, צלם לצד הגברים וצלמת לצד הנשים, גלריית אולמות, תפילין ונרות שנגללת לרוחב, ומיקסר עם ארבעה ערוצים שמנגן בזמן אמת בדפדפן — ונעצר בשבת.",
+    features: ["מסך פתיחה מפוצל", "מיקסר אינטראקטיבי", "גלריה כמו סרט", "מצב שבת", "מותאם לנטפרי"],
+    palette: ["#0c0b0a", "#f3ece1", "#e9b872", "#ff4d3a", "#211e1b"],
+    glow: "#ff4d3a",
+    concept: true,
+    shots: { desktop: adashaDesktop, mobile: adashaMobile, desktopLong: adashaDesktopLong, mobileLong: adashaMobileLong },
   },
 ];
