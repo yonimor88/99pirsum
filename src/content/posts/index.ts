@@ -1,13 +1,16 @@
-import { extractToc, readingMinutes, renderMarkdown } from "@/lib/markdown";
+import { extractFaqs, extractToc, readingMinutes, renderMarkdown } from "@/lib/markdown";
 import { photos, type Photo } from "../media";
 import { body as buildingEntrancePosters } from "./building-entrance-posters";
 import { body as distributionPricing } from "./distribution-pricing";
 import { body as doorHangersGuide } from "./door-hangers-guide";
 import { body as fridgeMagnets } from "./fridge-magnets";
+import { body as fundraisingCampaignAdvertising } from "./fundraising-campaign-advertising";
+import { body as harediAdCopywriting } from "./haredi-ad-copywriting";
 import { body as harediAdvertisingGuide } from "./haredi-advertising-guide";
 import { body as harediBusinessWebsite } from "./haredi-business-website";
 import { body as harediCampaignPlanning } from "./haredi-campaign-planning";
 import { body as harediMailboxDistribution } from "./haredi-mailbox-distribution";
+import { body as jewishHolidaysAdvertisingCalendar } from "./jewish-holidays-advertising-calendar";
 import { body as streetPosterDesignRules } from "./street-poster-design-rules";
 import { body as synagogueShabbatLeaflets } from "./synagogue-shabbat-leaflets";
 
@@ -27,6 +30,39 @@ type PostSource = PostMeta & { body: string };
 
 /** Newest first. To add an article: create a file in this folder and add an entry here. */
 const sources: PostSource[] = [
+  {
+    slug: "jewish-holidays-advertising-calendar",
+    title: "לוח שנה למפרסם: מתי לפרסם לקראת החגים במגזר החרדי",
+    description:
+      "מתשרי ועד אלול — מתי להתחיל לפרסם לפני כל חג, מה הציבור החרדי והדתי מחפש בכל עונה ואילו ערוצים עובדים, בטבלה אחת שאפשר לתכנן לפיה את כל השנה.",
+    category: "אסטרטגיה",
+    date: "2026-11-02",
+    cover: photos.board2024b,
+    relatedService: "advertising-branding",
+    body: jewishHolidaysAdvertisingCalendar,
+  },
+  {
+    slug: "fundraising-campaign-advertising",
+    title: "פרסום לקמפיין תרומות: המדריך למוסדות תורה וארגוני חסד",
+    description:
+      "איך מוסד תורני, כולל או ארגון חסד מגייס תרומות בציבור החרדי והדתי: בניית אמון, מסר שנוגע בלב, עלוני שבת, לוחות מודעות, קמפיין חי ותזמון לפי לוח השנה.",
+    category: "מוסדות",
+    date: "2026-11-02",
+    cover: photos.synagogueDoor,
+    relatedService: "synagogues",
+    body: fundraisingCampaignAdvertising,
+  },
+  {
+    slug: "haredi-ad-copywriting",
+    title: "איך כותבים מודעה לציבור החרדי והדתי: שפה, תמונות וכבוד",
+    description:
+      "בס״ד בראש המודעה, תאריך עברי, לשון נקייה, תמונות צנועות ושמירה על קדושת השמות — המדריך המעשי לכתיבת מודעה שהקהל החרדי והדתי קורא וסומך עליה.",
+    category: "עיצוב",
+    date: "2026-11-02",
+    cover: photos.boardCloseup,
+    relatedService: "advertising-branding",
+    body: harediAdCopywriting,
+  },
   {
     slug: "haredi-business-website",
     title: "אתר לעסק במגזר החרדי: מה חשוב לדעת לפני שבונים",
@@ -155,6 +191,7 @@ export function getPost(slug: string) {
     ...meta,
     html: renderMarkdown(body),
     toc: extractToc(body),
+    faqs: extractFaqs(body),
     minutes: readingMinutes(body),
   };
 }

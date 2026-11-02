@@ -15,7 +15,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { formatHebrewDate, getPost, posts, type PostMeta } from "@/content/posts";
 import { getService } from "@/content/services";
 import { site } from "@/content/site";
-import { absoluteUrl, pageMetadata } from "@/lib/seo";
+import { absoluteUrl, faqJsonLd, pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
@@ -187,6 +187,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
           publisher: { "@id": absoluteUrl("/#business"), name: site.name },
         }}
       />
+      {post.faqs.length > 0 && <JsonLd data={faqJsonLd(post.faqs)} />}
     </>
   );
 }

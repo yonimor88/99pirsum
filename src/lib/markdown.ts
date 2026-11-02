@@ -41,6 +41,23 @@ export function extractToc(md: string): TocItem[] {
     .map((t) => ({ id: slugifyHeading(t.text), text: t.text.replace(/\*\*/g, "") }));
 }
 
+/** Questions (H3) and answers under a "## שאלות נפוצות" section, as plain text for FAQPage JSON-LD. */
+export function extractFaqs(md: string): { q: string; a: string }[] {
+  const plain = (text: string) => text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/\*\*/g, "").trim();
+  const faqs: { q: string; a: string }[] = [];
+  let inFaq = false;
+  for (const t of marked.lexer(md)) {
+    if (t.type === "heading" && t.depth === 2) inFaq = t.text.trim() === "שאלות נפוצות";
+    else if (!inFaq) continue;
+    else if (t.type === "heading" && t.depth === 3) faqs.push({ q: plain(t.text), a: "" });
+    else if (t.type === "paragraph" && faqs.length > 0) {
+      const last = faqs[faqs.length - 1];
+      last.a = [last.a, plain(t.text)].filter(Boolean).join("\n\n");
+    }
+  }
+  return faqs.filter((f) => f.a);
+}
+
 export function readingMinutes(md: string) {
   const words = md.split(/\s+/).filter(Boolean).length;
   return Math.max(2, Math.round(words / 150));
