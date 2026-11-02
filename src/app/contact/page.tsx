@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "צור קשר — הצעת מחיר לפרסום והפצה",
-  description: `דברו עם 99 פרסום ומדיה: ${site.phones[0].display}, וואטסאפ או טופס הצעת מחיר. ${site.address.full}.`,
+  description: `הצעת מחיר להפצת עלונים, הדבקת מודעות, תלי דלת ופרסום בבתי כנסת: חייגו ${site.phones[0].display}, שלחו וואטסאפ או השאירו פרטים בטופס. המשרד: ${site.address.full}.`,
   path: "/contact",
 });
 

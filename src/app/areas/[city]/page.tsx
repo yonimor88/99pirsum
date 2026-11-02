@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { PostCard } from "@/components/blog/post-card";
 import { ContactForm } from "@/components/contact/contact-form";
 import { CtaBand, Faq, PageHero } from "@/components/layout/page-blocks";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -13,6 +14,7 @@ import { PhotoGrid } from "@/components/ui/photo-grid";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { cities, getCity, type City } from "@/content/cities";
 import { lite, photos } from "@/content/media";
+import { posts } from "@/content/posts";
 import { accentBg } from "@/content/service-nav";
 import { services } from "@/content/services";
 import { site } from "@/content/site";
@@ -20,6 +22,9 @@ import { cn } from "@/lib/cn";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
 const fmt = (n: number) => n.toLocaleString("he-IL");
+
+/** Field-distribution guides linked from every city page. */
+const guideSlugs = ["haredi-mailbox-distribution", "distribution-pricing", "street-poster-design-rules"];
 
 export function generateStaticParams() {
   return cities.map((c) => ({ city: c.slug }));
@@ -80,6 +85,7 @@ export default async function CityPage({ params }: PageProps<"/areas/[city]">) {
   const fieldServices = services.filter((s) => s.group === "field");
   const faqs = cityFaqs(city);
   const others = cities.filter((c) => c.slug !== city.slug);
+  const cityGuides = guideSlugs.map((s) => posts.find((p) => p.slug === s)).filter((p) => p !== undefined);
 
   return (
     <>
@@ -193,6 +199,20 @@ export default async function CityPage({ params }: PageProps<"/areas/[city]">) {
         </div>
       </section>
 
+      <section className="pb-20">
+        <div className="container-page">
+          <Reveal>
+            <h2 className="text-3xl font-extrabold sm:text-4xl">לפני שמפרסמים {city.inName}</h2>
+            <p className="mt-3 text-lg text-muted">מדריכים קצרים מהניסיון שלנו בשטח.</p>
+          </Reveal>
+          <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {cityGuides.map((p) => (
+              <PostCard key={p.slug} post={p} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="quote" className="border-t border-ink/10 py-20 lg:py-28">
         <div className="container-page grid gap-16 lg:grid-cols-2 lg:gap-20">
           <Reveal>
@@ -235,6 +255,7 @@ export default async function CityPage({ params }: PageProps<"/areas/[city]">) {
           "@context": "https://schema.org",
           "@type": "Service",
           name: `פרסום והפצה ${city.inName}`,
+          description: city.intro,
           serviceType: "הפצת עלונים, הדבקת מודעות ופרסום",
           url: absoluteUrl(`/areas/${city.slug}`),
           provider: { "@id": absoluteUrl("/#business"), name: site.name },

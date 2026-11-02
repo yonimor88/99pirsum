@@ -8,7 +8,7 @@ import { websites } from "@/content/websites";
 import { absoluteUrl } from "@/lib/seo";
 
 /** Bump when page content changes. */
-const SITE_UPDATED = "2026-11-01";
+const SITE_UPDATED = "2026-11-02";
 
 const img = (list: Photo[]) => [...new Set(list.map((p) => absoluteUrl(p.src.src)))];
 

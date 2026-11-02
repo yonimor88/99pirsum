@@ -12,7 +12,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { ButtonLink } from "@/components/ui/button";
 import { Misregistered } from "@/components/ui/misregistered";
 import { Reveal } from "@/components/ui/reveal";
-import { formatHebrewDate, getPost, posts } from "@/content/posts";
+import { formatHebrewDate, getPost, posts, type PostMeta } from "@/content/posts";
 import { getService } from "@/content/services";
 import { site } from "@/content/site";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
@@ -51,7 +51,12 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
   if (!post) notFound();
 
   const service = getService(post.relatedService);
-  const more = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  // Same-service, then same-category articles first (newest first within each), so older guides keep getting links
+  const topic = (p: PostMeta) => (p.relatedService === post.relatedService ? 2 : 0) + (p.category === post.category ? 1 : 0);
+  const more = posts
+    .filter((p) => p.slug !== post.slug)
+    .sort((a, b) => topic(b) - topic(a))
+    .slice(0, 3);
   const url = absoluteUrl(`/blog/${post.slug}`);
 
   return (

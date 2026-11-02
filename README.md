@@ -50,6 +50,7 @@ See `.env.example`. On Vercel, set these under Project → Settings → Environm
 - Per-page metadata, Open Graph image, `sitemap.xml`, `robots.txt`, web manifest.
 - JSON-LD: `AdvertisingAgency` (local business), `Service`, `BlogPosting`, `FAQPage`, `BreadcrumbList`.
 - All old WordPress URLs (Hebrew slugs such as `/מי-אנחנו/`, `/תלי-דלת/`) permanently redirect to the new pages. See `next.config.ts`.
+- IndexNow (Bing, Yandex and others): after a deploy is live, run `npm run indexnow` to submit every sitemap URL, or `npm run indexnow -- /blog/my-article` for just the pages that changed. The key file is in `public/`.
 
 ## Accessibility
 

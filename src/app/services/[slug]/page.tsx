@@ -15,7 +15,7 @@ import { PinnedPhoto } from "@/components/ui/pinned-photo";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { posts } from "@/content/posts";
 import { accentBg } from "@/content/service-nav";
-import { cities } from "@/content/cities";
+import { allCityNames, cities } from "@/content/cities";
 import { lite } from "@/content/media";
 import { getService, services } from "@/content/services";
 import { primaryPhone, site, websitesEmail, websitesPhone, whatsappLink } from "@/content/site";
@@ -50,7 +50,11 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
 
   const related = service.related.map((r) => getService(r)).filter((s) => s !== undefined);
   const phone = service.slug === "web-digital" ? websitesPhone : primaryPhone;
-  const articles = posts.filter((p) => p.relatedService === service.slug || service.related.includes(p.relatedService)).slice(0, 3);
+  // This service's own guides first, then guides for the services that pair with it
+  const articles = [
+    ...posts.filter((p) => p.relatedService === service.slug),
+    ...posts.filter((p) => service.related.includes(p.relatedService)),
+  ].slice(0, 3);
 
   return (
     <>
@@ -326,7 +330,11 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           url: absoluteUrl(`/services/${service.slug}`),
           image: absoluteUrl(service.hero.src.src),
           provider: { "@id": absoluteUrl("/#business"), name: site.name },
-          areaServed: { "@type": "Country", name: "ישראל" },
+          // Field work happens in specific cities; production and creative work ship anywhere
+          areaServed:
+            service.group === "field"
+              ? allCityNames.map((name) => ({ "@type": "City", name }))
+              : { "@type": "Country", name: "ישראל" },
         }}
       />
     </>
