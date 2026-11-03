@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+import { posthogConfig, posthogHosts } from "./src/lib/posthog-config";
+
 /**
  * Old WordPress URLs (Hebrew slugs) → new routes, so existing links and
  * search rankings keep working after the move off WordPress.
@@ -30,6 +32,9 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // PostHog's endpoints end in a slash (/e/, /flags/). Next's automatic slash-stripping redirect
+  // would break them behind /ingest, so it's off and the first redirect below does the job instead.
+  skipTrailingSlashRedirect: true,
   env: {
     NEXT_PUBLIC_BUILD_YEAR: String(new Date().getFullYear()),
   },
@@ -58,6 +63,8 @@ const nextConfig: NextConfig = {
       }));
     });
     return [
+      // Same as Next's default trailing-slash redirect (/about/ → /about), except for /ingest
+      { source: "/:first((?!ingest(?![^/]))[^/]+)/:rest*/", destination: "/:first/:rest*", permanent: true },
       ...hebrew,
       // Other WordPress leftovers that search engines may still request
       { source: "/feed", destination: "/blog/feed.xml", permanent: true },
@@ -66,6 +73,15 @@ const nextConfig: NextConfig = {
       { source: "/wp-sitemap.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/post-sitemap.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/page-sitemap.xml", destination: "/sitemap.xml", permanent: true },
+    ];
+  },
+  async rewrites() {
+    // Analytics proxy: the site's own domain forwards to PostHog (see src/lib/analytics.ts)
+    const { apiPath } = posthogConfig;
+    return [
+      { source: `${apiPath}/static/:path*`, destination: `${posthogHosts.assets}/static/:path*` },
+      { source: `${apiPath}/array/:path*`, destination: `${posthogHosts.assets}/array/:path*` },
+      { source: `${apiPath}/:path*`, destination: `${posthogHosts.api}/:path*` },
     ];
   },
   async headers() {

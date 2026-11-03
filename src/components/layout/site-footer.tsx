@@ -13,7 +13,7 @@ const year = process.env.NEXT_PUBLIC_BUILD_YEAR;
 
 export function SiteFooter() {
   return (
-    <footer className="relative overflow-hidden bg-ink text-paper">
+    <footer data-placement="footer" className="relative overflow-hidden bg-ink text-paper">
       <div aria-hidden>
       <Marquee duration="60s" className="border-b border-paper/10 py-6" trackClassName="gap-10 pe-10">
         {Array.from({ length: 4 }).map((_, i) => (

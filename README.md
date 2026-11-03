@@ -45,6 +45,25 @@ The form posts to a server action (`src/app/contact/actions.ts`).
 
 See `.env.example`. On Vercel, set these under Project → Settings → Environment Variables.
 
+## Analytics
+
+[PostHog](https://posthog.com) (EU region) loads from `src/instrumentation-client.ts`, only on 99pirsum.com (not locally or on preview URLs). The project key and region are in `src/lib/posthog-config.ts`.
+
+- Events go through `/ingest` on the site's own domain (rewrites in `next.config.ts`), so ad blockers and filtered-internet providers don't drop them.
+- Pageviews, clicks (autocapture), web vitals and session replay come from PostHog's defaults. Form inputs are masked in replays.
+- Custom events (`src/lib/analytics.ts`):
+
+| Event | When | Properties |
+| --- | --- | --- |
+| `lead_submitted` | Contact form sent | `delivery` (`email` / `whatsapp_fallback`), `service`, `city` |
+| `lead_form_invalid` | Form rejected | `fields` |
+| `whatsapp_clicked` | Any WhatsApp link | `placement`, `link_text` |
+| `phone_clicked` | Any `tel:` link | `placement`, `link_text`, `phone` |
+| `email_clicked` | Any `mailto:` link | `placement`, `link_text`, `email` |
+| `directions_clicked` | Waze / Google Maps | `placement`, `app` |
+
+`placement` comes from the nearest `data-placement` attribute (`header`, `mobile_menu`, `footer`, `floating`, `contact_form_fallback`), otherwise `content`. Names and phone numbers from the form are never sent.
+
 ## SEO
 
 - Per-page metadata, Open Graph image, `sitemap.xml`, `robots.txt`, web manifest.

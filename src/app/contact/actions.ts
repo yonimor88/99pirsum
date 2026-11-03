@@ -7,6 +7,8 @@ export type LeadState = {
   message?: string;
   errors?: Partial<Record<"name" | "phone" | "message", string>>;
   whatsappText?: string;
+  /** Non-personal details of a sent lead, for analytics */
+  meta?: { service?: string; city?: string };
 };
 
 function field(formData: FormData, key: string, max = 500) {
@@ -42,9 +44,10 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
     message && `פרטים: ${message}`,
   ].filter(Boolean) as string[];
   const text = lines.join("\n");
+  const meta = { service: service || undefined, city: city || undefined };
 
   const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) return { status: "fallback", whatsappText: `שלום, הגעתי מהאתר:\n${text}` };
+  if (!apiKey) return { status: "fallback", whatsappText: `שלום, הגעתי מהאתר:\n${text}`, meta };
 
   try {
     const res = await fetch("https://api.resend.com/emails", {
@@ -58,9 +61,9 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
       }),
     });
     if (!res.ok) throw new Error(`Resend responded ${res.status}`);
-    return { status: "success" };
+    return { status: "success", meta };
   } catch (err) {
     console.error("[contact] failed to send lead", err);
-    return { status: "fallback", whatsappText: `שלום, הגעתי מהאתר:\n${text}` };
+    return { status: "fallback", whatsappText: `שלום, הגעתי מהאתר:\n${text}`, meta };
   }
 }

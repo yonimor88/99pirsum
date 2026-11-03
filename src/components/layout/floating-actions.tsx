@@ -26,6 +26,7 @@ function WhatsAppFab() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="שליחת הודעת וואטסאפ ל-99 פרסום ומדיה"
+      data-placement="floating"
       className="pop-in group fixed bottom-5 left-5 z-40 flex items-center gap-3 sm:bottom-7 sm:left-7"
       style={{ "--intro-delay": "1.4s" } as CSSProperties}
     >

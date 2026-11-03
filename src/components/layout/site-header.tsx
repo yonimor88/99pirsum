@@ -121,6 +121,7 @@ export function SiteHeader() {
       </a>
 
       <header
+        data-placement="header"
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-transform duration-500 ease-[var(--ease-out-expo)]",
           hidden && "-translate-y-[110%]",
@@ -305,6 +306,7 @@ export function SiteHeader() {
       {menuMounted && (
         <div
           id="mobile-menu"
+          data-placement="mobile_menu"
           role="dialog"
           aria-modal="true"
           aria-label="תפריט"

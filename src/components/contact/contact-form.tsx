@@ -1,13 +1,14 @@
 "use client";
 
 import { ArrowUpLeft, CheckCircle2, LoaderCircle } from "lucide-react";
-import { useActionState, useId, type CSSProperties } from "react";
+import { useActionState, useEffect, useId, type CSSProperties } from "react";
 
 import { submitLead, type LeadState } from "@/app/contact/actions";
 import { buttonClasses } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/ui/icons";
 import { serviceNav } from "@/content/service-nav";
 import { whatsappLink } from "@/content/site";
+import { track } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
 const initial: LeadState = { status: "idle" };
@@ -23,6 +24,15 @@ export function ContactForm({
 }) {
   const [state, action, pending] = useActionState(submitLead, initial);
   const id = useId();
+
+  useEffect(() => {
+    if (state.status === "success" || state.status === "fallback") {
+      // "fallback" = email delivery isn't available, so the visitor is asked to send it over WhatsApp
+      track("lead_submitted", { delivery: state.status === "success" ? "email" : "whatsapp_fallback", ...state.meta });
+    } else if (state.status === "error" && state.errors) {
+      track("lead_form_invalid", { fields: Object.keys(state.errors) });
+    }
+  }, [state]);
 
   const fieldClass = cn(
     "w-full rounded-2xl border-2 border-transparent px-4 py-3.5 text-lg text-ink transition-colors outline-none placeholder:text-muted-2 focus:border-ink",
@@ -54,6 +64,7 @@ export function ContactForm({
           </p>
           <a
             href={whatsappLink(state.whatsappText)}
+            data-placement="contact_form_fallback"
             target="_blank"
             rel="noopener noreferrer"
             className={buttonClasses({ variant: "whatsapp", size: "lg", className: "mt-6" })}
