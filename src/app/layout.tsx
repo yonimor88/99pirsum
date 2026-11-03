@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Frank_Ruhl_Libre, Heebo, Rubik } from "next/font/google";
 
 import { a11yBootScript } from "@/components/a11y/a11y-store";
+import { CookieConsent } from "@/components/layout/cookie-consent";
 import { FloatingActions } from "@/components/layout/floating-actions";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -71,6 +72,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <SiteFooter />
         <FloatingActions />
+        <CookieConsent />
         <SmoothScroll />
         <JsonLd data={localBusinessJsonLd()} />
       </body>

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ColorBar, Dots } from "@/components/brand/ornaments";
+import { CookieSettingsButton } from "@/components/layout/cookie-consent";
 import { FacebookIcon, WazeIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { Marquee } from "@/components/ui/marquee";
 import { cities, moreCities } from "@/content/cities";
@@ -174,6 +175,9 @@ export function SiteFooter() {
                 </Link>
               </li>
             ))}
+            <li>
+              <CookieSettingsButton className="hover:text-paper" />
+            </li>
           </ul>
         </div>
       </div>

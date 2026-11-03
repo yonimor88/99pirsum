@@ -6,7 +6,8 @@ export type AnalyticsEvent =
   | "whatsapp_clicked"
   | "phone_clicked"
   | "email_clicked"
-  | "directions_clicked";
+  | "directions_clicked"
+  | "cookie_consent";
 
 /** Safe to call anywhere on the client; does nothing when PostHog isn't set up. */
 export function track(event: AnalyticsEvent, properties?: Record<string, unknown>) {

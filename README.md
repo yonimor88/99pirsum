@@ -50,6 +50,7 @@ See `.env.example`. On Vercel, set these under Project → Settings → Environm
 [PostHog](https://posthog.com) (EU region) loads from `src/instrumentation-client.ts`, only on 99pirsum.com (not locally or on preview URLs). The project key and region are in `src/lib/posthog-config.ts`.
 
 - Events go through `/ingest` on the site's own domain (rewrites in `next.config.ts`), so ad blockers and filtered-internet providers don't drop them.
+- Cookie drawer (`src/components/layout/cookie-consent.tsx`, choice stored in `src/lib/consent.ts`): until visitors accept, and if they decline, PostHog runs in cookieless mode (anonymous counts, no cookies, no replay). Accepting switches on cookies and session replay. "הגדרות עוגיות" in the footer and on /privacy reopens it. Cookieless mode must be enabled in the PostHog project settings, or those events are dropped.
 - Pageviews, clicks (autocapture), web vitals and session replay come from PostHog's defaults. Form inputs are masked in replays.
 - Custom events (`src/lib/analytics.ts`):
 
@@ -61,6 +62,7 @@ See `.env.example`. On Vercel, set these under Project → Settings → Environm
 | `phone_clicked` | Any `tel:` link | `placement`, `link_text`, `phone` |
 | `email_clicked` | Any `mailto:` link | `placement`, `link_text`, `email` |
 | `directions_clicked` | Waze / Google Maps | `placement`, `app` |
+| `cookie_consent` | Visitor chose in the cookie drawer | `choice` (`granted` / `denied`) |
 
 `placement` comes from the nearest `data-placement` attribute (`header`, `mobile_menu`, `footer`, `floating`, `contact_form_fallback`), otherwise `content`. Names and phone numbers from the form are never sent.
 
