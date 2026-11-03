@@ -64,7 +64,9 @@ const nextConfig: NextConfig = {
     });
     return [
       // Same as Next's default trailing-slash redirect (/about/ → /about), except for /ingest
-      { source: "/:first((?!ingest(?![^/]))[^/]+)/:rest*/", destination: "/:first/:rest*", permanent: true },
+      // (two rules: on Vercel an empty :rest* leaves the slash on and the redirect loops)
+      { source: "/:first((?!ingest(?![^/]))[^/]+)/", destination: "/:first", permanent: true },
+      { source: "/:first((?!ingest(?![^/]))[^/]+)/:rest+/", destination: "/:first/:rest+", permanent: true },
       ...hebrew,
       // Other WordPress leftovers that search engines may still request
       { source: "/feed", destination: "/blog/feed.xml", permanent: true },
