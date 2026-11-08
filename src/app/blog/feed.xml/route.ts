@@ -26,7 +26,7 @@ export function GET() {
   <channel>
     <title>${escape(site.name)} — מאמרים</title>
     <link>${absoluteUrl("/blog")}</link>
-    <description>מדריכים, טיפים ואסטרטגיות לפרסום במגזר החרדי והדתי</description>
+    <description>מדריכים, טיפים ואסטרטגיות לפרסום והפצה, מהשטח</description>
     <language>he</language>
     <atom:link href="${absoluteUrl("/blog/feed.xml")}" rel="self" type="application/rss+xml" />
 ${items}

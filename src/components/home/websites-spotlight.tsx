@@ -58,7 +58,7 @@ export function WebsitesSpotlight() {
                 <span className="text-yellow">אל המסך.</span>
               </h2>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-paper/70 sm:text-xl">
-                אחרי שלושים שנה של פרסום למגזר, אנחנו בונים גם אתרים: מהירים, ממותגים עד הפרט האחרון ומותאמים לנייד — לעסקים
+                אחרי שלושים שנה בפרסום, אנחנו בונים גם אתרים: מהירים, ממותגים עד הפרט האחרון ומותאמים לנייד — לעסקים
                 שרוצים להיראות הכי טוב שיש, ולקבל פניות.
               </p>
 

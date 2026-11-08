@@ -9,7 +9,7 @@ export function TickerBands() {
     <section aria-label="ערים ושירותים" className="relative z-10 -mt-6 overflow-hidden py-10 sm:py-14">
       <div className="-rotate-[2deg] scale-x-[1.04] bg-ink py-4 text-paper shadow-[0_20px_40px_-20px_rgba(20,20,20,0.6)] sm:py-5">
         <Marquee duration="50s" trackClassName="gap-8 pe-8">
-          {[...allCityNames, "וכל ריכוז חרדי ודתי"].map((city) => (
+          {[...allCityNames, "ועוד ערים ברחבי הארץ"].map((city) => (
             <span key={city} className="flex items-center gap-8">
               <span className="font-display text-2xl font-bold whitespace-nowrap sm:text-3xl">{city}</span>
               <Dots size="size-2" />

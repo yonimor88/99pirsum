@@ -75,7 +75,7 @@ const photo = (src: StaticImageData, alt: string): Photo => ({ src, alt });
 
 export const photos = {
   boardReader: photo(boardReader, "אברך עוצר לקרוא את לוח המודעות ברחוב"),
-  websitesCollage: photo(websitesCollage, "אתרים שעיצבנו ובנינו לעסקים במגזר החרדי"),
+  websitesCollage: photo(websitesCollage, "אתרים שעיצבנו ובנינו לעסקים"),
   boardReaderTall: photo(boardReaderTall, "עובר אורח קורא מודעות על לוח מודעות עירוני"),
   boardPosterCrew: photo(boardPosterCrew, "עובד הדבקה מדביק מודעה חדשה על לוח מודעות"),
   boardPosterCrew2: photo(boardPosterCrew2, "לוח מודעות עירוני מלא במודעות טריות"),

@@ -40,7 +40,7 @@ export function SiteFooter() {
             className="w-44"
           />
           <p className="mt-6 max-w-xs leading-relaxed text-paper/65">
-            פרסום, הפצה ודפוס למגזר החרדי והדתי בכל הארץ. מאז {site.foundingYear}, מאלעד לכל ריכוז חרדי ודתי.
+            פרסום, הפצה ודפוס לעסקים, למוסדות ולמותגים — עם התמחות במגזר החרדי והדתי. מאז {site.foundingYear}, מאלעד לכל הארץ.
           </p>
           <div className="mt-6 flex gap-2">
             <a

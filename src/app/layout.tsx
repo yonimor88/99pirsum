@@ -28,7 +28,7 @@ const frank = Frank_Ruhl_Libre({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "99 פרסום ומדיה — פרסום והפצה למגזר החרדי והדתי",
+    default: "99 פרסום ומדיה — פרסום, הפצה ודפוס · מומחים במגזר החרדי והדתי",
     template: "%s | 99 פרסום ומדיה",
   },
   description: site.description,
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "he_IL",
     siteName: site.name,
-    title: "99 פרסום ומדיה — פרסום והפצה למגזר החרדי והדתי",
+    title: "99 פרסום ומדיה — פרסום, הפצה ודפוס · מומחים במגזר החרדי והדתי",
     description: site.description,
     url: "/",
   },

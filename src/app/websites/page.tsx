@@ -182,7 +182,7 @@ export default function WebsitesPage() {
                 {allSites.length} אתרים. <span className="text-yellow">{allSites.length} עולמות.</span>
               </span>
             }
-            description={`אתרים של לקוחות שלנו, ועוד ${concepts.length} אתרי קונספט למגזר החרדי. גללו לאט — האתרים זזים בתוך המסכים בדיוק כמו אצל הגולשים. כל מה שאתם רואים הוא צילום של האתר החי.`}
+            description={`אתרים של לקוחות שלנו, ועוד ${concepts.length} אתרי קונספט שבנינו לעסקים לדוגמה. גללו לאט — האתרים זזים בתוך המסכים בדיוק כמו אצל הגולשים. כל מה שאתם רואים הוא צילום של האתר החי.`}
           />
         </div>
         <div className="relative pb-24 lg:pb-10">
@@ -198,7 +198,7 @@ export default function WebsitesPage() {
             eyebrow="אתרי קונספט"
             title={
               <span id="concepts-title">
-                למגזר החרדי. <span className="text-yellow">עד הפרט האחרון.</span>
+                גם למגזר החרדי. <span className="text-yellow">עד הפרט האחרון.</span>
               </span>
             }
             description="עסקים לדוגמה — אתרים אמיתיים וחיים. כל אחד עם מצב שבת, תאריך עברי, טלפון בכל מקום (גם למי שמחזיק מכשיר כשר), ועובד יפה גם כשנטפרי או רימון חוסמים תמונות."

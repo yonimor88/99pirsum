@@ -12,7 +12,7 @@ export function GET() {
 
 > ${site.description}
 
-${site.name} היא חברת פרסום, הפצה ודפוס שמתמחה במגזר החרדי והדתי בישראל, ופועלת מאז ${site.foundingYear} מהעיר אלעד.
+${site.name} היא חברת פרסום, הפצה ודפוס שעובדת עם עסקים, מוסדות ומותגים בכל הארץ ומתמחה במגזר החרדי והדתי. פועלת מאז ${site.foundingYear} מהעיר אלעד.
 
 - כתובת: ${site.address.full}
 - טלפון: ${site.phones.map((p) => p.display).join(", ")}

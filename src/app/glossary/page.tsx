@@ -7,9 +7,9 @@ import { glossary } from "@/content/glossary";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "מילון מונחים: פרסום והפצה במגזר החרדי",
+  title: "מילון מונחים: פרסום, הפצה ודפוס",
   description:
-    "מה זה חצי גיליון, ראש לוח, שמירה או קו מורחב? כל המונחים של עולם ההפצה, הדבקת המודעות והדפוס במגזר החרדי — מוסברים בפשטות.",
+    "מה זה חצי גיליון, ראש לוח, שמירה או קו מורחב? כל המונחים של עולם ההפצה, הדבקת המודעות והדפוס — מוסברים בפשטות.",
   path: "/glossary",
 });
 
@@ -69,7 +69,7 @@ export default function GlossaryPage() {
           "@context": "https://schema.org",
           "@type": "DefinedTermSet",
           "@id": absoluteUrl("/glossary"),
-          name: "מילון מונחי פרסום והפצה במגזר החרדי",
+          name: "מילון מונחי פרסום, הפצה ודפוס",
           inLanguage: "he",
           hasDefinedTerm: sorted.map((t) => ({
             "@type": "DefinedTerm",

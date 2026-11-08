@@ -33,7 +33,7 @@ export function Hero() {
         <div className="relative z-10">
           <div className="intro-rise inline-flex items-center gap-2.5 rounded-full border border-ink/12 bg-paper/80 px-3.5 py-1.5 text-sm font-medium text-ink/80 backdrop-blur">
             <Dots size="size-1.5" />
-            <h1 className="font-medium">פרסום והפצה למגזר החרדי והדתי</h1>
+            <h1 className="font-medium">פרסום, הפצה ודפוס בכל הארץ</h1>
             <span aria-hidden>·</span>
             <span>מאז {site.foundingYear}</span>
           </div>

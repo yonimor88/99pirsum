@@ -69,6 +69,8 @@ export function localBusinessJsonLd() {
       "עלוני שבת",
       "דפוס דיגיטלי",
       "שילוט",
+      "מיתוג ועיצוב גרפי",
+      "בניית אתרים",
     ],
     hasOfferCatalog: {
       "@type": "OfferCatalog",
