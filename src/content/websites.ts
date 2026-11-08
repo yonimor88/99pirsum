@@ -48,6 +48,10 @@ import pirsumDesktop from "@/assets/images/sites/99pirsum-desktop.webp";
 import pirsumDesktopLong from "@/assets/images/sites/99pirsum-desktop-long.webp";
 import pirsumMobile from "@/assets/images/sites/99pirsum-mobile.webp";
 import pirsumMobileLong from "@/assets/images/sites/99pirsum-mobile-long.webp";
+import hasidiDesktop from "@/assets/images/sites/hasidi-desktop.webp";
+import hasidiDesktopLong from "@/assets/images/sites/hasidi-desktop-long.webp";
+import hasidiMobile from "@/assets/images/sites/hasidi-mobile.webp";
+import hasidiMobileLong from "@/assets/images/sites/hasidi-mobile-long.webp";
 
 /**
  * Websites we designed and built. Screenshots are real captures of the live
@@ -150,6 +154,24 @@ export const websites: Website[] = [
     palette: ["#2a1f1d", "#fbf3ef", "#d0868b", "#c49a6c", "#f2d5d0"],
     glow: "#d0868b",
     shots: { desktop: gilaDesktop, mobile: gilaMobile, desktopLong: gilaDesktopLong, mobileLong: gilaMobileLong },
+  },
+  {
+    slug: "hasidi-photo",
+    name: "צלמי חזון אי״ש",
+    url: "https://hasidi-photo.vercel.app",
+    domain: "hasidi-photo.vercel.app",
+    industry: "צילום אירועים",
+    headline: "אלבום חי של רגעים — בשמנת וזהב.",
+    summary:
+      "אתר חדש לצוות צלמי אירועים מהמגזר החרדי: חתונות, בר מצוות ובריתות. קיר תמונות מוטה שזז עם העכבר, גלריות עם 191 תמונות של הלקוח, ושפה עיצובית בשמנת וזהב — כמו החותם של העסק, עם בס״ד בראש כל עמוד.",
+    challenge:
+      "אתר וורדפרס עם גלריות כבדות ואיטיות, שלא שיקף את איכות הצילום — והדירוג שלו בגוגל היה חייב לעבור איתו לאתר החדש.",
+    solution:
+      "אתר מהיר בהתאמה אישית: קיר תמונות אינטראקטיבי בפתיחה, גלריה לכל סוג אירוע עם תצוגה מלאה והחלקה, תמונות שנדחסות אוטומטית לכל מסך, וכל כתובת מהאתר הישן נשמרה — כדי שלקוחות ימשיכו למצוא אותו בגוגל.",
+    features: ["קיר תמונות אינטראקטיבי", "191 תמונות בגלריות", "תצוגה מלאה בהחלקה", "5 פלטות צבעים", "שמירת דירוג בגוגל", "טופס פנייה למייל"],
+    palette: ["#f4ecdc", "#946c22", "#1d1912", "#fffdf8", "#c9a24b"],
+    glow: "#b08532",
+    shots: { desktop: hasidiDesktop, mobile: hasidiMobile, desktopLong: hasidiDesktopLong, mobileLong: hasidiMobileLong },
   },
 ];
 
