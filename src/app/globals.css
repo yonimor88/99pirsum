@@ -53,6 +53,13 @@
   }
 }
 
+/*
+ * Large screens with little height: a laptop, or a browser that isn't maximised. The /websites project
+ * scenes pin to the screen there, so their text tightens up in steps instead of running off it.
+ */
+@custom-variant short (@media (min-width: 64rem) and (max-height: 820px));
+@custom-variant shorter (@media (min-width: 64rem) and (max-height: 640px));
+
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;

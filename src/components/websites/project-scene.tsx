@@ -121,7 +121,7 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
           >
             {/* On phones the stage above already shows all of this, so it stays for screen readers only */}
             <m.div variants={item} className="flex items-center gap-4 max-md:sr-only">
-              <span className="text-outline font-display text-6xl leading-none font-black sm:text-7xl" style={{ WebkitTextStrokeColor: site.glow }}>
+              <span className="text-outline font-display text-6xl leading-none font-black sm:text-7xl short:text-5xl" style={{ WebkitTextStrokeColor: site.glow }}>
                 {number}
               </span>
               <span className="flex flex-col gap-1">
@@ -136,33 +136,33 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
               </span>
             </m.div>
 
-            <m.h3 variants={item} id={`site-${site.slug}`} className="text-4xl leading-none font-black text-paper sm:text-5xl md:mt-6 lg:text-[3.4rem]">
+            <m.h3 variants={item} id={`site-${site.slug}`} className="text-4xl leading-none font-black text-paper sm:text-5xl md:mt-6 lg:text-[3.4rem] short:mt-4 short:text-[2.75rem]">
               {site.name}
             </m.h3>
-            <m.p variants={item} className="mt-3 font-display text-xl font-semibold sm:text-2xl" style={{ color: site.glow }}>
+            <m.p variants={item} className="mt-3 font-display text-xl font-semibold sm:text-2xl short:mt-2 short:text-xl" style={{ color: site.glow }}>
               {site.headline}
             </m.p>
-            <m.p variants={item} className="mt-4 text-lg leading-relaxed text-paper/70 lg:[@media(max-height:820px)]:hidden">
+            <m.p variants={item} className="mt-4 text-lg leading-relaxed text-paper/70 lg:[@media(max-height:960px)]:sr-only">
               {site.summary}
             </m.p>
 
-            <m.dl variants={item} className="mt-6 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl border border-paper/10 bg-paper/[0.04] p-4">
+            <m.dl variants={item} className="mt-6 grid gap-3 sm:grid-cols-2 short:mt-4">
+              <div className="rounded-2xl border border-paper/10 bg-paper/[0.04] p-4 short:p-3.5">
                 <dt className="text-xs font-semibold tracking-wide text-paper/45">האתגר</dt>
-                <dd className="mt-1.5 leading-relaxed text-paper/85">{site.challenge}</dd>
+                <dd className="mt-1.5 leading-relaxed text-paper/85 short:mt-1 short:text-[0.95rem] short:leading-normal">{site.challenge}</dd>
               </div>
-              <div className="rounded-2xl border border-paper/10 bg-paper/[0.04] p-4">
+              <div className="rounded-2xl border border-paper/10 bg-paper/[0.04] p-4 short:p-3.5">
                 <dt className="text-xs font-semibold tracking-wide text-paper/45">מה בנינו</dt>
-                <dd className="mt-1.5 leading-relaxed text-paper/85">{site.solution}</dd>
+                <dd className="mt-1.5 leading-relaxed text-paper/85 short:mt-1 short:text-[0.95rem] short:leading-normal">{site.solution}</dd>
               </div>
             </m.dl>
 
-            <m.ul variants={list} className="mt-6 flex flex-wrap gap-2" aria-label="מה יש באתר">
+            <m.ul variants={list} className="mt-6 flex flex-wrap gap-2 short:mt-4 shorter:sr-only" aria-label="מה יש באתר">
               {site.features.map((f) => (
                 <m.li
                   key={f}
                   variants={pop}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-paper/[0.08] px-3 py-1.5 text-sm text-paper/90"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-paper/[0.08] px-3 py-1.5 text-sm text-paper/90 short:py-1 short:text-[0.8rem]"
                 >
                   <Check className="size-3.5" style={{ color: site.glow }} strokeWidth={3} aria-hidden />
                   {f}
@@ -170,7 +170,7 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
               ))}
             </m.ul>
 
-            <m.div variants={item} className="mt-6 flex items-center gap-3">
+            <m.div variants={item} className="mt-6 flex items-center gap-3 short:hidden">
               <span className="text-xs text-paper/45">פלטת הצבעים</span>
               <m.span variants={list} className="flex -space-x-1.5 space-x-reverse">
                 {site.palette.map((c) => (
@@ -186,7 +186,7 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
               </m.span>
             </m.div>
 
-            <m.div variants={item} className="mt-8 flex flex-wrap items-center gap-3">
+            <m.div variants={item} className="mt-8 flex flex-wrap items-center gap-3 short:mt-5">
               <a
                 href={site.url}
                 target="_blank"
