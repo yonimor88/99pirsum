@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowUpLeft, Check } from "lucide-react";
-import { m, useScroll, useTransform, type Variants } from "motion/react";
+import { ArrowUpLeft, Check, ChevronsDown, Lock } from "lucide-react";
+import { m, useScroll, useTransform, type MotionValue, type Variants } from "motion/react";
 import Image from "next/image";
 import { useRef } from "react";
 
@@ -28,7 +28,9 @@ const pop: Variants = {
 /**
  * One project. The live site's full-page capture scrolls inside the laptop and
  * phone while they stay pinned to the viewport. On large screens the whole
- * scene pins; on phones only the devices pin, and the story follows below.
+ * scene pins; below that only the devices pin, and the story follows below.
+ * On phones a laptop is too small to read, so the devices give way to one big
+ * phone (`PhoneStage`) showing the mobile site.
  */
 export function ProjectScene({ site, index, total }: { site: Website; index: number; total: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -50,11 +52,12 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
   return (
     <section
       aria-labelledby={`site-${site.slug}`}
-      // --dev-h: rough height of the devices on phones (browser frame + the phone hanging below it)
-      className="relative [--dev-h:calc((100vw-2.5rem)*0.625+4.5rem)] sm:[--dev-h:calc((100vw-4rem)*0.625+5.5rem)] lg:h-[300vh]"
+      // --dev-h: height of the pinned devices below lg. Phones: the full-screen phone stage. Tablets: the browser
+      // frame + the phone hanging below it.
+      className="relative [--dev-h:100svh] md:[--dev-h:calc((100vw-4rem)*0.625+5.5rem)] lg:h-[300vh]"
     >
       {/*
-        Scroll ruler for the capture animation. Large screens: the whole pinned scene. Phones: only the devices
+        Scroll ruler for the capture animation. Large screens: the whole pinned scene. Below lg: only the devices
         pin, vertically centred, for 200vh — the ruler is shifted up by that centring offset so the mapping is the same.
       */}
       <div
@@ -67,7 +70,8 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
           {/* Devices */}
           <div className={cn("h-[calc(200vh_+_var(--dev-h))] lg:col-span-7 lg:h-auto", flip && "lg:order-2")}>
             <div className="sticky top-[calc(50svh_-_var(--dev-h)/2)] lg:static">
-              <div className="relative w-full">
+              <PhoneStage site={site} number={number} total={total} scroll={scrollYProgress} hint={index === 0} className="md:hidden" />
+              <div className="relative hidden w-full md:block">
                 <m.div
                   aria-hidden
                   className="absolute inset-[8%] -z-10 rounded-full opacity-50 blur-[90px]"
@@ -115,7 +119,8 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
             whileInView="show"
             viewport={{ once: true, amount: 0.35 }}
           >
-            <m.div variants={item} className="flex items-center gap-4">
+            {/* On phones the stage above already shows all of this, so it stays for screen readers only */}
+            <m.div variants={item} className="flex items-center gap-4 max-md:sr-only">
               <span className="text-outline font-display text-6xl leading-none font-black sm:text-7xl" style={{ WebkitTextStrokeColor: site.glow }}>
                 {number}
               </span>
@@ -131,7 +136,7 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
               </span>
             </m.div>
 
-            <m.h3 variants={item} id={`site-${site.slug}`} className="mt-6 text-4xl leading-none font-black text-paper sm:text-5xl lg:text-[3.4rem]">
+            <m.h3 variants={item} id={`site-${site.slug}`} className="text-4xl leading-none font-black text-paper sm:text-5xl md:mt-6 lg:text-[3.4rem]">
               {site.name}
             </m.h3>
             <m.p variants={item} className="mt-3 font-display text-xl font-semibold sm:text-2xl" style={{ color: site.glow }}>
@@ -207,5 +212,128 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
         </div>
       </div>
     </section>
+  );
+}
+
+/** Scroll thumb height, as a share of its track */
+const THUMB = 0.14;
+
+/**
+ * Phones only: the stage fills the screen while it's pinned. One big phone, close to
+ * the real size of the visitor's own, runs off the bottom of the screen and scrolls
+ * through the mobile site, with the project's name and number above it.
+ */
+function PhoneStage({
+  site,
+  number,
+  total,
+  scroll,
+  hint,
+  className,
+}: {
+  site: Website;
+  number: string;
+  total: number;
+  /** The scene's scroll ruler: the stage is pinned from 0.25 to 0.75 */
+  scroll: MotionValue<number>;
+  /** Show the "scroll to browse" cue */
+  hint: boolean;
+  className?: string;
+}) {
+  const lessMotion = usePrefersLessMotion();
+
+  const p = useTransform(scroll, [0.25, 0.75], [0, 1]);
+  // Two layers move the capture by p × (screen height − capture height) without measuring either:
+  // the outer one goes down a share of the screen, the inner one up the same share of the capture.
+  const down = useTransform(p, (v) => `${v * 100}%`);
+  const up = useTransform(p, (v) => `${v * -100}%`);
+  const thumbY = useTransform(p, (v) => `${v * (1 / THUMB - 1) * 100}%`);
+  const rise = useTransform(scroll, [0.06, 0.25], [80, 0]);
+  const grow = useTransform(scroll, [0.06, 0.25], [0.9, 1]);
+  const glow = useTransform(scroll, [0.06, 0.25, 0.75], [0.15, 0.55, 0.35]);
+  const hintOpacity = useTransform(scroll, [0.26, 0.32], [1, 0]);
+
+  return (
+    <div className={cn("flex h-svh flex-col pt-5", className)}>
+      {/* Caption: the story below repeats it in full */}
+      <div aria-hidden className="flex shrink-0 items-center gap-3 pb-4">
+        <span className="text-outline font-display text-[2.75rem] leading-none font-black" style={{ WebkitTextStrokeColor: site.glow }}>
+          {number}
+        </span>
+        <span className="flex min-w-0 flex-col">
+          <span className="truncate font-display text-xl leading-tight font-bold text-paper">{site.name}</span>
+          <span className="mt-0.5 flex items-center gap-1.5 text-sm text-paper/60">
+            <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: site.glow }} />
+            <span className="truncate">{site.industry}</span>
+          </span>
+        </span>
+        <span className="ms-auto flex shrink-0 flex-col items-end gap-1.5 text-xs tracking-widest text-paper/40 tabular-nums">
+          <span dir="ltr">
+            {number} / {String(total).padStart(2, "0")}
+          </span>
+          {site.concept && <span className="rounded-full bg-yellow px-2 py-0.5 font-bold tracking-normal text-ink">קונספט</span>}
+        </span>
+      </div>
+
+      {/* The phone, fading out where it runs off the screen. The glow and side buttons stay outside the mask, which would clip them. */}
+      <div className="relative isolate min-h-0 flex-1">
+        <m.div
+          aria-hidden
+          className="absolute inset-x-[6%] top-[4%] -z-10 h-3/4 rounded-full blur-[70px]"
+          style={{ backgroundColor: site.glow, opacity: lessMotion ? 0.45 : glow }}
+        />
+        <m.div
+          style={lessMotion ? undefined : { y: rise, scale: grow }}
+          className="relative mx-auto h-full max-w-[25rem] origin-bottom"
+        >
+          {/* Side buttons */}
+          <span aria-hidden className="absolute top-24 -left-[3px] h-9 w-[3px] rounded-l-sm bg-ink-3" />
+          <span aria-hidden className="absolute top-36 -left-[3px] h-14 w-[3px] rounded-l-sm bg-ink-3" />
+          <span aria-hidden className="absolute top-32 -right-[3px] h-20 w-[3px] rounded-r-sm bg-ink-3" />
+
+          <div className="h-full rounded-t-[2.75rem] bg-ink-2 p-2.5 pb-0 shadow-[inset_0_0_0_1.5px_rgb(255_255_255/0.14)] [mask-image:linear-gradient(to_bottom,black_72%,transparent_97%)]">
+            <div className="flex h-full flex-col overflow-hidden rounded-t-[2.2rem] bg-white">
+              {/* Status bar and address bar */}
+              <div dir="ltr" className="shrink-0 bg-paper-2 px-4 pt-2 pb-2.5">
+                <span aria-hidden className="mx-auto block h-[1.15rem] w-[4.75rem] rounded-full bg-ink" />
+                <span className="mx-auto mt-2 flex w-fit max-w-full items-center gap-1.5 rounded-full bg-white px-3.5 py-1 text-xs text-muted shadow-[0_1px_2px_rgb(0_0_0/0.06)]">
+                  <Lock className="size-3 shrink-0" aria-hidden />
+                  <span className="truncate">{site.domain}</span>
+                </span>
+              </div>
+
+              <div className="relative min-h-0 flex-1 overflow-hidden">
+                <m.div style={{ y: down }} className="absolute inset-0 will-change-transform">
+                  <m.div style={{ y: up }} className="will-change-transform">
+                    <Image
+                      src={site.shots.mobileLong}
+                      alt={`האתר ${site.name} בטלפון`}
+                      sizes="(min-width: 448px) 25rem, 90vw"
+                      className="h-auto w-full"
+                    />
+                  </m.div>
+                </m.div>
+
+                {/* Scroll indicator */}
+                <span aria-hidden className="absolute inset-y-2 right-1 w-1">
+                  <m.span className="block w-full rounded-full" style={{ height: `${THUMB * 100}%`, y: thumbY, backgroundColor: site.glow }} />
+                </span>
+
+                {hint && (
+                  <m.p
+                    aria-hidden
+                    style={{ opacity: hintOpacity }}
+                    className="pointer-events-none absolute inset-x-0 top-[38%] mx-auto flex w-fit items-center gap-2 rounded-full bg-ink/85 px-4 py-2 font-display text-sm font-semibold text-paper shadow-[0_12px_30px_-10px_rgb(0_0_0/0.5)] backdrop-blur"
+                  >
+                    <ChevronsDown className={cn("size-4", !lessMotion && "animate-bounce")} aria-hidden />
+                    גללו כדי לדפדף באתר
+                  </m.p>
+                )}
+              </div>
+            </div>
+          </div>
+        </m.div>
+      </div>
+    </div>
   );
 }
