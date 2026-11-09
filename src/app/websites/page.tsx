@@ -19,7 +19,7 @@ import { ProcessSteps } from "@/components/websites/process-steps";
 import { ProjectScene, type SceneLink } from "@/components/websites/project-scene";
 import { YourSiteNext } from "@/components/websites/your-site-next";
 import { lite, photos } from "@/content/media";
-import { websitesPhone, whatsappLink } from "@/content/site";
+import { websitesPhone, websitesWhatsappLink } from "@/content/site";
 import { concepts, websites, type Website } from "@/content/websites";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
@@ -109,7 +109,7 @@ export default function WebsitesPage() {
               </p>
               <div className="intro-rise mt-8 flex flex-wrap gap-3" style={{ "--intro-delay": "0.25s" } as CSSProperties}>
                 <ButtonAnchor
-                  href={whatsappLink("שלום, ראיתי את האתרים שבניתם ואשמח לשמוע על אתר לעסק שלי")}
+                  href={websitesWhatsappLink()}
                   target="_blank"
                   rel="noopener noreferrer"
                   size="lg"

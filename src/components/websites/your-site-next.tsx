@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePrefersLessMotion } from "@/components/a11y/motion-provider";
 import { buttonClasses } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/ui/icons";
-import { websitesEmail, websitesPhone, whatsappLink } from "@/content/site";
+import { websitesEmail, websitesPhone, websitesWhatsappLink } from "@/content/site";
 import { BrowserFrame } from "./device-frames";
 
 const DOMAINS = ["העסק-שלכם.co.il", "your-business.co.il", "המותג-הבא.com"];
@@ -66,7 +66,7 @@ export function YourSiteNext() {
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <a
-                href={whatsappLink("שלום, ראיתי את האתרים שבניתם ואשמח לשמוע על אתר לעסק שלי")}
+                href={websitesWhatsappLink()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={buttonClasses({ variant: "whatsapp", size: "lg" })}

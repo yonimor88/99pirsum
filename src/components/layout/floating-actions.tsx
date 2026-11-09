@@ -2,11 +2,12 @@
 
 import { Accessibility, Contrast, Link2, Minus, Pause, Plus, RotateCcw, Type, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 
 import { applyA11yClasses, resetA11y, updateA11y, useA11ySettings } from "@/components/a11y/a11y-store";
 import { WhatsAppIcon } from "@/components/ui/icons";
-import { whatsappLink } from "@/content/site";
+import { websitesWhatsappLink, whatsappLink } from "@/content/site";
 import { cn } from "@/lib/cn";
 
 /** WhatsApp button (bottom-left) and accessibility menu (bottom-right). */
@@ -20,9 +21,11 @@ export function FloatingActions() {
 }
 
 function WhatsAppFab() {
+  // Website enquiries go to the website projects line
+  const onWebsites = usePathname().startsWith("/websites");
   return (
     <a
-      href={whatsappLink()}
+      href={onWebsites ? websitesWhatsappLink() : whatsappLink()}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="שליחת הודעת וואטסאפ ל-99 פרסום ומדיה"

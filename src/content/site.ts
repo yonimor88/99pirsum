@@ -26,12 +26,19 @@ export const site = {
 
 export const primaryPhone = site.phones[0];
 
-/** Direct line for website projects (/websites and the web & digital service). */
-export const websitesPhone = { display: "054-397-1020", href: "tel:+972543971020" } as const;
+/** Direct line for website projects (/websites and the web & digital service). It takes WhatsApp too. */
+export const websitesPhone = { display: "054-397-1020", href: "tel:+972543971020", whatsappNumber: "972543971020" } as const;
 export const websitesEmail = "yoni99pirsum@gmail.com";
 
+const waMe = (number: string, text: string) => `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+
 export function whatsappLink(text = "שלום, הגעתי מהאתר ואשמח לקבל הצעת מחיר") {
-  return `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(text)}`;
+  return waMe(site.whatsappNumber, text);
+}
+
+/** WhatsApp to the website projects line (`websitesPhone`), for everything on /websites. */
+export function websitesWhatsappLink(text = "שלום, ראיתי את האתרים שבניתם ואשמח לשמוע על אתר לעסק שלי") {
+  return waMe(websitesPhone.whatsappNumber, text);
 }
 
 export const wazeLink = `https://waze.com/ul?q=${encodeURIComponent(site.address.full)}&navigate=yes`;

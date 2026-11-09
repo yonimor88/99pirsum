@@ -7,7 +7,7 @@ import { useRef, type CSSProperties, type RefObject } from "react";
 
 import { usePrefersLessMotion } from "@/components/a11y/motion-provider";
 import { WhatsAppIcon } from "@/components/ui/icons";
-import { whatsappLink } from "@/content/site";
+import { websitesWhatsappLink } from "@/content/site";
 import type { Website } from "@/content/websites";
 import { cn } from "@/lib/cn";
 import { BROWSER_SCREEN_RATIO, BrowserFrame, PHONE_SCREEN_RATIO, PhoneFrame, scrollTravel } from "./device-frames";
@@ -228,7 +228,7 @@ export function ProjectScene({
                 <span className="sr-only">(נפתח בלשונית חדשה)</span>
               </a>
               <a
-                href={whatsappLink(`שלום, ראיתי באתר שלכם את האתר של ${site.name} ואשמח לאתר כזה לעסק שלי`)}
+                href={websitesWhatsappLink(`שלום, ראיתי באתר שלכם את האתר של ${site.name} ואשמח לאתר כזה לעסק שלי`)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex h-12 items-center gap-2 rounded-full px-4 font-display font-semibold text-paper/85 transition-colors hover:bg-paper/10 hover:text-paper"
