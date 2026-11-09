@@ -73,24 +73,32 @@ export function Hero() {
 
           <Link
             href="/websites"
-            className="intro-rise group mt-6 flex max-w-xl items-center gap-4 rounded-2xl border border-ink/12 bg-paper/80 p-2.5 pe-5 backdrop-blur transition-colors hover:border-ink"
+            className="intro-rise group mt-6 flex max-w-xl items-center gap-3 rounded-2xl border border-ink/12 bg-paper/80 p-3 pe-3.5 backdrop-blur transition-colors hover:border-ink sm:gap-4 sm:p-2.5 sm:pe-5"
             style={delay(0.5)}
           >
-            <span className="relative aspect-[16/10] w-20 shrink-0 overflow-hidden rounded-lg bg-ink ring-1 ring-ink/10 sm:w-28">
+            <span className="relative aspect-[16/10] w-24 shrink-0 overflow-hidden rounded-lg bg-ink ring-1 ring-ink/10 sm:w-28">
               <Image src={concepts[1].shots.desktop} alt="" fill sizes="7rem" className="object-cover object-top" />
+              {/* Phones: the badge sits on the picture, leaving the line beside it to the label */}
+              <span className="absolute start-1 top-1 rounded-full bg-magenta px-1.5 py-px text-[0.7rem] font-bold text-paper sm:hidden">
+                חדש
+              </span>
             </span>
             <span className="min-w-0">
-              <span className="flex items-center gap-2 text-xs font-semibold whitespace-nowrap text-muted sm:text-sm">
-                <span className="rounded-full bg-magenta px-2 py-0.5 text-xs font-bold text-paper">חדש</span>
+              <span className="flex items-center gap-2 text-sm font-semibold whitespace-nowrap text-muted">
+                <span className="rounded-full bg-magenta px-2 py-0.5 text-xs font-bold text-paper max-sm:hidden">חדש</span>
                 סטודיו לבניית אתרים
               </span>
-              <span className="mt-1 block font-display text-base leading-snug font-bold sm:text-lg">
+              <span className="mt-1 block font-display text-lg leading-snug font-bold max-sm:text-balance">
                 אתרים שמביאים פניות
-                <span className="hidden [.promo-on_&]:inline"> · החל מ-500 ש״ח</span>
+                {/* Phones: the price gets a line of its own */}
+                <span className="hidden [.promo-on_&]:block sm:[.promo-on_&]:inline">
+                  <span className="max-sm:hidden"> · </span>
+                  החל מ-500 ש״ח
+                </span>
               </span>
             </span>
             <ArrowUpLeft
-              className="ms-auto size-5 shrink-0 transition-transform group-hover:-translate-x-0.5 group-hover:-translate-y-0.5"
+              className="ms-auto size-6 shrink-0 transition-transform group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 sm:size-5"
               aria-hidden
             />
           </Link>
