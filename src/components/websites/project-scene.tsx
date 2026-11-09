@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpLeft, Check, ChevronsDown, Lock } from "lucide-react";
+import { ArrowDown, ArrowUpLeft, Check, ChevronsDown, Lock } from "lucide-react";
 import { m, useScroll, useTransform, type Variants } from "motion/react";
 import Image from "next/image";
 import { useRef, type CSSProperties, type RefObject } from "react";
@@ -25,6 +25,9 @@ const pop: Variants = {
   show: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 300, damping: 15 } },
 };
 
+/** Where the phone stage's skip button goes: the next project, or past the last one */
+export type SceneLink = { href: string; label: string };
+
 /**
  * One project. The live site's full-page capture scrolls inside the laptop and
  * phone while they stay pinned to the viewport. On large screens the whole
@@ -32,7 +35,19 @@ const pop: Variants = {
  * On phones a laptop is too small to read, so the devices give way to one big
  * phone (`PhoneStage`) showing the mobile site.
  */
-export function ProjectScene({ site, index, total }: { site: Website; index: number; total: number }) {
+export function ProjectScene({
+  id,
+  site,
+  index,
+  total,
+  next,
+}: {
+  id: string;
+  site: Website;
+  index: number;
+  total: number;
+  next: SceneLink;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const devicesRef = useRef<HTMLDivElement>(null);
   const lessMotion = usePrefersLessMotion();
@@ -52,12 +67,14 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
 
   return (
     <section
+      id={id}
       aria-labelledby={`site-${site.slug}`}
       // Below lg: --dev-h is the height of the pinned devices, --pin how far the page scrolls while they stay
       // pinned. Phones: the full-screen phone stage, pinned for as long as its capture takes to scroll past at
       // finger speed. Tablets: the browser frame + the phone hanging below it, pinned for 200vh.
       style={{ "--phone-pin": phoneStagePin(site.shots.mobileLong) } as CSSProperties}
-      className="relative [--dev-h:100svh] [--pin:var(--phone-pin)] md:[--dev-h:calc((100vw-4rem)*0.625+5.5rem)] md:[--pin:200vh] lg:h-[300vh]"
+      // -scroll-mt-24 cancels the page's 6rem scroll-padding-top, so a jump here lands with the devices pinned
+      className="relative -scroll-mt-24 [--dev-h:100svh] [--pin:var(--phone-pin)] md:[--dev-h:calc((100vw-4rem)*0.625+5.5rem)] md:[--pin:200vh] lg:h-[300vh]"
     >
       {/*
         Scroll ruler for the capture animation. Large screens: the whole pinned scene. Tablets: only the devices
@@ -74,7 +91,15 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
           {/* Devices */}
           <div ref={devicesRef} className={cn("h-[calc(var(--pin)_+_var(--dev-h))] lg:col-span-7 lg:h-auto", flip && "lg:order-2")}>
             <div className="sticky top-[calc(50svh_-_var(--dev-h)/2)] lg:static">
-              <PhoneStage site={site} number={number} total={total} track={devicesRef} hint={index === 0} className="md:hidden" />
+              <PhoneStage
+                site={site}
+                number={number}
+                total={total}
+                track={devicesRef}
+                hint={index === 0}
+                next={next}
+                className="md:hidden"
+              />
               <div className="relative hidden w-full md:block">
                 <m.div
                   aria-hidden
@@ -251,6 +276,7 @@ function PhoneStage({
   total,
   track,
   hint,
+  next,
   className,
 }: {
   site: Website;
@@ -260,6 +286,8 @@ function PhoneStage({
   track: RefObject<HTMLDivElement | null>;
   /** Show the "scroll to browse" cue */
   hint: boolean;
+  /** The skip button at the bottom */
+  next: SceneLink;
   className?: string;
 }) {
   const lessMotion = usePrefersLessMotion();
@@ -281,7 +309,7 @@ function PhoneStage({
   const hintOpacity = useTransform(p, [0.01, 0.05], [1, 0]);
 
   return (
-    <div className={cn("flex h-svh flex-col pt-5", className)}>
+    <div className={cn("relative flex h-svh flex-col pt-5", className)}>
       {/* Caption: the story below repeats it in full */}
       <div aria-hidden className="flex shrink-0 items-center gap-3 pb-4">
         <span className="text-outline font-display text-[2.75rem] leading-none font-black" style={{ WebkitTextStrokeColor: site.glow }}>
@@ -302,7 +330,7 @@ function PhoneStage({
         </span>
       </div>
 
-      {/* The phone, fading out where it runs off the screen. The glow and side buttons stay outside the mask, which would clip them. */}
+      {/* The phone, running off the bottom of the screen */}
       <div className="relative isolate min-h-0 flex-1">
         <m.div
           aria-hidden
@@ -318,7 +346,7 @@ function PhoneStage({
           <span aria-hidden className="absolute top-36 -left-[3px] h-14 w-[3px] rounded-l-sm bg-ink-3" />
           <span aria-hidden className="absolute top-32 -right-[3px] h-20 w-[3px] rounded-r-sm bg-ink-3" />
 
-          <div className="h-full rounded-t-[2.75rem] bg-ink-2 p-2.5 pb-0 shadow-[inset_0_0_0_1.5px_rgb(255_255_255/0.14)] [mask-image:linear-gradient(to_bottom,black_72%,transparent_97%)]">
+          <div className="h-full rounded-t-[2.75rem] bg-ink-2 p-2.5 pb-0 shadow-[inset_0_0_0_1.5px_rgb(255_255_255/0.14)]">
             <div className="flex h-full flex-col overflow-hidden rounded-t-[2.2rem] bg-white">
               {/* Status bar and address bar */}
               <div dir="ltr" className="shrink-0 bg-paper-2 px-4 pt-2 pb-2.5">
@@ -360,7 +388,27 @@ function PhoneStage({
             </div>
           </div>
         </m.div>
+
+        {/*
+          Fades the phone into the page. A fade drawn over it rather than a mask on it: Chrome can leave the
+          bottom pixel rows of a masked, scrolling capture unmasked. Wider than the stage to cover the glow's
+          edges, and a little past its bottom for rounding — not more, or it would hide the story below.
+        */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -inset-x-8 top-[70%] -bottom-2 bg-linear-to-b from-ink/0 to-ink to-86%"
+        />
       </div>
+
+      {/* Skip ahead, level with the floating WhatsApp and accessibility buttons in the corners */}
+      <a
+        href={next.href}
+        className="absolute bottom-6 left-1/2 inline-flex h-12 -translate-x-1/2 items-center gap-2 rounded-full bg-paper px-5 font-display font-semibold whitespace-nowrap text-ink transition-transform active:scale-95"
+        style={{ boxShadow: `-3px 3px 0 0 ${site.glow}` }}
+      >
+        {next.label}
+        <ArrowDown className="size-4" aria-hidden />
+      </a>
     </div>
   );
 }

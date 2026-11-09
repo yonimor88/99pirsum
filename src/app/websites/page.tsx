@@ -16,11 +16,11 @@ import { Capabilities, type Score } from "@/components/websites/capabilities";
 import { HeroDeck } from "@/components/websites/hero-deck";
 import { MotionScope } from "@/components/websites/motion-scope";
 import { ProcessSteps } from "@/components/websites/process-steps";
-import { ProjectScene } from "@/components/websites/project-scene";
+import { ProjectScene, type SceneLink } from "@/components/websites/project-scene";
 import { YourSiteNext } from "@/components/websites/your-site-next";
 import { lite, photos } from "@/content/media";
 import { websitesPhone, whatsappLink } from "@/content/site";
-import { concepts, websites } from "@/content/websites";
+import { concepts, websites, type Website } from "@/content/websites";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -71,6 +71,14 @@ const faq = [
 ];
 
 const ticker = ["עיצוב אישי", "מהירות", "קידום בגוגל", "מותאם לנייד", "נגישות", "פניות לוואטסאפ", "אנימציות", "חוויית משתמש"];
+
+/** Projects in the order they appear. Each phone stage's skip button goes to the next one, and the last to what follows. */
+const sceneId = (site: Website) => `project-${site.slug}`;
+const scenes = [...websites, ...concepts];
+const nextScene = (site: Website): SceneLink => {
+  const next = scenes[scenes.indexOf(site) + 1];
+  return next ? { href: `#${sceneId(next)}`, label: "לאתר הבא" } : { href: "#capabilities", label: "המשך" };
+};
 
 /** Clients and concepts alternate in the hero deck, so both show up from the first few cards. */
 const deckSites = Array.from({ length: Math.max(websites.length, concepts.length) }, (_, i) => [websites[i], concepts[i]])
@@ -185,7 +193,7 @@ export default function WebsitesPage() {
         </div>
         <div className="relative pb-24 lg:pb-10">
           {websites.map((site, i) => (
-            <ProjectScene key={site.slug} site={site} index={i} total={websites.length} />
+            <ProjectScene key={site.slug} id={sceneId(site)} site={site} index={i} total={websites.length} next={nextScene(site)} />
           ))}
         </div>
 
@@ -204,13 +212,13 @@ export default function WebsitesPage() {
         </div>
         <div className="relative pb-24 lg:pb-10">
           {concepts.map((site, i) => (
-            <ProjectScene key={site.slug} site={site} index={i} total={concepts.length} />
+            <ProjectScene key={site.slug} id={sceneId(site)} site={site} index={i} total={concepts.length} next={nextScene(site)} />
           ))}
         </div>
       </section>
 
       {/* Capabilities */}
-      <section className="py-20 lg:py-28">
+      <section id="capabilities" className="py-20 lg:py-28">
         <div className="container-page">
           <SectionHeading
             eyebrow="מה כל אתר מקבל"
