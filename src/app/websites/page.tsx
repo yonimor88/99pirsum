@@ -72,8 +72,6 @@ const faq = [
 
 const ticker = ["עיצוב אישי", "מהירות", "קידום בגוגל", "מותאם לנייד", "נגישות", "פניות לוואטסאפ", "אנימציות", "חוויית משתמש"];
 
-const allSites = [...websites, ...concepts];
-
 /** Clients and concepts alternate in the hero deck, so both show up from the first few cards. */
 const deckSites = Array.from({ length: Math.max(websites.length, concepts.length) }, (_, i) => [websites[i], concepts[i]])
   .flat()
@@ -179,7 +177,7 @@ export default function WebsitesPage() {
             eyebrow="תיק עבודות"
             title={
               <span id="projects-title">
-                {allSites.length} אתרים. <span className="text-yellow">{allSites.length} עולמות.</span>
+                נסו למצוא שני אתרים דומים. <span className="text-yellow">בהצלחה.</span>
               </span>
             }
             description={`אתרים של לקוחות שלנו, ועוד ${concepts.length} אתרי קונספט שבנינו לעסקים לדוגמה. גללו לאט — האתרים זזים בתוך המסכים בדיוק כמו אצל הגולשים. כל מה שאתם רואים הוא צילום של האתר החי.`}
