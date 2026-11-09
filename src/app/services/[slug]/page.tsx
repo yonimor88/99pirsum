@@ -8,6 +8,7 @@ import { ContactForm } from "@/components/contact/contact-form";
 import { CtaBand, Faq, PageHero } from "@/components/layout/page-blocks";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ServiceCard } from "@/components/services/service-card";
+import { SignBuildSimulation } from "@/components/services/sign-build-simulation";
 import { ButtonAnchor, ButtonLink } from "@/components/ui/button";
 import { ServiceGlyph, WhatsAppIcon } from "@/components/ui/icons";
 import { PhotoGrid } from "@/components/ui/photo-grid";
@@ -205,25 +206,12 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         </div>
       </section>
 
-      {/* Video */}
-      {service.video && (
+      {/* Build simulation */}
+      {service.simulation && (
         <section className="py-20 lg:py-28">
           <div className="container-page">
             <Reveal>
-              <figure className="overflow-hidden rounded-[2rem] bg-ink">
-                <video
-                  className="aspect-video w-full object-cover"
-                  src={service.video.src}
-                  poster={service.video.poster}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="none"
-                  aria-label={service.video.caption}
-                />
-                <figcaption className="p-5 text-center text-paper/70">{service.video.caption}</figcaption>
-              </figure>
+              <SignBuildSimulation caption={service.simulation.caption} />
             </Reveal>
           </div>
         </section>
@@ -231,7 +219,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
 
       {/* Gallery */}
       {service.gallery.length > 0 && (
-        <section className={cn(service.video ? "pb-20 lg:pb-28" : "py-20 lg:py-28")}>
+        <section className={cn(service.simulation ? "pb-20 lg:pb-28" : "py-20 lg:py-28")}>
           <div className="container-page">
             <Reveal>
               <h2 className="text-4xl font-extrabold sm:text-5xl">מהשטח</h2>

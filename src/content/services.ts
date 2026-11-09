@@ -20,7 +20,8 @@ export type Service = ServiceNavItem & {
   facts: { label: string; value: string }[];
   features: { title: string; text: string }[];
   sections?: ServiceSection[];
-  video?: { src: string; poster: string; caption: string };
+  /** Animated build sequence (sign construction only), with a one-line description */
+  simulation?: { caption: string };
   faqs: { q: string; a: string }[];
   related: string[];
 };
@@ -552,9 +553,7 @@ const content: Record<string, ServiceContent> = {
       { title: "ייצור מותאם", text: "מבנה שמתאים בדיוק לגודל השלט, למיקום ולתנאי השטח." },
       { title: "העמדה והתקנה", text: "צוות שמגיע לשטח, מעמיד ומתקין." },
     ],
-    video: {
-      src: "/video/sign-construction.mp4",
-      poster: "/video/sign-construction-poster.jpg",
+    simulation: {
       caption: "הדמיה תלת-ממדית של קונסטרוקציה לשלט, כפי שאנחנו מכינים לפני כל ביצוע",
     },
     faqs: [
