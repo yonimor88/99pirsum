@@ -1,9 +1,9 @@
 "use client";
 
 import { ArrowUpLeft, Check, ChevronsDown, Lock } from "lucide-react";
-import { m, useScroll, useTransform, type MotionValue, type Variants } from "motion/react";
+import { m, useScroll, useTransform, type Variants } from "motion/react";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, type CSSProperties, type RefObject } from "react";
 
 import { usePrefersLessMotion } from "@/components/a11y/motion-provider";
 import { WhatsAppIcon } from "@/components/ui/icons";
@@ -34,6 +34,7 @@ const pop: Variants = {
  */
 export function ProjectScene({ site, index, total }: { site: Website; index: number; total: number }) {
   const ref = useRef<HTMLDivElement>(null);
+  const devicesRef = useRef<HTMLDivElement>(null);
   const lessMotion = usePrefersLessMotion();
   const flip = index % 2 === 1;
 
@@ -52,13 +53,16 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
   return (
     <section
       aria-labelledby={`site-${site.slug}`}
-      // --dev-h: height of the pinned devices below lg. Phones: the full-screen phone stage. Tablets: the browser
-      // frame + the phone hanging below it.
-      className="relative [--dev-h:100svh] md:[--dev-h:calc((100vw-4rem)*0.625+5.5rem)] lg:h-[300vh]"
+      // Below lg: --dev-h is the height of the pinned devices, --pin how far the page scrolls while they stay
+      // pinned. Phones: the full-screen phone stage, pinned for as long as its capture takes to scroll past at
+      // finger speed. Tablets: the browser frame + the phone hanging below it, pinned for 200vh.
+      style={{ "--phone-pin": phoneStagePin(site.shots.mobileLong) } as CSSProperties}
+      className="relative [--dev-h:100svh] [--pin:var(--phone-pin)] md:[--dev-h:calc((100vw-4rem)*0.625+5.5rem)] md:[--pin:200vh] lg:h-[300vh]"
     >
       {/*
-        Scroll ruler for the capture animation. Large screens: the whole pinned scene. Below lg: only the devices
+        Scroll ruler for the capture animation. Large screens: the whole pinned scene. Tablets: only the devices
         pin, vertically centred, for 200vh — the ruler is shifted up by that centring offset so the mapping is the same.
+        Phones don't use it: the phone stage tracks its own pin.
       */}
       <div
         ref={ref}
@@ -68,9 +72,9 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
       <div className="lg:sticky lg:top-0 lg:flex lg:h-svh lg:items-center">
         <div className="container-page grid items-center gap-12 pb-16 lg:grid-cols-12 lg:gap-14 lg:pb-0">
           {/* Devices */}
-          <div className={cn("h-[calc(200vh_+_var(--dev-h))] lg:col-span-7 lg:h-auto", flip && "lg:order-2")}>
+          <div ref={devicesRef} className={cn("h-[calc(var(--pin)_+_var(--dev-h))] lg:col-span-7 lg:h-auto", flip && "lg:order-2")}>
             <div className="sticky top-[calc(50svh_-_var(--dev-h)/2)] lg:static">
-              <PhoneStage site={site} number={number} total={total} scroll={scrollYProgress} hint={index === 0} className="md:hidden" />
+              <PhoneStage site={site} number={number} total={total} track={devicesRef} hint={index === 0} className="md:hidden" />
               <div className="relative hidden w-full md:block">
                 <m.div
                   aria-hidden
@@ -219,6 +223,24 @@ export function ProjectScene({ site, index, total }: { site: Website; index: num
 const THUMB = 0.14;
 
 /**
+ * How fast the phone stage's capture scrolls relative to the page: 1 moves the site under the visitor's finger
+ * exactly as if they were scrolling it themselves. Higher is faster but keeps the page shorter.
+ */
+const PHONE_SCROLL_SPEED = 1;
+
+/**
+ * How long the phone stage stays pinned: the distance its capture has to travel, ÷ PHONE_SCROLL_SPEED. CSS works
+ * the travel out from the stage's layout — the screen is the phone (at most 25rem, inside the page's 1.25rem
+ * gutters) less its 0.625rem bezels, and is as tall as the viewport less ~10rem of caption, bezel and address bar.
+ * Keep in step with `PhoneStage`.
+ */
+function phoneStagePin(capture: { width: number; height: number }) {
+  const ratio = (capture.height / capture.width).toFixed(4);
+  const travel = `(min(25rem, 100vw - 2.5rem) - 1.25rem) * ${ratio} - 100svh + 10rem`;
+  return `max(100vh, calc((${travel}) / ${PHONE_SCROLL_SPEED}))`;
+}
+
+/**
  * Phones only: the stage fills the screen while it's pinned. One big phone, close to
  * the real size of the visitor's own, runs off the bottom of the screen and scrolls
  * through the mobile site, with the project's name and number above it.
@@ -227,31 +249,36 @@ function PhoneStage({
   site,
   number,
   total,
-  scroll,
+  track,
   hint,
   className,
 }: {
   site: Website;
   number: string;
   total: number;
-  /** The scene's scroll ruler: the stage is pinned from 0.25 to 0.75 */
-  scroll: MotionValue<number>;
+  /** The box the stage is pinned inside: it stays on screen from the box's top reaching the top of the viewport to its bottom reaching the bottom */
+  track: RefObject<HTMLDivElement | null>;
   /** Show the "scroll to browse" cue */
   hint: boolean;
   className?: string;
 }) {
   const lessMotion = usePrefersLessMotion();
 
-  const p = useTransform(scroll, [0.25, 0.75], [0, 1]);
+  // enter: 0 → 1 as the stage scrolls up into place. p: 0 → 1 while it's pinned.
+  const { scrollYProgress: enter } = useScroll({ target: track, offset: ["start end", "start start"] });
+  const { scrollYProgress: p } = useScroll({ target: track, offset: ["start start", "end end"] });
   // Two layers move the capture by p × (screen height − capture height) without measuring either:
   // the outer one goes down a share of the screen, the inner one up the same share of the capture.
   const down = useTransform(p, (v) => `${v * 100}%`);
   const up = useTransform(p, (v) => `${v * -100}%`);
   const thumbY = useTransform(p, (v) => `${v * (1 / THUMB - 1) * 100}%`);
-  const rise = useTransform(scroll, [0.06, 0.25], [80, 0]);
-  const grow = useTransform(scroll, [0.06, 0.25], [0.9, 1]);
-  const glow = useTransform(scroll, [0.06, 0.25, 0.75], [0.15, 0.55, 0.35]);
-  const hintOpacity = useTransform(scroll, [0.26, 0.32], [1, 0]);
+  const rise = useTransform(enter, [0.24, 1], [80, 0]);
+  const grow = useTransform(enter, [0.24, 1], [0.9, 1]);
+  // Brightens as the stage arrives, then dims a little on the way through
+  const glowIn = useTransform(enter, [0.24, 1], [0.15, 0.55]);
+  const glowOut = useTransform(p, [0, 1], [0.55, 0.35]);
+  const glow = useTransform([glowIn, glowOut], ([a, b]: number[]) => Math.min(a, b));
+  const hintOpacity = useTransform(p, [0.01, 0.05], [1, 0]);
 
   return (
     <div className={cn("flex h-svh flex-col pt-5", className)}>
