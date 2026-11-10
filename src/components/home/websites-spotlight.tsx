@@ -6,6 +6,7 @@ import { Dots } from "@/components/brand/ornaments";
 import { buttonClasses } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/ui/icons";
 import { Marquee } from "@/components/ui/marquee";
+import { promo } from "@/content/promo";
 import { websitesPhone, whatsappLink } from "@/content/site";
 import { concepts, websites, type Website } from "@/content/websites";
 
@@ -64,8 +65,9 @@ export function WebsitesSpotlight() {
 
               <p className="mt-6 hidden w-fit flex-wrap items-baseline gap-x-3 gap-y-0.5 rounded-2xl bg-yellow px-4 py-2.5 font-display text-ink [.promo-on_&]:flex">
                 <span className="text-sm font-bold">מבצע</span>
-                <span className="text-lg font-black whitespace-nowrap sm:text-xl">אתר החל מ-500 ש״ח</span>
-                <span className="text-sm whitespace-nowrap text-ink/70">עד 15 בנובמבר</span>
+                <span className="text-lg font-black whitespace-nowrap sm:text-xl">{promo.short}</span>
+                <span className="text-sm font-semibold whitespace-nowrap">{promo.extra}</span>
+                <span className="text-sm whitespace-nowrap text-ink/70">{promo.until}</span>
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">

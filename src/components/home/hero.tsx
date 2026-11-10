@@ -10,6 +10,7 @@ import { WhatsAppIcon } from "@/components/ui/icons";
 import { Misregistered } from "@/components/ui/misregistered";
 import { Mark } from "@/components/ui/section-heading";
 import { totals } from "@/content/cities";
+import { promo } from "@/content/promo";
 import { site, whatsappLink } from "@/content/site";
 import { concepts } from "@/content/websites";
 import { HeroVisual } from "./hero-visual";
@@ -93,7 +94,7 @@ export function Hero() {
                 {/* Phones: the price gets a line of its own */}
                 <span className="hidden [.promo-on_&]:block sm:[.promo-on_&]:inline">
                   <span className="max-sm:hidden"> · </span>
-                  החל מ-500 ש״ח
+                  {promo.price} כולל מע״מ
                 </span>
               </span>
             </span>

@@ -4,10 +4,13 @@
  * `promo-on` class to <html> before then, so nothing flashes after it expires.
  */
 export const promo = {
-  id: "websites-2026-11",
+  id: "websites-2026-11-1300",
   label: "מבצע",
-  text: "אתר החל מ-500 ש״ח לזמן מוגבל",
-  price: "500 ש״ח",
+  text: "אתר מקצועי ב-1,300 ש״ח כולל מע״מ + שנת תחזוקה חינם",
+  price: "1,300 ש״ח",
+  /** Short version for tight spots (home hero, websites spotlight) */
+  short: "אתר ב-1,300 ש״ח כולל מע״מ",
+  extra: "+ 12 חודשי תחזוקה ותפעול חינם",
   until: "עד 15 בנובמבר",
   href: "/websites",
   /** End of 15 November, Israel time */
