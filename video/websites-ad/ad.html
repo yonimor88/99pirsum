@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>99 פרסום — מודעת וידאו: בניית אתרים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&display=block" rel="stylesheet">
+<!--
+  Video ad: "we build websites" for 99 פרסום ומדיה. 1080×1920, 32 seconds.
+  Every frame is a pure function of time: window.__render(t) lays the stage out for second t,
+  and render.mjs screenshots it frame by frame. Open with ?play to watch it in real time.
+-->
+<style>
+  :root {
+    --paper: #f6f2ea; --paper-2: #ece6da; --paper-3: #e2dacb;
+    --ink: #141414; --ink-2: #1f1f1f; --ink-3: #2b2b2b;
+    --muted: #5c574f; --muted-2: #8a8378;
+    --yellow: #fdbe52; --cyan: #0db5e8; --green: #49bb82; --magenta: #b357a1;
+    --cyan-ink: #04709a; --green-ink: #1f7a4d; --wa: #25d366;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #000; }
+  body { width: 1080px; height: 1920px; overflow: hidden; font-family: Heebo, system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--paper); }
+  .scene { position: absolute; inset: 0; overflow: hidden; visibility: hidden; }
+  .abs { position: absolute; }
+  .display { font-family: Rubik, sans-serif; font-weight: 900; letter-spacing: -0.025em; line-height: 1; white-space: nowrap; }
+  .center-x { left: 0; right: 0; display: flex; justify-content: center; }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+  .will { will-change: transform, opacity; }
+
+  .bg-paper { background: var(--paper); }
+  .bg-ink { background: var(--ink); color: var(--paper); }
+  .bg-yellow { background: var(--yellow); }
+
+  /* paper grain, as on the site */
+  .grain::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.5; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.22 0 0 0 0.10 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .halftone { background-image: radial-gradient(circle at center, currentColor 2.4px, transparent 3px); background-size: 28px 28px; -webkit-mask-image: radial-gradient(ellipse at center, #000 8%, transparent 68%); mask-image: radial-gradient(ellipse at center, #000 8%, transparent 68%); }
+
+  /* misregistered type: three CMY plates that snap into register under the ink */
+  .mr { position: relative; display: inline-block; isolation: isolate; }
+  .mr .plate { position: absolute; inset: 0; z-index: -1; mix-blend-mode: multiply; white-space: nowrap; pointer-events: none; }
+  .on-ink .mr .plate { mix-blend-mode: screen; }
+  .mr .main { position: relative; }
+  .mr .mk { position: absolute; z-index: -2; left: -0.07em; right: -0.07em; top: 56%; bottom: 4%; transform-origin: 100% 50%; border-radius: 0.06em; }
+
+  /* phones */
+  .phone { position: absolute; border-radius: 76px; background: #0c0c0c; box-shadow: inset 0 0 0 3px #3a3a3a, 0 50px 90px rgba(0,0,0,.45); }
+  .phone .screen { position: absolute; inset: 14px; border-radius: 62px; overflow: hidden; background: #fff; }
+  .phone .island { position: absolute; top: 28px; left: 50%; width: 130px; height: 38px; margin-left: -65px; border-radius: 20px; background: #000; z-index: 5; }
+  .phone .shot { position: absolute; top: 0; left: 0; width: 100%; display: block; }
+
+  /* ---------- scene 1 ---------- */
+  #s1 .wrap { position: absolute; inset: 330px 50px 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 90px; }
+  #s1 .eyebrow { position: absolute; top: 230px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 18px; font: 600 40px Rubik, sans-serif; color: var(--muted); }
+  .dots4 { display: inline-flex; gap: 10px; }
+  .dots4 i { width: 18px; height: 18px; border-radius: 50%; display: block; }
+  #s1 h1 { display: flex; flex-direction: column; align-items: center; gap: 0.06em; text-align: center; }
+  #s1 h1 .line { display: block; }
+  .ring-wrap { position: relative; width: 240px; height: 240px; }
+  .ring-wrap .wave { position: absolute; inset: 0; border-radius: 50%; border: 6px solid var(--yellow); }
+  .ring-wrap .btn { position: absolute; inset: 0; border-radius: 50%; background: var(--ink); display: grid; place-items: center; box-shadow: 0 30px 60px rgba(20,20,20,.25); }
+  .ring-wrap svg { width: 110px; height: 110px; }
+  .pill { display: inline-flex; align-items: center; gap: 16px; padding: 22px 38px; border-radius: 999px; background: #fff; font: 600 38px Heebo, sans-serif; box-shadow: 0 16px 40px rgba(20,20,20,.12); white-space: nowrap; }
+  .pill .live { width: 18px; height: 18px; border-radius: 50%; background: var(--wa); box-shadow: 0 0 0 6px rgba(37,211,102,.25); }
+
+  /* ---------- scene 2 ---------- */
+  .glow { position: absolute; width: 1200px; height: 1200px; border-radius: 50%; left: -60px; top: 505px; opacity: .55; }
+  .s-head { position: absolute; top: 225px; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+  .site-label { position: absolute; top: 1640px; left: 0; right: 0; display: flex; justify-content: center; }
+  .site-label .in { display: inline-flex; align-items: baseline; gap: 18px; padding: 20px 40px; border-radius: 999px; background: rgba(246,242,234,.08); box-shadow: inset 0 0 0 2px rgba(246,242,234,.14); white-space: nowrap; }
+  .site-label b { font: 800 52px Rubik, sans-serif; color: var(--paper); }
+  .site-label span { font: 500 36px Heebo, sans-serif; color: rgba(246,242,234,.6); }
+
+  /* ---------- scene 3 ---------- */
+  .eyebrow2 { position: absolute; top: 215px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 16px; font: 700 38px Rubik, sans-serif; color: var(--muted); }
+  .eyebrow2 .ic { width: 62px; height: 62px; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-items: center; }
+  .eyebrow2 .ic svg { width: 32px; height: 32px; }
+  .search { position: absolute; top: 585px; left: 70px; width: 940px; height: 124px; border-radius: 999px; background: #fff; box-shadow: 0 24px 60px rgba(20,20,20,.10), inset 0 0 0 2px var(--paper-3); display: flex; align-items: center; gap: 24px; padding: 0 44px; font: 500 46px Heebo, sans-serif; }
+  .search svg { width: 50px; height: 50px; flex: none; color: var(--muted-2); }
+  .caret { display: inline-block; width: 4px; height: 52px; background: var(--ink); vertical-align: middle; margin-inline-start: 4px; }
+  .result { position: absolute; top: 752px; left: 70px; width: 940px; padding: 40px 48px 44px; border-radius: 44px; background: #fff; box-shadow: 0 30px 70px rgba(20,20,20,.12); }
+  .result .site { display: flex; align-items: center; gap: 20px; }
+  .result .fav { width: 66px; height: 66px; border-radius: 50%; background: var(--yellow); display: grid; place-items: center; font: 900 34px Rubik, sans-serif; flex: none; }
+  .result .site b { display: block; font: 600 34px Heebo, sans-serif; line-height: 1.2; }
+  .result .site small { display: block; font: 400 28px Heebo, sans-serif; color: var(--muted); line-height: 1.2; }
+  .result h3 { margin-top: 22px; font: 700 50px Rubik, sans-serif; color: #1a0dab; color: var(--cyan-ink); line-height: 1.15; }
+  .result p { margin-top: 12px; font: 400 32px/1.45 Heebo, sans-serif; color: var(--muted); }
+  .result .links { margin-top: 26px; display: flex; gap: 14px; }
+  .result .links span { padding: 14px 28px; border-radius: 999px; box-shadow: inset 0 0 0 2px var(--paper-3); font: 600 30px Heebo, sans-serif; color: var(--cyan-ink); }
+  .sticker { position: absolute; top: 708px; left: 52px; padding: 16px 30px; border-radius: 18px; background: var(--yellow); font: 800 36px Rubik, sans-serif; box-shadow: 0 14px 30px rgba(20,20,20,.18); white-space: nowrap; }
+  .scores { position: absolute; top: 1200px; left: 70px; width: 940px; padding: 40px 40px 36px; border-radius: 48px; background: var(--ink); color: var(--paper); }
+  .scores h4 { font: 800 44px Rubik, sans-serif; text-align: center; }
+  .scores .row { margin-top: 36px; display: flex; justify-content: space-between; }
+  .score { width: 200px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .score .ring { position: relative; width: 180px; height: 180px; }
+  .score svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .score .num { position: absolute; inset: 0; display: grid; place-items: center; font: 900 50px Rubik, sans-serif; letter-spacing: -0.02em; color: var(--green); font-variant-numeric: tabular-nums; }
+  .score .lab { font: 600 30px Heebo, sans-serif; color: rgba(246,242,234,.85); white-space: nowrap; }
+  .scores .note { margin-top: 30px; text-align: center; font: 400 24px Heebo, sans-serif; color: rgba(246,242,234,.42); }
+
+  /* ---------- scene 4 ---------- */
+  .wa-chat { position: absolute; inset: 0; z-index: 6; background: #efeae2; color: #111b21; display: flex; flex-direction: column; }
+  .wa-chat::before { content: ""; position: absolute; inset: 0; color: rgba(0,0,0,.05); background-image: radial-gradient(circle at center, currentColor 2px, transparent 2.6px); background-size: 26px 26px; }
+  .wa-top { position: relative; z-index: 1; height: 180px; padding: 78px 30px 0; background: #008069; color: #fff; display: flex; align-items: center; gap: 18px; }
+  .wa-top .av { width: 74px; height: 74px; border-radius: 50%; background: var(--yellow); color: var(--ink); display: grid; place-items: center; font: 900 36px Rubik, sans-serif; flex: none; }
+  .wa-top b { display: block; font: 700 34px Heebo, sans-serif; line-height: 1.15; }
+  .wa-top small { display: block; font: 400 26px Heebo, sans-serif; opacity: .85; }
+  .wa-body { position: relative; z-index: 1; flex: 1; padding: 40px 24px; display: flex; flex-direction: column; gap: 22px; }
+  .bubble { max-width: 82%; padding: 22px 26px 16px; border-radius: 28px; font: 400 32px/1.4 Heebo, sans-serif; box-shadow: 0 2px 2px rgba(0,0,0,.08); }
+  .bubble .meta { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; font: 400 22px Heebo, sans-serif; color: #667781; }
+  .bubble.out { align-self: flex-end; background: #d9fdd3; border-end-start-radius: 8px; }
+  .bubble.in { align-self: flex-start; background: #fff; border-start-start-radius: 8px; }
+  .ticks { color: #53bdeb; font-weight: 700; letter-spacing: -6px; }
+  .typing { align-self: flex-start; background: #fff; border-radius: 28px; padding: 26px 30px; display: flex; gap: 10px; }
+  .typing i { width: 16px; height: 16px; border-radius: 50%; background: #8696a0; display: block; }
+  .wa-input { position: relative; z-index: 1; height: 120px; padding: 16px 20px 28px; display: flex; gap: 14px; align-items: center; }
+  .wa-input .box { flex: 1; height: 76px; border-radius: 40px; background: #fff; display: flex; align-items: center; padding: 0 30px; font: 400 30px Heebo, sans-serif; color: #8696a0; }
+  .wa-input .send { width: 76px; height: 76px; border-radius: 50%; background: #00a884; display: grid; place-items: center; color: #fff; flex: none; }
+  .wa-input .send svg { width: 38px; height: 38px; }
+  .fab { position: absolute; width: 112px; height: 112px; border-radius: 50%; background: var(--wa); display: grid; place-items: center; color: #fff; box-shadow: 0 14px 30px rgba(0,0,0,.25); z-index: 3; }
+  .fab svg { width: 62px; height: 62px; }
+  .tap { position: absolute; width: 150px; height: 150px; border-radius: 50%; background: rgba(255,255,255,.55); box-shadow: 0 0 0 4px rgba(255,255,255,.9); z-index: 4; }
+  .ripple { position: absolute; width: 150px; height: 150px; border-radius: 50%; border: 6px solid rgba(255,255,255,.9); z-index: 4; }
+  .notif { position: absolute; width: 640px; padding: 26px 30px; border-radius: 36px; background: rgba(255,255,255,.97); color: var(--ink); display: flex; gap: 22px; align-items: center; box-shadow: 0 30px 70px rgba(0,0,0,.4); }
+  .notif .ic { width: 84px; height: 84px; border-radius: 22px; background: var(--wa); color: #fff; display: grid; place-items: center; flex: none; }
+  .notif .ic svg { width: 54px; height: 54px; }
+  .notif .tx { flex: 1; min-width: 0; }
+  .notif .tx div { display: flex; justify-content: space-between; align-items: baseline; }
+  .notif b { font: 700 32px Rubik, sans-serif; }
+  .notif small { font: 400 24px Heebo, sans-serif; color: var(--muted-2); }
+  .notif p { margin-top: 4px; font: 400 30px Heebo, sans-serif; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ---------- scene 5 ---------- */
+  .grid8 { position: absolute; top: 540px; left: 58px; width: 964px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .chip { position: relative; height: 216px; border-radius: 44px; background: var(--ink); color: var(--paper); padding: 34px 34px; display: flex; flex-direction: column; justify-content: space-between; }
+  .chip .ic { width: 80px; height: 80px; border-radius: 50%; background: rgba(246,242,234,.1); color: var(--yellow); display: grid; place-items: center; }
+  .chip .ic svg { width: 42px; height: 42px; }
+  .chip b { display: block; font: 800 44px Rubik, sans-serif; line-height: 1.1; }
+  .chip small { display: block; margin-top: 6px; font: 400 28px Heebo, sans-serif; color: rgba(246,242,234,.6); white-space: nowrap; }
+  .chip .ok { position: absolute; top: 30px; left: 30px; width: 58px; height: 58px; border-radius: 50%; background: var(--green); color: var(--ink); display: grid; place-items: center; }
+  .chip .ok svg { width: 34px; height: 34px; }
+  .ticker { position: absolute; top: 1555px; left: -60px; width: 1200px; height: 120px; background: var(--ink); color: var(--yellow); transform: rotate(-2.5deg); overflow: hidden; }
+  .ticker .track { position: absolute; top: 0; height: 120px; display: flex; align-items: center; gap: 40px; white-space: nowrap; right: 0; }
+  .ticker .track span { font: 800 50px Rubik, sans-serif; }
+  .ticker .track em { font-style: normal; font-size: 40px; }
+
+  /* ---------- scene 6 ---------- */
+  .logo-big { position: absolute; top: 250px; left: 50%; width: 560px; margin-left: -280px; }
+  .logo-big svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .cta-btn { position: absolute; top: 1150px; left: 110px; width: 860px; height: 150px; border-radius: 999px; background: var(--wa); color: var(--ink); display: flex; align-items: center; justify-content: center; gap: 24px; font: 800 56px Rubik, sans-serif; box-shadow: 0 24px 60px rgba(37,211,102,.28); white-space: nowrap; }
+  .cta-btn svg { width: 70px; height: 70px; }
+  .cta-phone { position: absolute; top: 1345px; left: 0; right: 0; text-align: center; font: 900 118px Rubik, sans-serif; letter-spacing: 0.01em; color: var(--paper); font-variant-numeric: tabular-nums; }
+  .cta-url { position: absolute; top: 1510px; left: 0; right: 0; text-align: center; font: 600 46px Heebo, sans-serif; color: rgba(246,242,234,.62); }
+
+  /* transition: four process-colour bands */
+  #bands { position: absolute; inset: 0; pointer-events: none; z-index: 50; visibility: hidden; }
+  #bands i { position: absolute; top: 0; width: 271px; height: 1920px; display: block; }
+
+  /* ?play: controls under the stage */
+  #controls { position: fixed; left: 0; bottom: 0; display: none; gap: 12px; padding: 12px; background: #000; color: #fff; font: 14px system-ui; direction: ltr; z-index: 99; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- 1 · Hook -->
+  <section id="s1" class="scene bg-paper grain">
+    <div class="halftone abs" style="top:-160px; left:-200px; width:760px; height:760px; color:rgba(20,20,20,.13)"></div>
+    <div class="halftone abs" style="bottom:-220px; right:-240px; width:820px; height:820px; color:rgba(20,20,20,.10)"></div>
+    <div class="eyebrow will">
+      <span class="dots4"><i style="background:var(--yellow)"></i><i style="background:var(--cyan)"></i><i style="background:var(--green)"></i><i style="background:var(--magenta)"></i></span>
+      סטודיו לבניית אתרים · 99 פרסום
+    </div>
+    <div class="wrap">
+      <h1 class="display">
+        <span class="line will" data-fit="960,330">אתרים</span>
+        <span class="line will" data-fit="960,200">שגורמים ללקוחות</span>
+        <span class="line will" data-fit="960,200" data-mark="yellow">להרים טלפון.</span>
+      </h1>
+      <div class="ring-wrap will">
+        <i class="wave"></i><i class="wave"></i><i class="wave"></i>
+        <div class="btn"><svg data-icon="phone" style="color:var(--yellow)"></svg></div>
+      </div>
+      <div class="pill will"><i class="live"></i>לקוח חדש מתקשר…</div>
+    </div>
+  </section>
+
+  <!-- 2 · Showcase -->
+  <section id="s2" class="scene bg-ink on-ink">
+    <div class="halftone abs" style="top:-260px; right:-260px; width:900px; height:900px; color:rgba(246,242,234,.07)"></div>
+    <div class="glow"></div>
+    <div class="s-head">
+      <div class="display line will" style="font-size:128px">עיצוב אישי.</div>
+      <div class="display line will" style="font-size:128px; color:var(--yellow)">אפס תבניות.</div>
+    </div>
+    <div class="track"></div>
+    <div class="labels"></div>
+  </section>
+
+  <!-- 3 · Google -->
+  <section id="s3" class="scene bg-paper grain">
+    <div class="eyebrow2 will"><span class="ic"><svg data-icon="search"></svg></span>SEO · קידום בגוגל</div>
+    <div class="s-head" style="top:310px; gap:8px">
+      <div class="display line will" style="font-size:118px">מוכן לגוגל</div>
+      <div class="display line will" style="font-size:118px" data-mark="cyan">מהיום הראשון.</div>
+    </div>
+    <div class="search will"><svg data-icon="search"></svg><span class="q"></span><i class="caret"></i></div>
+    <div class="result will">
+      <div class="site">
+        <span class="fav">ע</span>
+        <div><b>העסק שלך</b><small><span class="ltr">your-business.co.il</span></small></div>
+      </div>
+      <h3>העסק שלך | השירות המוביל באזור</h3>
+      <p>צפו בעבודות, קראו המלצות וקבלו הצעת מחיר בוואטסאפ.</p>
+      <div class="links"><span>שירותים</span><span>עבודות</span><span>המלצות</span><span>צור קשר</span></div>
+    </div>
+    <div class="sticker will">כך תיראו בגוגל ✦</div>
+    <div class="scores will">
+      <h4>ציונים מושלמים בבדיקה של גוגל</h4>
+      <div class="row"></div>
+      <div class="note">ציוני Google Lighthouse, נמדדו באתרים החיים שבנינו</div>
+    </div>
+  </section>
+
+  <!-- 4 · WhatsApp leads -->
+  <section id="s4" class="scene bg-ink on-ink">
+    <div class="glow" style="background:radial-gradient(circle, rgba(37,211,102,.55) 0%, rgba(37,211,102,0) 62%); top:560px"></div>
+    <div class="halftone abs" style="bottom:-300px; left:-260px; width:900px; height:900px; color:rgba(246,242,234,.07)"></div>
+    <div class="s-head">
+      <div class="display line will" style="font-size:128px">פניות ישר</div>
+      <div class="display line will" style="font-size:128px; color:var(--wa)">לוואטסאפ.</div>
+    </div>
+    <div class="phone will" id="p4" style="left:291px; top:600px; width:498px; height:1045px">
+      <i class="island"></i>
+      <div class="screen">
+        <img class="shot" src="/src/assets/images/sites/99pirsum-mobile.webp" alt="">
+        <div class="fab will" style="left:22px; bottom:90px"><svg data-icon="wa"></svg></div>
+        <div class="tap will" style="left:3px; bottom:71px"></div>
+        <div class="ripple will" style="left:3px; bottom:71px"></div>
+        <div class="wa-chat will">
+          <div class="wa-top"><span class="av">ע</span><div><b>העסק שלך</b><small class="status">מחובר/ת</small></div></div>
+          <div class="wa-body">
+            <div class="bubble out will">שלום, הגעתי מהאתר ואשמח לקבל הצעת מחיר 🙂<div class="meta">10:24 <span class="ticks">✓✓</span></div></div>
+            <div class="typing will"><i></i><i></i><i></i></div>
+            <div class="bubble in will">היי! בשמחה 🙏 איך קוראים לך?<div class="meta">10:24</div></div>
+          </div>
+          <div class="wa-input"><div class="box">הודעה</div><span class="send"><svg data-icon="send"></svg></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="notifs"></div>
+  </section>
+
+  <!-- 5 · Everything included -->
+  <section id="s5" class="scene bg-yellow">
+    <div class="halftone abs" style="top:-200px; left:-220px; width:800px; height:800px; color:rgba(20,20,20,.12)"></div>
+    <div class="s-head" style="gap:6px">
+      <div class="display line will" style="font-size:118px">בכל אתר</div>
+      <div class="display line will" style="font-size:118px">שאנחנו בונים:</div>
+    </div>
+    <div class="grid8"></div>
+    <div class="ticker will"><div class="track"></div></div>
+  </section>
+
+  <!-- 6 · Call to action -->
+  <section id="s6" class="scene bg-ink on-ink">
+    <div class="glow" style="background:radial-gradient(circle, rgba(253,190,82,.26) 0%, rgba(253,190,82,0) 60%); top:-220px"></div>
+    <div class="halftone abs" style="bottom:-300px; right:-260px; width:900px; height:900px; color:rgba(246,242,234,.07)"></div>
+    <div class="logo-big will"></div>
+    <div class="s-head" style="top:820px; gap:14px">
+      <div class="display line will" style="font-size:112px">רוצים אתר</div>
+      <div class="display line will" style="font-size:112px; color:var(--yellow)">שמביא לקוחות?</div>
+    </div>
+    <div class="cta-btn will"><svg data-icon="wa"></svg>דברו איתנו בוואטסאפ</div>
+    <div class="cta-phone ltr will">054-397-1020</div>
+    <div class="cta-url ltr will">99pirsum.com/websites</div>
+  </section>
+
+  <div id="bands"><i style="background:var(--yellow)"></i><i style="background:var(--cyan)"></i><i style="background:var(--green)"></i><i style="background:var(--magenta)"></i></div>
+</div>
+<div id="controls"><button id="play">▶︎ / ❚❚</button><input id="scrub" type="range" min="0" max="32" step="0.01" value="0" style="width:600px"><span id="tc"></span></div>
+
+<script>
+/* ================================================================ *
+ * Content
+ * ================================================================ */
+const DURATION = 32;
+const SITES = "/src/assets/images/sites/";
+
+// The phone carousel: real screenshots of sites we built (src/content/websites.ts)
+const SHOWCASE = [
+  { slug: "hezki", name: "ענק הברזל", industry: "ברזל ופלדה", glow: "#ff6b1a" },
+  { slug: "diana", name: "דייאנה קליין", industry: "מוזיקה והופעות", glow: "#e9a23b" },
+  { slug: "gila", name: "גילה שמעונוב", industry: "איפור קבוע", glow: "#d0868b" },
+  { slug: "stam", name: "הדר סת״ם", industry: "סת״ם ויודאיקה", glow: "#c9a24a" },
+  { slug: "kitchen", name: "המטבח של שבת", industry: "אוכל מוכן לשבת", glow: "#f2a516" },
+  { slug: "adasha", name: "עדשה וניגון", industry: "צילום שמחות ואולפן", glow: "#ff4d3a" },
+];
+
+// Google Lighthouse, desktop, measured on the live sites in November 2026 (same numbers as /websites)
+const SCORES = [
+  { label: "ביצועים", value: 96 },
+  { label: "נגישות", value: 96 },
+  { label: "שיטות עבודה", value: 100 },
+  { label: "קידום בגוגל", value: 100 },
+];
+
+const QUERY = "השירות שלך באזור שלך";
+
+// Cue times shared with the soundtrack (audio.js), so the sound effects hit with the picture
+const TYPE_FROM = 11.25, TYPE_TO = 12.2;
+const RINGS_AT = 13.7;
+const TAP_AT = 17.5, SENT_AT = 18.5, REPLY_AT = 19.5, NOTIFS_AT = 20.0;
+const CHIPS_AT = 22.25;
+const DOTS_AT = 26.25;
+
+const FEATURES = [
+  { icon: "zap", title: "טעינה מהירה", sub: "בלי תבניות כבדות" },
+  { icon: "smartphone", title: "מותאם לנייד", sub: "נבנה קודם לטלפון" },
+  { icon: "search", title: "SEO מתקדם", sub: "גוגל מבין כל עמוד" },
+  { icon: "palette", title: "עיצוב אישי", sub: "צבעים, פונטים ומיתוג" },
+  { icon: "sparkles", title: "אנימציות", sub: "חוויה שזוכרים" },
+  { icon: "accessibility", title: "נגישות", sub: "תפריט נגישות מובנה" },
+  { icon: "wa", title: "וואטסאפ וחיוג", sub: "פנייה בלחיצה אחת" },
+  { icon: "moon", title: "מצב שבת", sub: "ומותאם לנטפרי" },
+];
+
+const NOTIFS = [
+  { text: "שלום, אשמח לקבל הצעת מחיר 🙏", x: 40, y: 760, r: -3 },
+  { text: "מתי אפשר לקבוע פגישה?", x: 400, y: 1080, r: 2.5 },
+  { text: "ראיתי את האתר — מעוניין!", x: 60, y: 1400, r: -2 },
+];
+
+const TICKER = ["עיצוב אישי", "מהירות", "קידום בגוגל", "מותאם לנייד", "נגישות", "פניות לוואטסאפ", "אנימציות", "חוויית משתמש"];
+
+/* ================================================================ *
+ * Icons (lucide, ISC) + WhatsApp
+ * ================================================================ */
+const ICONS = {
+  phone: '<path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>',
+  search: '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>',
+  zap: '<path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/>',
+  smartphone: '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>',
+  palette: '<path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>',
+  accessibility: '<circle cx="16" cy="4" r="1"/><path d="m18 19 1-7-6 1"/><path d="m5 8 3-3 5.5 3-2.36 3.5"/><path d="M4.24 14.5a5 5 0 0 0 6.88 6"/><path d="M13.76 17.5a5 5 0 0 0-6.88-6"/>',
+  sparkles: '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/>',
+  moon: '<path d="M18 5h4"/><path d="M20 3v4"/><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  send: '<path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z"/><path d="M6 12h16"/>',
+};
+const WA_PATH = "M19.05 4.91A9.82 9.82 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.91-7.01Zm-7.01 15.24h-.01a8.23 8.23 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.22-8.23 8.22Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48a.92.92 0 0 0-.67.31c-.23.25-.87.85-.87 2.08 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.22-.16-.47-.29Z";
+
+function iconSvg(name) {
+  if (name === "wa") return `<svg viewBox="0 0 24 24" fill="currentColor"><path d="${WA_PATH}"/></svg>`;
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`;
+}
+function fillIcons(root = document) {
+  root.querySelectorAll("svg[data-icon]").forEach((el) => {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = iconSvg(el.dataset.icon);
+    const svg = tmp.firstChild;
+    svg.setAttribute("style", el.getAttribute("style") || "");
+    el.replaceWith(svg);
+  });
+}
+
+/* ================================================================ *
+ * Motion helpers — everything is a function of t
+ * ================================================================ */
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, p) => a + (b - a) * p;
+const E = {
+  outExpo: (p) => (p >= 1 ? 1 : 1 - Math.pow(2, -10 * p)),
+  outCubic: (p) => 1 - Math.pow(1 - p, 3),
+  inCubic: (p) => p * p * p,
+  inOutCubic: (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2),
+  inOutQuart: (p) => (p < 0.5 ? 8 * p ** 4 : 1 - Math.pow(-2 * p + 2, 4) / 2),
+  outBack: (p) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+  // a damped spring settling on 1
+  spring: (p) => (p <= 0 ? 0 : p >= 1 ? 1 : 1 - Math.exp(-6.5 * p) * Math.cos(10.5 * p)),
+};
+function put(el, { x = 0, y = 0, s = 1, sx, sy, r = 0, o, blur } = {}) {
+  el.style.transform = `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px) rotate(${r.toFixed(3)}deg) scale(${(sx ?? s).toFixed(4)}, ${(sy ?? s).toFixed(4)})`;
+  if (o !== undefined) el.style.opacity = clamp(o).toFixed(3);
+  if (blur !== undefined) el.style.filter = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : "none";
+}
+/** a pop-in: scale + rise on a spring, fading in quickly */
+function pop(el, t, at, { dur = 0.7, from = 0.6, dy = 50, r0 = 0 } = {}) {
+  const p = seg(t, at, at + dur), sp = E.spring(p);
+  put(el, { y: dy * (1 - sp), s: lerp(from, 1, sp), r: r0 * (1 - sp), o: seg(t, at, at + 0.12) });
+}
+/** a rise-in: slide up with expo ease and a short blur */
+function rise(el, t, at, { dur = 0.8, dy = 90 } = {}) {
+  const p = E.outExpo(seg(t, at, at + dur));
+  put(el, { y: dy * (1 - p), o: seg(t, at, at + 0.22), blur: 10 * (1 - seg(t, at, at + 0.35)) });
+}
+const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const mixHex = (a, b, p) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, i) => Math.round(lerp(v, B[i], p))).join(",")})`; };
+
+/* Misregistration: wrap text in a span with three CMY plates under the ink */
+const PLATE_OFFSETS = [[-0.07, -0.035], [0.055, 0.05], [-0.03, 0.075]];
+function misreg(el) {
+  const txt = el.textContent.trim();
+  const mark = el.dataset.mark;
+  el.textContent = "";
+  const wrap = document.createElement("span");
+  wrap.className = "mr";
+  let mk = null;
+  if (mark) {
+    mk = document.createElement("span");
+    mk.className = "mk";
+    mk.style.background = `color-mix(in srgb, var(--${mark}) 88%, transparent)`;
+    wrap.appendChild(mk);
+  }
+  const plates = ["cyan", "magenta", "yellow"].map((c) => {
+    const s = document.createElement("span");
+    s.className = "plate";
+    s.style.color = `var(--${c})`;
+    s.textContent = txt;
+    wrap.appendChild(s);
+    return s;
+  });
+  const main = document.createElement("span");
+  main.className = "main";
+  main.textContent = txt;
+  wrap.appendChild(main);
+  el.appendChild(wrap);
+  el._mr = { plates, mk };
+}
+/** p: 0 = far off register, 1 = in register */
+function register(el, p, amp = 3.2) {
+  const fs = parseFloat(getComputedStyle(el).fontSize);
+  const k = (1 - p) * amp * fs;
+  el._mr.plates.forEach((pl, i) => {
+    const [mx, my] = PLATE_OFFSETS[i];
+    pl.style.transform = `translate(${(mx * k).toFixed(2)}px, ${(my * k).toFixed(2)}px)`;
+    pl.style.opacity = p >= 1 ? 0 : 1;
+  });
+}
+/** headline line: rise + misregistration snap (+ marker sweep if it has one) */
+function headLine(el, t, at, markAt) {
+  rise(el, t, at, { dur: 0.9, dy: 80 });
+  register(el, E.outCubic(seg(t, at, at + 0.95)));
+  if (el._mr.mk) el._mr.mk.style.transform = `scaleX(${E.outCubic(seg(t, markAt, markAt + 0.42)).toFixed(4)})`;
+}
+
+function fitLines(root) {
+  root.querySelectorAll("[data-fit]").forEach((el) => {
+    const [maxW, maxPx] = el.dataset.fit.split(",").map(Number);
+    el.style.fontSize = "100px";
+    const w = el.getBoundingClientRect().width;
+    el.style.fontSize = Math.min(maxPx, (100 * maxW) / w).toFixed(1) + "px";
+  });
+}
+
+/* ================================================================ *
+ * Build
+ * ================================================================ */
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+const S = Object.fromEntries([1, 2, 3, 4, 5, 6].map((n) => [n, $("#s" + n)]));
+const imgs = [];
+
+function makePhone(w, h) {
+  const el = document.createElement("div");
+  el.className = "phone will";
+  el.style.width = w + "px";
+  el.style.height = h + "px";
+  el.innerHTML = `<i class="island"></i><div class="screen"></div>`;
+  return el;
+}
+
+function build() {
+  fillIcons();
+
+  // scene 2: phone carousel + labels
+  const track = $(".track", S[2]);
+  const labels = $(".labels", S[2]);
+  SHOWCASE.forEach((site) => {
+    const ph = makePhone(468, 980);
+    ph.style.left = 540 - 234 + "px";
+    ph.style.top = 1105 - 490 + "px";
+    const img = new Image();
+    img.className = "shot";
+    img.src = SITES + site.slug + "-mobile-long.webp";
+    $(".screen", ph).appendChild(img);
+    imgs.push(img);
+    track.appendChild(ph);
+    site.el = ph;
+    site.img = img;
+    const lab = document.createElement("div");
+    lab.className = "site-label will";
+    lab.innerHTML = `<div class="in"><b>${site.name}</b><span>${site.industry}</span></div>`;
+    labels.appendChild(lab);
+    site.label = lab;
+  });
+
+  // scene 3: score rings
+  const row = $(".scores .row", S[3]);
+  SCORES.forEach((sc) => {
+    const d = document.createElement("div");
+    d.className = "score";
+    d.innerHTML = `<div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="rgba(246,242,234,.1)" stroke-width="7"/><circle class="arc" cx="50" cy="50" r="44" fill="none" stroke="#49bb82" stroke-width="7" stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="276.46"/></svg><span class="num">0</span></div><span class="lab">${sc.label}</span>`;
+    row.appendChild(d);
+    sc.el = d;
+  });
+
+  // scene 4: notifications
+  const nwrap = $(".notifs", S[4]);
+  NOTIFS.forEach((n) => {
+    const d = document.createElement("div");
+    d.className = "notif will";
+    d.style.left = n.x + "px";
+    d.style.top = n.y + "px";
+    d.innerHTML = `<span class="ic">${iconSvg("wa")}</span><div class="tx"><div><b>פנייה חדשה מהאתר</b><small>עכשיו</small></div><p>${n.text}</p></div>`;
+    nwrap.appendChild(d);
+    n.el = d;
+  });
+
+  // scene 5: feature chips + ticker
+  const grid = $(".grid8", S[5]);
+  FEATURES.forEach((f) => {
+    const d = document.createElement("div");
+    d.className = "chip will";
+    d.innerHTML = `<span class="ic">${iconSvg(f.icon)}</span><div><b>${f.title}</b><small>${f.sub}</small></div><span class="ok will">${iconSvg("check")}</span>`;
+    grid.appendChild(d);
+    f.el = d;
+  });
+  const tt = $(".ticker .track", S[5]);
+  tt.innerHTML = [...TICKER, ...TICKER, ...TICKER].map((x) => `<span>${x}</span><em>✦</em>`).join("");
+
+  // misregistered headlines everywhere
+  $$("#s1 h1 .line, .s-head .line").forEach(misreg);
+  $$(".scene img").forEach((i) => imgs.includes(i) || imgs.push(i));
+}
+
+async function loadLogo() {
+  const svgText = await (await fetch("/public/logo-full-light.svg")).text();
+  const host = $(".logo-big", S[6]);
+  host.innerHTML = svgText;
+  const svg = $("svg", host);
+  // the four process dots are the only paths filled with these colours
+  const colours = ["#fdbe52", "#0db5e8", "#49bb82", "#b357a1"];
+  window.logoDots = colours.map((c) => {
+    const p = svg.querySelector(`path[fill="${c}"]`);
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    p.replaceWith(g);
+    g.appendChild(p);
+    g.style.transformBox = "fill-box";
+    g.style.transformOrigin = "50% 50%";
+    return g;
+  });
+  window.logoRest = [...svg.children].filter((n) => n.tagName !== "defs" && !window.logoDots.includes(n));
+}
+
+/* ================================================================ *
+ * Scenes
+ * ================================================================ */
+/*
+ * Timing sits on a 120 BPM grid (a beat every 0.5 s) so the cuts land on the soundtrack's kicks:
+ * hook 0–4 · showcase 4–10.5 · Google 10.5–16 · WhatsApp 16–22 · features 22–26 · call to action 26–32.
+ */
+const SCENES = [
+  { n: 1, from: 0, to: 4.05 },
+  { n: 2, from: 3.5, to: 10.55 },
+  { n: 3, from: 10.0, to: 16.01 },
+  { n: 4, from: 16.01, to: 22.05 },
+  { n: 5, from: 21.5, to: 26.05 },
+  { n: 6, from: 25.5, to: DURATION + 1 },
+];
+const BANDS = { a: 15.5, cover: 16.01 }; // all four bands cover the frame at `cover`
+
+function s1(t) {
+  const sc = S[1];
+  rise($(".eyebrow", sc), t, 0.05, { dy: 30, dur: 0.7 });
+  const lines = $$("h1 .line", sc);
+  [0.12, 0.42, 0.78].forEach((at, i) => headLine(lines[i], t, at, 1.3));
+
+  const ring = $(".ring-wrap", sc);
+  const sp = E.spring(seg(t, 1.6, 2.35));
+  // buzz like a ringing phone: two bursts, in time with the ring tone
+  const env = Math.max(seg(t, 2.0, 2.08) * (1 - seg(t, 2.5, 2.58)), seg(t, 2.75, 2.83) * (1 - seg(t, 3.25, 3.33)));
+  put(ring, { s: lerp(0.3, 1, sp), o: seg(t, 1.6, 1.72), r: 13 * Math.sin(t * Math.PI * 2 * 13) * env });
+  $$(".wave", ring).forEach((w, k) => {
+    const ph = t < 2.0 ? 0 : ((t - 2.0) * 1.15 + k / 3) % 1;
+    put(w, { s: 1 + ph * 1.1, o: t < 2.0 ? 0 : (1 - ph) * 0.55 });
+  });
+  pop($(".pill", sc), t, 2.2, { dur: 0.7, from: 0.7, dy: 40 });
+
+  // hand over to scene 2: drift up and back as the ink panel rises
+  const out = E.inOutCubic(seg(t, 3.45, 4.0));
+  $(".wrap", sc).style.transform = `translateY(${(-220 * out).toFixed(1)}px) scale(${(1 - 0.06 * out).toFixed(4)})`;
+}
+
+function s2(t) {
+  const sc = S[2];
+  // ink panel rising from the bottom, rounded on top like the site's dark sections
+  const rv = E.inOutQuart(seg(t, 3.5, 4.0));
+  const r = (110 * (1 - rv * 0.6)).toFixed(0);
+  sc.style.clipPath = rv < 1 ? `inset(${(1920 * (1 - rv)).toFixed(1)}px 0 0 0 round ${r}px ${r}px 0 0)` : "none";
+
+  const heads = $$(".s-head .line", sc);
+  headLine(heads[0], t, 3.85);
+  headLine(heads[1], t, 4.05);
+
+  // carousel: a new site every two beats, each slide landing on the beat
+  const T0 = 4.0, STEP = 1.0, SLIDE = 0.4, N = SHOWCASE.length;
+  const k = clamp(Math.floor((t - T0) / STEP), 0, N - 1);
+  const local = t - T0 - k * STEP;
+  const pos = t < T0 ? 0 : k >= N - 1 ? N - 1 : k + E.inOutCubic(seg(local, STEP - SLIDE, STEP));
+  const enter = E.outExpo(seg(t, 3.8, 4.65));
+  SHOWCASE.forEach((site, i) => {
+    const d = i - pos;
+    const ad = Math.min(Math.abs(d), 1.6);
+    const visible = Math.abs(d) < 2.2;
+    site.el.style.visibility = visible ? "visible" : "hidden";
+    // RTL: the next site waits on the left
+    if (visible) put(site.el, { x: -d * 560, y: 760 * (1 - enter) + ad * 30, s: lerp(1, 0.8, Math.min(ad, 1)), r: clamp(d, -1, 1) * -5, o: lerp(1, 0.45, Math.min(ad, 1)) });
+    // the screen scrolls like a thumb flick once the phone takes centre stage
+    const st = T0 + i * STEP + (i === 0 ? 0.35 : 0.05);
+    const scroll = 1250 * E.outCubic(seg(t, st, st + 1.3)) + 160 * seg(t, st + 1.3, st + 3);
+    site.img.style.transform = `translateY(${(-scroll).toFixed(1)}px)`;
+    put(site.label, { y: 26 * Math.min(Math.abs(d), 1), o: clamp(1 - Math.abs(d) * 2.6) * seg(t, 4.2, 4.5) });
+  });
+  // the glow takes the colour of the site on stage
+  const gi = Math.floor(pos), gp = pos - gi;
+  const glow = $(".glow", sc);
+  glow.style.background = `radial-gradient(circle, ${mixHex(SHOWCASE[gi].glow, SHOWCASE[Math.min(gi + 1, N - 1)].glow, gp)} 0%, rgba(0,0,0,0) 60%)`;
+  glow.style.opacity = (0.6 * enter).toFixed(3);
+}
+
+function s3(t) {
+  const sc = S[3];
+  // paper circle opening from the centre phone
+  const rv = E.inOutCubic(seg(t, 10.0, 10.5));
+  sc.style.clipPath = rv < 1 ? `circle(${(2300 * rv).toFixed(1)}px at 540px 1105px)` : "none";
+
+  rise($(".eyebrow2", sc), t, 10.25, { dy: 30 });
+  const heads = $$(".s-head .line", sc);
+  headLine(heads[0], t, 10.3);
+  headLine(heads[1], t, 10.5, 10.95);
+
+  const search = $(".search", sc);
+  pop(search, t, 11.0, { dur: 0.7, from: 0.85, dy: 40 });
+  const typed = Math.floor(QUERY.length * seg(t, TYPE_FROM, TYPE_TO));
+  $(".q", search).textContent = QUERY.slice(0, typed);
+  $(".caret", search).style.opacity = t > TYPE_TO && Math.floor(t * 2.6) % 2 ? 0 : 1;
+
+  const res = $(".result", sc);
+  pop(res, t, 12.5, { dur: 0.8, from: 0.85, dy: 90 });
+  $$(".links span", res).forEach((l, i) => pop(l, t, 12.75 + i * 0.08, { dur: 0.5, from: 0.5, dy: 16 }));
+  const stk = $(".sticker", sc);
+  pop(stk, t, 13.0, { dur: 0.7, from: 0.3, dy: 0, r0: 25 });
+  stk.style.transform += " rotate(-5deg)";
+
+  rise($(".scores", sc), t, 13.5, { dur: 0.9, dy: 160 });
+  SCORES.forEach((s, i) => {
+    const at = RINGS_AT + i * 0.12;
+    const p = E.outExpo(seg(t, at, at + 1.1));
+    $(".arc", s.el).setAttribute("stroke-dashoffset", (276.46 * (1 - (p * s.value) / 100)).toFixed(2));
+    $(".num", s.el).textContent = Math.round(s.value * E.outCubic(seg(t, at, at + 0.9)));
+    // the perfect scores get a little victory bounce on the beat
+    const b0 = 15.0 + (i - 2) * 0.12;
+    const bounce = s.value === 100 ? Math.sin(Math.PI * seg(t, b0, b0 + 0.4)) * 0.12 : 0;
+    put($(".ring", s.el), { s: 1 + bounce });
+  });
+}
+
+function bands(t) {
+  // four process-colour bands sweep up across the frame between scenes 3 and 4
+  const el = $("#bands");
+  const { a, cover } = BANDS;
+  if (t < a || t > cover + 0.55) { el.style.visibility = "hidden"; return; }
+  el.style.visibility = "visible";
+  const run = cover - a - 0.15;
+  $$("i", el).forEach((band, i) => {
+    const d = i * 0.05;
+    const pin = E.inOutCubic(seg(t, a + d, a + d + run));
+    const pout = E.inOutCubic(seg(t, cover + d, cover + d + 0.38));
+    band.style.left = 1080 - (i + 1) * 270 - 1 + "px"; // yellow on the right, where Hebrew starts reading
+    band.style.transform = `translateY(${(1920 * (1 - pin) - 1920 * pout).toFixed(1)}px)`;
+  });
+}
+
+function s4(t) {
+  const sc = S[4];
+  const heads = $$(".s-head .line", sc);
+  headLine(heads[0], t, 16.25);
+  headLine(heads[1], t, 16.45);
+
+  const phone = $("#p4", sc);
+  const pe = E.outExpo(seg(t, 16.3, 17.1));
+  put(phone, { y: 700 * (1 - pe), r: 4 * (1 - pe), o: 1 });
+
+  // a thumb taps the WhatsApp button on the beat
+  const fab = $(".fab", sc);
+  const fp = Math.sin(Math.PI * 2 * clamp((t - 16.9) * 1.6)) * 0.08 * (t < TAP_AT ? 1 : 0);
+  put(fab, { s: 1 + fp - 0.12 * Math.sin(Math.PI * seg(t, TAP_AT, TAP_AT + 0.2)) });
+  const tIn = E.outCubic(seg(t, TAP_AT - 0.25, TAP_AT));
+  put($(".tap", sc), { s: lerp(1.6, 0.85, tIn), o: tIn * (1 - seg(t, TAP_AT + 0.12, TAP_AT + 0.32)) });
+  const rp = seg(t, TAP_AT, TAP_AT + 0.55);
+  put($(".ripple", sc), { s: 1 + rp * 1.6, o: t < TAP_AT ? 0 : (1 - rp) * 0.9 });
+
+  const cp = E.outExpo(seg(t, 17.7, 18.3));
+  put($(".wa-chat", sc), { y: 1100 * (1 - cp), o: t < 17.7 ? 0 : 1 });
+  pop($(".bubble.out", sc), t, SENT_AT, { dur: 0.6, from: 0.7, dy: 40 });
+  const typing = $(".typing", sc);
+  const ty = t >= 18.9 && t < REPLY_AT;
+  typing.style.display = ty ? "flex" : "none";
+  if (ty) {
+    pop(typing, t, 18.9, { dur: 0.4, from: 0.6, dy: 10 });
+    $$("i", typing).forEach((d, i) => (d.style.transform = `translateY(${(-8 * Math.max(0, Math.sin((t - 18.9) * 14 - i * 1.1))).toFixed(1)}px)`));
+  }
+  const inn = $(".bubble.in", sc);
+  inn.style.display = t >= REPLY_AT ? "block" : "none";
+  pop(inn, t, REPLY_AT, { dur: 0.6, from: 0.7, dy: 40 });
+  $(".status", sc).textContent = ty ? "מקליד/ה…" : "מחובר/ת";
+
+  NOTIFS.forEach((n, i) => {
+    const at = NOTIFS_AT + i * 0.5;
+    const p = seg(t, at, at + 0.7), sp = E.spring(p);
+    put(n.el, { x: (i % 2 ? 1 : -1) * 120 * (1 - E.outExpo(p)), y: 40 * (1 - sp), s: lerp(0.7, 1, sp), r: n.r, o: seg(t, at, at + 0.12) });
+  });
+  // the phone eases back a touch while the leads land
+  phone.style.transform += ` scale(${(1 - 0.04 * E.inOutCubic(seg(t, 19.9, 21.9))).toFixed(4)})`;
+}
+
+function s5(t) {
+  const sc = S[5];
+  // yellow circle opening from the bottom
+  const rv = E.inOutCubic(seg(t, 21.5, 22.05));
+  sc.style.clipPath = rv < 1 ? `circle(${(2300 * rv).toFixed(1)}px at 540px 1920px)` : "none";
+  const heads = $$(".s-head .line", sc);
+  headLine(heads[0], t, 21.8);
+  headLine(heads[1], t, 21.98);
+  FEATURES.forEach((f, i) => {
+    const at = CHIPS_AT + i * 0.25;
+    pop(f.el, t, at, { dur: 0.75, from: 0.55, dy: 70, r0: i % 2 ? 6 : -6 });
+    pop($(".ok", f.el), t, at + 0.3, { dur: 0.5, from: 0, dy: 0 });
+  });
+  const tk = $(".ticker", sc);
+  const te = E.outExpo(seg(t, 22.0, 22.8));
+  tk.style.transform = `translateX(${(1300 * (1 - te)).toFixed(1)}px) rotate(-2.5deg)`;
+  $(".track", tk).style.transform = `translateX(${(((t - 21.5) * 150) % 3000).toFixed(1)}px)`;
+}
+
+function s6(t) {
+  const sc = S[6];
+  const rv = E.inOutQuart(seg(t, 25.5, 26.0));
+  sc.style.clipPath = rv < 1 ? `inset(${(1920 * (1 - rv)).toFixed(1)}px 0 0 0 round 110px 110px 0 0)` : "none";
+
+  const logo = $(".logo-big", sc);
+  const lp = E.outExpo(seg(t, 25.9, 26.7));
+  put(logo, { y: 60 * (1 - lp), s: lerp(0.86, 1, lp), o: seg(t, 25.9, 26.1) });
+  window.logoDots.forEach((g, i) => {
+    const at = DOTS_AT + i * 0.125;
+    const sp = E.spring(seg(t, at, at + 0.8));
+    // once landed, the dots breathe on the beat
+    const beat = t > 28 ? Math.pow(Math.max(0, Math.cos(Math.PI * ((t - 28) * 2 - i * 0.25))), 16) * 0.18 : 0;
+    g.style.transform = `translateY(${(-70 * (1 - sp)).toFixed(2)}px) scale(${(Math.min(1, sp * 1.4) * (1 + beat)).toFixed(4)})`;
+  });
+
+  const heads = $$(".s-head .line", sc);
+  headLine(heads[0], t, 26.5);
+  headLine(heads[1], t, 26.7);
+
+  const btn = $(".cta-btn", sc);
+  pop(btn, t, 27.0, { dur: 0.8, from: 0.6, dy: 60 });
+  if (t > 28) btn.style.transform += ` scale(${(1 + 0.035 * Math.pow(Math.sin(Math.PI * (t - 28)), 2)).toFixed(4)})`;
+  rise($(".cta-phone", sc), t, 27.25, { dy: 60 });
+  rise($(".cta-url", sc), t, 27.45, { dy: 40 });
+}
+
+const UPDATE = { 1: s1, 2: s2, 3: s3, 4: s4, 5: s5, 6: s6 };
+
+function render(t) {
+  for (const sc of SCENES) {
+    const on = t >= sc.from && t < sc.to;
+    S[sc.n].style.visibility = on ? "visible" : "hidden";
+    if (on) UPDATE[sc.n](t);
+  }
+  bands(t);
+}
+
+/* ================================================================ *
+ * Boot
+ * ================================================================ */
+window.__duration = DURATION;
+window.__render = render;
+window.__ready = (async () => {
+  build();
+  await loadLogo();
+  await Promise.all(
+    ["400", "500", "600", "700", "800"].map((w) => document.fonts.load(`${w} 40px Heebo`, "אבגabc"))
+      .concat(["500", "600", "700", "800", "900"].map((w) => document.fonts.load(`${w} 40px Rubik`, "אבגabc"))),
+  );
+  await document.fonts.ready;
+  fitLines(document);
+  await Promise.all(imgs.map((i) => i.decode().catch(() => {})));
+  render(0);
+  return true;
+})();
+
+if (location.search.includes("play")) {
+  const c = $("#controls");
+  c.style.display = "flex";
+  document.body.style.height = "auto";
+  document.body.style.overflow = "auto";
+  let playing = true, t0 = performance.now(), base = 0;
+  const scrub = $("#scrub"), tc = $("#tc");
+  $("#play").onclick = () => { playing = !playing; base = +scrub.value; t0 = performance.now(); };
+  scrub.oninput = () => { base = +scrub.value; t0 = performance.now(); render(base); };
+  window.__ready.then(() => {
+    const loop = (now) => {
+      if (playing) {
+        const t = (base + (now - t0) / 1000) % DURATION;
+        scrub.value = t;
+        tc.textContent = t.toFixed(2) + "s";
+        render(t);
+      }
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  });
+}
+</script>
+<script src="audio.js"></script>
+</body>
+</html>

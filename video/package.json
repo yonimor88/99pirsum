@@ -1,0 +1,13 @@
+{
+  "name": "99pirsum-video",
+  "private": true,
+  "type": "module",
+  "description": "Video ads for 99 פרסום, rendered from HTML with headless Chromium. Separate from the site so Vercel never installs these tools.",
+  "scripts": {
+    "render:websites": "node websites-ad/render.mjs"
+  },
+  "devDependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "puppeteer-core": "^24.0.0"
+  }
+}
