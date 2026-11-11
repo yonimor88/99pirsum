@@ -12,7 +12,7 @@ const message = "הגעתי דרך רחלי ואני מעוניין לקבל ע�
 const target = `https://wa.me/972543971020?text=${encodeURIComponent(message)}`;
 
 const preview = {
-  title: "יוני מורדכוב · 99 פרסום ומדיה",
+  title: "יוני מורדכיוב · 99 פרסום ומדיה",
   description: "בניית אתרים ודפי נחיתה לעסקים. לחצו כאן לשיחה איתי בוואטסאפ",
   image: "https://99pirsum.com/opengraph-image.png",
   url: "https://99pirsum.com/yoni-whatsapp-raheli",
