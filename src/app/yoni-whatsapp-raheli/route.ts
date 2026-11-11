@@ -1,5 +1,5 @@
 /**
- * Short WhatsApp link for leads: 99pirsum.com/yoni-whatsapp opens a chat with a
+ * Short WhatsApp link for leads: 99pirsum.com/yoni-whatsapp-raheli opens a chat with a
  * pre-filled message saying who referred them. Done as a route (not a
  * next.config redirect) because config redirects decode the Hebrew text into
  * the Location header, which Node rejects.
