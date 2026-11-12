@@ -11,10 +11,10 @@ export const promo = {
   /** Short version for tight spots (home hero, websites spotlight) */
   short: "אתר ב-1,300 ש״ח כולל מע״מ",
   extra: "+ 12 חודשי תחזוקה ותפעול חינם",
-  until: "עד 15 בנובמבר",
+  until: "עד 30 בנובמבר",
   href: "/websites",
-  /** End of 15 November, Israel time */
-  ends: "2026-11-16T00:00:00+02:00",
+  /** End of 30 November, Israel time */
+  ends: "2026-12-01T00:00:00+02:00",
 } as const;
 
 export const PROMO_DISMISS_KEY = "99p-promo-dismissed";
