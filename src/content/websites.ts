@@ -52,6 +52,10 @@ import hasidiDesktop from "@/assets/images/sites/hasidi-desktop.webp";
 import hasidiDesktopLong from "@/assets/images/sites/hasidi-desktop-long.webp";
 import hasidiMobile from "@/assets/images/sites/hasidi-mobile.webp";
 import hasidiMobileLong from "@/assets/images/sites/hasidi-mobile-long.webp";
+import tamarDesktop from "@/assets/images/sites/tamar-raz-desktop.webp";
+import tamarDesktopLong from "@/assets/images/sites/tamar-raz-desktop-long.webp";
+import tamarMobile from "@/assets/images/sites/tamar-raz-mobile.webp";
+import tamarMobileLong from "@/assets/images/sites/tamar-raz-mobile-long.webp";
 
 /**
  * Websites we designed and built. Screenshots are real captures of the live
@@ -176,7 +180,7 @@ export const websites: Website[] = [
 ];
 
 /**
- * Concept sites for the Haredi sector: made-up businesses, real live sites.
+ * Concept sites, mostly for the Haredi sector: made-up businesses, real live sites.
  * Built to show what we can do; contact details on them are ours.
  */
 export const concepts: Website[] = [
@@ -324,5 +328,23 @@ export const concepts: Website[] = [
     glow: "#a893c9",
     concept: true,
     shots: { desktop: chevyonDesktop, mobile: chevyonMobile, desktopLong: chevyonDesktopLong, mobileLong: chevyonMobileLong },
+  },
+  {
+    slug: "tamar-raz",
+    name: "תמר רז",
+    url: "https://tamar-raz.vercel.app",
+    domain: "tamar-raz.vercel.app",
+    industry: "גרפולוגיה",
+    headline: "כתב יד שנכתב מול העיניים.",
+    summary:
+      "אתר לגרפולוגית: ענני דיו חיים בתלת־ממד, חוט זהב שכותב את עצמו על המסך ופרח דליה שעליו עשויים מלולאות של עט. אינדיגו עמוק, נייר שמנת וזהב — כמו שולחן כתיבה בשעת לילה.",
+    challenge: "להסביר מה גרפולוגית באמת בודקת בכתב היד, ולבנות אמון מספיק כדי שישלחו לה דף כתוב.",
+    solution:
+      "שמונה סימני כתב שמוסברים אחד־אחד על דוגמת כתב חיה, משטח כתיבה שבו הגולש כותב שורה באצבע ורואה נטייה, גודל וקצב, שירותים לאנשים ולארגונים, תהליך עבודה בארבעה צעדים, שאלות נפוצות וטופס שנפתח ישר בוואטסאפ.",
+    features: ["רקע דיו חי בתלת־ממד", "משטח כתיבה אינטראקטיבי", "8 סימני כתב מוסברים", "טופס לוואטסאפ", "שאלות נפוצות"],
+    palette: ["#0f1024", "#f4eee4", "#2c3170", "#7b2d45", "#d9b98a"],
+    glow: "#a14a66",
+    concept: true,
+    shots: { desktop: tamarDesktop, mobile: tamarMobile, desktopLong: tamarDesktopLong, mobileLong: tamarMobileLong },
   },
 ];
