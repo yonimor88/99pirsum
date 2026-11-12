@@ -11,7 +11,7 @@ export const promo = {
   /** Short version for tight spots (home hero, websites spotlight) */
   short: "אתר ב-1,300 ש״ח כולל מע״מ",
   extra: "+ 12 חודשי תחזוקה ותפעול חינם",
-  until: "עד 30 בנובמבר",
+  until: "לאור הביקוש הרב, הוארך עד 30 בנובמבר",
   href: "/websites",
   /** End of 30 November, Israel time */
   ends: "2026-12-01T00:00:00+02:00",
